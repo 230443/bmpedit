@@ -4,10 +4,17 @@
 
 using namespace cimg_library;
 
-class Bitmap : private CImg<unsigned char>
+class Bitmap : public CImg<unsigned char>
 {
 public:
 	Bitmap(const char* const filename);
-	int pixvalue(int x=0, int y=0);
+	//modify brightness, contrast and RGB components 
+	void brightness(int val);
+	void contrast(float val);
+	//simple geometric operations.
+
+
+
+	void save(std::string ofname);	//method overloaded, save(const char* const)
 };
 
