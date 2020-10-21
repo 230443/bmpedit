@@ -6,11 +6,10 @@ using namespace cimg_library;
 
 class Bitmap
 {
-	int m, n;
-	
+	CImg<unsigned char> image;
 public:
-	unsigned char** pix;
 	Bitmap(const char* const filename);
+
 	
 };
 
