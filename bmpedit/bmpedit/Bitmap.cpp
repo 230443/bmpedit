@@ -1,7 +1,8 @@
 #include "Bitmap.h"
 
 Bitmap::Bitmap(const char* const filename)
-	:CImg<unsigned char>(filename)
+	:CImg<unsigned char>(filename)		//CImg creates one pixel array. First all red pixels then G and B.
+										//RRR..BBB...GGG not RGBRGBRGB
 {
 }
 void Bitmap::brightness(int val)
@@ -14,7 +15,6 @@ void Bitmap::brightness(int val)
 			if (*ptr > 0)
 				*ptr += val;
 		}
-		display();
 	}
 	else 
 	{
@@ -23,11 +23,10 @@ void Bitmap::brightness(int val)
 			if (*ptr < 255)
 				*ptr += val;
 		}
-		display();
 	}
 
 }
-void Bitmap::contrast(float a) // y=ax+y_0-ax_0, (x_0,y_0) middle of the spectrum
+void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point of the spectrum
 {
 	float b = (1 - a) * 128;
 	unsigned char tab[256];
@@ -43,7 +42,14 @@ void Bitmap::contrast(float a) // y=ax+y_0-ax_0, (x_0,y_0) middle of the spectru
 	{
 		*ptr = tab[*ptr];
 	}
-	display();
+}
+void Bitmap::negative()
+{
+	unsigned char* ptr = begin();
+	for (int i = 0; i < height() * width() * 3; i++, ptr++)
+	{
+		*ptr = ~*ptr;
+	}
 }
 void Bitmap::save(std::string ofname)
 {

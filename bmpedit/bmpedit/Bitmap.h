@@ -10,7 +10,8 @@ public:
 	Bitmap(const char* const filename);
 	//modify brightness, contrast and RGB components 
 	void brightness(int val);
-	void contrast(float val);
+	void contrast(float a);
+	void negative();
 	//simple geometric operations.
 
 

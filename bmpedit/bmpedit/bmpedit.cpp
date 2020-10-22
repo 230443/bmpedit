@@ -12,5 +12,7 @@ int main(int argc, char* argv[])
 	Bitmap img(filename.c_str());
 	img.display();		//for debuging
 	//img.brightness(20);
-	img.contrast(0.2);
+	//img.contrast(0.01);
+	img.negative();
+	img.display();
 }
