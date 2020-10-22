@@ -10,9 +10,7 @@ int main(int argc, char* argv[])
 	filename = "lena.bmp";
 	cout << filename<<endl;
 	Bitmap img(filename.c_str());
-	for (int i = 0; i < 60; i++)
-	{
-		cout << (int)img.pix[0][i] << endl;
-	}
-	
+	img.display();		//for debuging
+	//img.brightness(20);
+	img.contrast(0.2);
 }
