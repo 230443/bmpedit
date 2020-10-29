@@ -3,10 +3,12 @@
 #include <algorithm>
 #include "CImg.h"
 
+typedef unsigned char byte;
+
 class Bitmap 
 {
 public:
-	cimg_library::CImg<unsigned char> image;
+	cimg_library::CImg<byte> image;
 	const int H, W, SP, S;
 public:
 	Bitmap(const char* const&& filename);

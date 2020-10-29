@@ -12,7 +12,7 @@ Bitmap::~Bitmap()
 }
 void Bitmap::brightness(int val)
 {
-	unsigned char* ptr = image.begin();
+	byte* ptr = image.begin();
 	if (val < 0)
 	{
 		for (; ptr != image.end(); ++ptr)
@@ -35,7 +35,7 @@ void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point 
 {
 	float b = (1 - a) * 128;
 
-	unsigned char tab[256];
+	byte tab[256];
 	for (int i = 0; i < 256; i++)
 	{
 		int y = a * i + b;
@@ -43,14 +43,14 @@ void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point 
 		else if (y <= 0)	tab[i] = 0;
 		else				tab[i] = y;
 	}
-	for (unsigned char* ptr = image.begin(); ptr != image.end(); ++ptr)
+	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
 	{
 		*ptr = tab[*ptr];
 	}
 }
 void Bitmap::negative()
 {
-	for (unsigned char* ptr = image.begin(); ptr != image.end(); ++ptr)
+	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
 	{
 		*ptr = ~*ptr;
 	}
@@ -87,8 +87,8 @@ void Bitmap::dflip()
 
 	for (int s = 0; s != image.spectrum(); ++s)
 	{
-		unsigned char* ptr = image.begin() + s * W * H;
-		unsigned char* rptr = image.begin() + ((s + 1) * W * H) - 1;
+		byte* ptr = image.begin() + s * W * H;
+		byte* rptr = image.begin() + ((s + 1) * W * H) - 1;
 		for (; ptr<rptr; ++ptr,--rptr)
 		{
 			std::swap(*ptr, *rptr);
@@ -99,12 +99,12 @@ void Bitmap::shrink(int k)
 {
 	if (!(W % k))
 	{
-		CImg<unsigned char> tmp(W / k, H / k, 1, image.spectrum());
-		unsigned char* it = image.begin();
-		unsigned char* ptr = tmp.begin();
+		CImg<byte> tmp(W / k, H / k, 1, image.spectrum());
+		byte* it = image.begin();
+		byte* ptr = tmp.begin();
 		while (it < image.end())
 		{
-			unsigned char* endptr = it + W;
+			byte* endptr = it + W;
 			while (it < endptr)
 			{
 				*ptr = *it;
@@ -120,16 +120,15 @@ void Bitmap::shrink(int k)
 void Bitmap::enlarge(int k)
 {
 	
-	CImg<unsigned char> tmp(W*k, H*k, 1, image.spectrum());
-
-	unsigned char* it = image.begin();
-	unsigned char* ptr = tmp.begin();
+	CImg<byte> tmp(W*k, H*k, 1, image.spectrum());
+	byte* it = image.begin();
+	byte* ptr = tmp.begin();
 	while (it < image.end())
 	{
-		unsigned char* endptr = ptr + tmp.width();
+		byte* endptr = ptr + tmp.width();
 		while (ptr < endptr)
 		{
-			unsigned char* endptr = ptr + k;
+			byte* endptr = ptr + k;
 			while (ptr < endptr)
 			{
 				*ptr = *it;
