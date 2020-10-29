@@ -5,6 +5,21 @@ using namespace cimg_library;
 Bitmap::Bitmap(const char* const&& filename)
 	:image(filename), H(image.height()), W(image.width()), SP(image.spectrum()), S(image.size()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
+	int offset = W*H;
+	bool is_mono = true;
+	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
+	{
+		if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
+		{
+			is_mono = false;
+			break;
+		}
+	}
+	if (is_mono)
+	{
+		CImg<byte> tmp(image.data(), image.width(), image.height());
+		image = tmp;
+	}
 }
 Bitmap::~Bitmap()
 {
