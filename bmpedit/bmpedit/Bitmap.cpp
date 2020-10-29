@@ -2,7 +2,7 @@
 
 using namespace cimg_library;
 
-Bitmap::Bitmap(const char* const filename)
+Bitmap::Bitmap(const char* const&& filename)
 	:image(filename), H(image.height()), W(image.width()), SP(image.spectrum()), S(image.size()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
 }
@@ -87,8 +87,8 @@ void Bitmap::dflip()
 
 	for (int s = 0; s != image.spectrum(); ++s)
 	{
-		unsigned char* ptr = image.begin()+s*W*H;
-		unsigned char* rptr = image.begin()+((s+1)*W*H)-1;
+		unsigned char* ptr = image.begin() + s * W * H;
+		unsigned char* rptr = image.begin() + ((s + 1) * W * H) - 1;
 		for (; ptr<rptr; ++ptr,--rptr)
 		{
 			std::swap(*ptr, *rptr);
@@ -119,7 +119,32 @@ void Bitmap::shrink(int k)
 }
 void Bitmap::enlarge(int k)
 {
+	
+	CImg<unsigned char> tmp(W*k, H*k, 1, image.spectrum());
+
+	unsigned char* it = image.begin();
+	unsigned char* ptr = tmp.begin();
+	while (it < image.end())
+	{
+		unsigned char* endptr = ptr + tmp.width();
+		while (ptr < endptr)
+		{
+			unsigned char* endptr = ptr + k;
+			while (ptr < endptr)
+			{
+				*ptr = *it;
+				for (int i = 1; i != k; ++i)
+						*(ptr + (tmp.width() * i)) = *it;
+				ptr++;
+			}
+			it++;
+		}
+		ptr += tmp.width() * (k - 1);
+		
+	}
+	tmp.move_to(image);				//parameters W,H,S cant be used
 }
+	
 void Bitmap::save(std::string ofname)
 {
 	image.save(ofname.c_str());

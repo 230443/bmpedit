@@ -15,6 +15,6 @@ int main(int argc, char* argv[])
 	//img.contrast(4);
 	//img.negative();
 	//img.dflip();
-	img.shrink(8);
+	img.enlarge(2);
 	img.image.display();
 }

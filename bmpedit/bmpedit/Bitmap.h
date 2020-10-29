@@ -9,7 +9,7 @@ public:
 	cimg_library::CImg<unsigned char> image;
 	const int H, W, SP, S;
 public:
-	Bitmap(const char* const filename);
+	Bitmap(const char* const&& filename);
 	~Bitmap();
 	//modify brightness, contrast and RGB components
 	void brightness(int val);
