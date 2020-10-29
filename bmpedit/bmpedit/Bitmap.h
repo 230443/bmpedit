@@ -1,18 +1,29 @@
 #pragma once
 #include <string>
+#include <algorithm>
 #include "CImg.h"
 
-using namespace cimg_library;
-
-class Bitmap : public CImg<unsigned char>
+class Bitmap 
 {
 public:
+	cimg_library::CImg<unsigned char> image;
+	const unsigned int H, W, SP, S;
+public:
 	Bitmap(const char* const filename);
+	~Bitmap();
 	//modify brightness, contrast and RGB components
 	void brightness(int val);
 	void contrast(float a);
 	void negative();
 	//simple geometric operations.
+	void hflip();
+	void vflip();
+	void dflip();
+	//shrinking and enlargement
+	void shrink();
+	void enlarge();
+
+
 
 
 
