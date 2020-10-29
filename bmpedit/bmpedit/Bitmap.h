@@ -7,7 +7,7 @@ class Bitmap
 {
 public:
 	cimg_library::CImg<unsigned char> image;
-	const unsigned int H, W, SP, S;
+	const int H, W, SP, S;
 public:
 	Bitmap(const char* const filename);
 	~Bitmap();
@@ -20,8 +20,8 @@ public:
 	void vflip();
 	void dflip();
 	//shrinking and enlargement
-	void shrink();
-	void enlarge();
+	void shrink(int k);
+	void enlarge(int k);
 
 
 

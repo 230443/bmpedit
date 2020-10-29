@@ -95,10 +95,29 @@ void Bitmap::dflip()
 		}
 	}
 }
-void Bitmap::shrink()
+void Bitmap::shrink(int k)
 {
+	if (!(W % k))
+	{
+		CImg<unsigned char> tmp(W / k, H / k, 1, image.spectrum());
+		unsigned char* it = image.begin();
+		unsigned char* ptr = tmp.begin();
+		while (it < image.end())
+		{
+			unsigned char* endptr = it + W;
+			while (it < endptr)
+			{
+				*ptr = *it;
+				ptr++;
+				it += k;
+			}
+			it += W * (k - 1);
+		}
+		tmp.move_to(image);
+	}
+	
 }
-void Bitmap::enlarge()
+void Bitmap::enlarge(int k)
 {
 }
 void Bitmap::save(std::string ofname)

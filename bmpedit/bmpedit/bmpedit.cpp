@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
 	//img.brightness(20);
 	//img.contrast(4);
 	//img.negative();
-	img.dflip();
+	//img.dflip();
+	img.shrink(8);
 	img.image.display();
 }
