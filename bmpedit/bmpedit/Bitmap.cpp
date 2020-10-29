@@ -55,25 +55,45 @@ void Bitmap::negative()
 		*ptr = ~*ptr;
 	}
 }
-void Bitmap::hflip()
+void Bitmap::vflip()
 {
-	for (int s = 0; s != SP; ++s)
+	int h = H - 1;
+	for (int x = 0; x != W; ++x)
 	{
-		for (int x = 0; x != W; ++x)
+		for (int y = 0; y != H/2; ++y)
 		{
-			for (int y = 0; y != H/2; ++y)
-			{
-				std::swap(image(x, y, s), image(x, (H - y), s));
 
-			}
+				std::swap(image(x, y, 0), image(x, (h - y), 0));
+				std::swap(image(x, y, 1), image(x, (h - y), 1));
+				std::swap(image(x, y, 2), image(x, (h - y), 2));
 		}
 	}
 }
-void Bitmap::vflip()
+void Bitmap::hflip()
 {
+	int w = W - 1;
+	for (int x = 0; x != W/2; ++x)
+	{
+		for (int y = 0; y != H; ++y)
+		{
+			std::swap(image(x, y, 0), image((w - x), y, 0));
+			std::swap(image(x, y, 1), image((w - x), y, 1));
+			std::swap(image(x, y, 2), image((w - x), y, 2));
+		}
+	}
 }
 void Bitmap::dflip()
 {
+
+	for (int s = 0; s != image.spectrum(); ++s)
+	{
+		unsigned char* ptr = image.begin()+s*W*H;
+		unsigned char* rptr = image.begin()+((s+1)*W*H)-1;
+		for (; ptr<rptr; ++ptr,--rptr)
+		{
+			std::swap(*ptr, *rptr);
+		}
+	}
 }
 void Bitmap::shrink()
 {
