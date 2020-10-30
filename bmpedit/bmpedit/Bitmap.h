@@ -9,11 +9,14 @@ class Bitmap
 {
 public:
 	cimg_library::CImg<byte> image;
+private:
 	int H, W;
+	long offset;
+	bool is_mono;
+	void set_new_image(cimg_library::CImg<byte>& tmp);
 public:
 	Bitmap(const char* const&& filename);
 	~Bitmap();
-	void set_new_image(cimg_library::CImg<byte>& tmp);
 	//modify brightness, contrast and RGB components
 	void brightness(int val);
 	void contrast(float a);

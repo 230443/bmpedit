@@ -5,14 +5,17 @@ using namespace cimg_library;
 Bitmap::Bitmap(const char* const&& filename)
 	:image(filename), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
-	int offset = W*H;
-	bool is_mono = true;
-	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
+	offset = W*H;
+	is_mono = true;
+	if (image.spectrum() == 3)
 	{
-		if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
+		for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
 		{
-			is_mono = false;
-			break;
+			if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
+			{
+				is_mono = false;
+				break;
+			}
 		}
 	}
 	if (is_mono)
