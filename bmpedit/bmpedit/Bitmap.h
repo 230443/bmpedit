@@ -9,10 +9,11 @@ class Bitmap
 {
 public:
 	cimg_library::CImg<byte> image;
-	const int H, W, SP, S;
+	int H, W;
 public:
 	Bitmap(const char* const&& filename);
 	~Bitmap();
+	void set_new_image(cimg_library::CImg<byte>& tmp);
 	//modify brightness, contrast and RGB components
 	void brightness(int val);
 	void contrast(float a);
@@ -24,6 +25,8 @@ public:
 	//shrinking and enlargement
 	void shrink(int k);
 	void enlarge(int k);
+	//filters
+
 
 
 

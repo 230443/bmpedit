@@ -3,7 +3,7 @@
 using namespace cimg_library;
 
 Bitmap::Bitmap(const char* const&& filename)
-	:image(filename), H(image.height()), W(image.width()), SP(image.spectrum()), S(image.size()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
+	:image(filename), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
 	int offset = W*H;
 	bool is_mono = true;
@@ -25,6 +25,14 @@ Bitmap::~Bitmap()
 {
 	~image;
 }
+void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
+{
+	image = tmp;
+	H = image.height();
+	W = image.width();
+}
+
+
 void Bitmap::brightness(int val)
 {
 	byte* ptr = image.begin();
@@ -128,12 +136,12 @@ void Bitmap::shrink(int k)
 			}
 			it += W * (k - 1);
 		}
-		tmp.move_to(image);
+		set_new_image(tmp);
 	}
 	
 }
-void Bitmap::enlarge(int k)
-{
+void Bitmap::enlarge(int k)		//k=2,3,4...
+{								//not optimal - 4 loops
 	
 	CImg<byte> tmp(W*k, H*k, 1, image.spectrum());
 	byte* it = image.begin();
@@ -156,7 +164,7 @@ void Bitmap::enlarge(int k)
 		ptr += tmp.width() * (k - 1);
 		
 	}
-	tmp.move_to(image);				//parameters W,H,S cant be used
+	set_new_image(tmp);
 }
 	
 void Bitmap::save(std::string ofname)
