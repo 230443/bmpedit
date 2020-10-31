@@ -47,6 +47,38 @@ void Bitmap::make_arr(byte* p, int win_s, byte tab[])
 	}
 }
 
+void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
+{
+	byte* i = image.begin();
+	byte* t = tmp.begin();
+	int w = W - 1;
+	for (int s = 0; s != image.spectrum(); ++s, 
+											i += offset,
+											t += offset)
+	{
+		std::copy(i, (i + W * win_s), t);
+		std::copy(i + offset - W * win_s, (i + offset), t + 0);
+
+		if(win_s==1)
+			for (int y = 1; y < H - 1; y++)
+			{
+				tmp(0, y, s) = image(0, y, s);
+				tmp(w, y, s) = image(w, y, s);
+
+			}
+		else
+			for (int y = win_s; y < H - win_s; y++)
+			{
+				for (int i = 0; i < win_s; i++)
+				{
+					tmp(0 + i, y, s) = image(0 + i, y, s);
+					tmp(w - i, y, s) = image(w - i, y, s);
+				}
+			}
+	}
+	image = tmp;
+}
+
 
 void Bitmap::brightness(int val)
 {
@@ -203,9 +235,8 @@ void Bitmap::alpha(int win_size, int d)
 				
 			}
 		}
-
 	}
-	image = tmp;
+	copy_frame(tmp,win_size);
 }
 	
 void Bitmap::save(std::string ofname)

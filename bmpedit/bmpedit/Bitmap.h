@@ -16,6 +16,7 @@ private:
 	bool is_mono;
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int win_s, byte tab[]);
+	void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
 public:
 	Bitmap(const char* const&& filename);
 	~Bitmap();
