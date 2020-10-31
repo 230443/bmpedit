@@ -7,12 +7,15 @@ int main(int argc, char* argv[])
 {
 	string filename;
 	//cin >> filename;
-	filename = "lena.bmp";
+	filename = "lena_impulse2.bmp";
 	cout << filename<<endl;
 	Bitmap img(filename.c_str());
-	img.display();		//for debuging
+	img.image.display();		//for debuging
 	//img.brightness(20);
-	//img.contrast(0.01);
-	img.negative();
-	img.display();
+	//img.contrast(4);
+	//img.negative();
+	//img.hflip();
+	//img.enlarge(2);
+	img.alpha(1, 4);
+	img.image.display();
 }
