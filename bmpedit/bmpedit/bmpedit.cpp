@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
 	string filename;
 	//cin >> filename;
-	filename = "lena_impulse2.bmp";
+	filename = "lenac_impulse2.bmp";
 	cout << filename<<endl;
 	Bitmap img(filename.c_str());
 	img.image.display();		//for debuging

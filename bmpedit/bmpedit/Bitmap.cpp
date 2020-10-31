@@ -195,10 +195,10 @@ void Bitmap::alpha(int win_size, int d)
 		{
 			for (int y = win_size; y < (H - win_size); ++y)
 			{
-				make_arr(image.data(x, y ), win_size, tab);
+				make_arr(image.data(x, y, s), win_size, tab);
 				std::sort(tab, tab + size);
 
-				tmp(x, y) = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
+				tmp(x, y, s) = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
 				//*(tmp.data()+x+y*W) = image(x, y, 1, s);
 				
 			}
