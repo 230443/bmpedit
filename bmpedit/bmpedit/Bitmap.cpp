@@ -163,12 +163,10 @@ void Bitmap::dflip()
 
 	for (int s = 0; s != image.spectrum(); ++s)
 	{
-		byte* ptr = image.begin() + s * W * H;
-		byte* rptr = image.begin() + ((s + 1) * W * H) - 1;
-		for (; ptr<rptr; ++ptr,--rptr)
-		{
-			std::swap(*ptr, *rptr);
-		}
+		byte* ptr = image.begin() + s * offset;
+		byte* rptr = image.begin() + ((s + 1) * offset) - 1;
+		while (ptr<rptr)
+			std::swap(*(ptr++), *(rptr--));
 	}
 }
 void Bitmap::shrink(int k)
@@ -220,29 +218,45 @@ void Bitmap::enlarge(int k)		//k=2,3,4...
 	set_new_image(tmp);
 }
 
-void Bitmap::alpha(int win_size, int d)
+void Bitmap::alpha(int win_s, int d)
 {
 	d = d / 2;
-	int size = (win_size * 2 + 1) * (win_size * 2 + 1);
+	int size = (win_s * 2 + 1) * (win_s * 2 + 1);	//surface of the window
 	byte* tab = new byte[size];
-	CImg<byte> tmp(W, H, 1, image.spectrum());
-	//CImg<byte> tmp(image);
-	for (int s = 0; s != image.spectrum(); ++s)
+	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
 	{
-		for (int x = win_size; x < (W - win_size); ++x)
+		for (int x = win_s; x < (W - win_s); ++x)
 		{
-			for (int y = win_size; y < (H - win_size); ++y)
+			for (int y = win_s; y < (H - win_s); ++y)
 			{
-				make_arr(image.data(x, y, s), win_size, tab);
+				make_arr(image.data(x, y, s), win_s, tab);
 				std::sort(tab, tab + size);
 
 				tmp(x, y, s) = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
-				//*(tmp.data()+x+y*W) = image(x, y, 1, s);
-				
 			}
 		}
 	}
-	copy_frame(tmp,win_size);
+	copy_frame(tmp,win_s);
+}
+
+void Bitmap::cmean(int win_s)
+{
+	int size = (win_s * 2 + 1) * (win_s * 2 + 1);	//surface of the window
+	byte* tab = new byte[size];
+	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
+	{
+		for (int x = win_s; x < (W - win_s); ++x)
+		{
+			for (int y = win_s; y < (H - win_s); ++y)
+			{
+				make_arr(image.data(x, y, s), win_s, tab);
+
+			}
+		}
+	}
+	copy_frame(tmp, win_s);
 }
 	
 void Bitmap::save(std::string ofname)

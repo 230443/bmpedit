@@ -33,9 +33,13 @@ public:
 	void enlarge(int k);
 		//filters
 	//Alpha - trimmed mean filter(--alpha)
-	void alpha(int win_size = 1, int d = 4);	//win_size - distance from center pixel
-												//d - number of discarded pixels
+	//win_s - window size - distance from a center pixel
+	//d - number of discarded pixels
+	void alpha(int win_s = 1, int d = 4);
+
+											
 	//contraharmonic mean filter(--cmean).
+	void cmean(int win_s = 1);
 
 
 
