@@ -9,7 +9,7 @@ Bitmap::Bitmap(const char* const&& filename)
 	is_mono = true;
 	if (image.spectrum() == 3)
 	{
-		for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
+		for (byte* ptr = image.begin(); ptr != (image.begin() + offset); ++ptr)
 		{
 			if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
 			{
@@ -33,6 +33,18 @@ void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
 	image = tmp;
 	H = image.height();
 	W = image.width();
+}
+
+void Bitmap::make_arr(byte* p, int win_s, byte tab[])
+{
+	int i = 0;
+	for (int xw = -win_s; xw <= win_s; ++xw)
+	{
+		for (int yw = -win_s; yw <= win_s; ++yw)
+		{
+			tab[i++] = *(p + xw + (yw * W));
+		}
+	}
 }
 
 
@@ -168,6 +180,32 @@ void Bitmap::enlarge(int k)		//k=2,3,4...
 		
 	}
 	set_new_image(tmp);
+}
+
+void Bitmap::alpha(int win_size, int d)
+{
+	d = d / 2;
+	int size = (win_size * 2 + 1) * (win_size * 2 + 1);
+	byte* tab = new byte[size];
+	CImg<byte> tmp(W, H, 1, image.spectrum());
+	//CImg<byte> tmp(image);
+	for (int s = 0; s != image.spectrum(); ++s)
+	{
+		for (int x = win_size; x < (W - win_size); ++x)
+		{
+			for (int y = win_size; y < (H - win_size); ++y)
+			{
+				make_arr(image.data(x, y ), win_size, tab);
+				std::sort(tab, tab + size);
+
+				tmp(x, y) = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
+				//*(tmp.data()+x+y*W) = image(x, y, 1, s);
+				
+			}
+		}
+
+	}
+	image = tmp;
 }
 	
 void Bitmap::save(std::string ofname)

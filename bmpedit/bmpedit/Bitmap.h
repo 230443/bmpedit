@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <algorithm>
+#include <numeric>
 #include "CImg.h"
 
 typedef unsigned char byte;
@@ -14,6 +15,7 @@ private:
 	long offset;
 	bool is_mono;
 	void set_new_image(cimg_library::CImg<byte>& tmp);
+	void make_arr(byte* p, int win_s, byte tab[]);
 public:
 	Bitmap(const char* const&& filename);
 	~Bitmap();
@@ -28,7 +30,11 @@ public:
 	//shrinking and enlargement
 	void shrink(int k);
 	void enlarge(int k);
-	//filters
+		//filters
+	//Alpha - trimmed mean filter(--alpha)
+	void alpha(int win_size = 1, int d = 2);	//win_size - distance from center pixel
+												//d - number of discarded pixels
+	//contraharmonic mean filter(--cmean).
 
 
 
