@@ -49,32 +49,38 @@ void Bitmap::make_arr(byte* p, int win_s, byte tab[])
 
 void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
 {
-	byte* i = image.begin();
-	byte* t = tmp.begin();
 	int w = W - 1;
-	for (int s = 0; s != image.spectrum(); ++s, 
-											i += offset,
-											t += offset)
+	for (int s = 0; s != image.spectrum(); ++s)									
 	{
-		std::copy(i, (i + W * win_s), t);
-		std::copy(i + offset - W * win_s, (i + offset), t + 0);
-
-		if(win_s==1)
+		if(win_s==1)	//reduce nested loop
 			for (int y = 1; y < H - 1; y++)
 			{
-				tmp(0, y, s) = image(0, y, s);
-				tmp(w, y, s) = image(w, y, s);
-
+				tmp(0, y, s) = tmp(1, y, s);
+				tmp(w, y, s) = tmp(w-1, y, s);
 			}
 		else
 			for (int y = win_s; y < H - win_s; y++)
 			{
 				for (int i = 0; i < win_s; i++)
 				{
-					tmp(0 + i, y, s) = image(0 + i, y, s);
-					tmp(w - i, y, s) = image(w - i, y, s);
+					tmp(0 + i, y, s) = tmp(win_s, y, s);
+					tmp(w - i, y, s) = tmp(w - win_s, y, s);
 				}
 			}
+		byte* i = tmp.begin() + W * win_s + W + offset * s; //last value in the first good row
+		byte* t = i - W;									//value above i
+		byte* tr = tmp.begin() + offset*s;					
+		while (t != tr)
+		{
+			*(--t) = *(--i);
+		}
+		i += (H - 2 - win_s) * W;						//first value in the last good row
+		t = i + W;
+		tr += offset;
+		while (t != tr)
+		{
+			*(t++) = *(i++);
+		}
 	}
 	image = tmp;
 }
