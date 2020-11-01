@@ -7,7 +7,7 @@ Bitmap::Bitmap(const char* const&& filename)
 {
 	offset = W*H;
 	is_mono = true;
-	if (image.spectrum() == 3)
+	if (image.spectrum() == 3)								//check bits per pixel
 	{
 		for (byte* ptr = image.begin(); ptr != (image.begin() + offset); ++ptr)
 		{
@@ -45,6 +45,23 @@ void Bitmap::make_arr(byte* p, int& win_s, byte* tab)
 			*(tab++) = *(p + xw);
 		}
 	}
+}
+
+byte Bitmap::contr(byte* tab, int size, int Q)
+{
+	int sum1 = 0;
+	int sum2 = 0;
+	int i = 0;
+	for (byte* end=tab+size; tab != end; tab++)
+	{
+		i++;
+		int xq = *tab;
+		for (int i = 1; i < Q; i++)
+			xq *= *tab;
+		sum1 += xq;
+		sum2 += (*tab) * xq;
+	}
+	return (byte)(sum2/sum1);
 }
 
 void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
@@ -221,16 +238,16 @@ void Bitmap::enlarge(int k)		//k=2,3,4...
 void Bitmap::alpha(int win_s, int d)
 {
 	d = d / 2;
-	int size = (win_s * 2 + 1) * (win_s * 2 + 1);	//surface of the window
+	int size = (win_s * 2 + 1) * (win_s * 2 + 1);		//surface of the window
 	byte* tab = new byte[size];
-	CImg<byte> tmp(W, H, 1, image.spectrum());	//temporary image
+	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 
 	int w = W - 2 * win_s;
 
-	byte* i = image.begin() + win_s * W + win_s;
-	byte* t = tmp.begin() + win_s * W + win_s;
-	byte* ir = i + w;
-	byte* last = ir + W * (H - win_s * 2 - 1);
+	byte* i = image.data(win_s, win_s);					//iterator on the image
+	byte* t = tmp.data(win_s, win_s);					//iterator on the tmp
+	byte* ir = i + w;									//last in a row
+	byte* last = ir + W * (H - win_s * 2 - 1);			//last in a given color
 
 	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
 	{
@@ -244,11 +261,11 @@ void Bitmap::alpha(int win_s, int d)
 				*t = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
 				i++; t++;
 			}
-			i += win_s * 2;
+			i += win_s * 2;				//go to the next line
 			t += win_s * 2;
 			ir = i + w;
 		}
-		i += win_s * 2 * W;
+		i += win_s * 2 * W;				//go to the next color
 		t += win_s * 2 * W;
 		ir = i + w;
 		last += offset;
@@ -256,21 +273,48 @@ void Bitmap::alpha(int win_s, int d)
 	copy_frame(tmp, win_s);
 }
 
-void Bitmap::cmean(int win_s)
+void Bitmap::cmean(int win_s, int Q)
 {
-	int size = (win_s * 2 + 1) * (win_s * 2 + 1);	//surface of the window
+	int size = (win_s * 2 + 1) * (win_s * 2 + 1);		//surface of the window
 	byte* tab = new byte[size];
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+
+	int w = W - 2 * win_s;								//new width
+
+	byte* i = image.data(win_s, win_s);					//iterator on the image
+	byte* t = tmp.data(win_s, win_s);					//iterator on the tmp
+	byte* ir = i + w;									//last in a row
+	byte* last = ir + W * (H - win_s * 2 - 1);			//last in a given color
+
 	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
 	{
-		for (int x = win_s; x < (W - win_s); ++x)
+		while (i < last)
 		{
-			for (int y = win_s; y < (H - win_s); ++y)
+			while (i < ir)
 			{
-				make_arr(image.data(x, y, s), win_s, tab);
-
+				make_arr(i, win_s, tab);
+				/*{
+					int sum1 = 0;
+					int sum2 = 0;
+					for (int i = 0 ; i<size; i++)
+					{
+						//int xq = tab[i];
+						sum1 += tab[i];
+						sum2 += tab[i] * tab[i];
+					}
+					*t = (sum2 / sum1);
+				}*/
+				*t = contr(tab, size, Q);
+				i++; t++;
 			}
+			i += win_s * 2;				//go to the next line
+			t += win_s * 2;
+			ir = i + w;
 		}
+		i += win_s * 2 * W;				//go to the next color
+		t += win_s * 2 * W;
+		ir = i + w;
+		last += offset;
 	}
 	copy_frame(tmp, win_s);
 }
