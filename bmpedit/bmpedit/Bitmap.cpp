@@ -49,13 +49,11 @@ void Bitmap::make_arr(byte* p, int& win_s, byte* tab)
 
 byte Bitmap::contr(byte* tab, int size, int Q)
 {
-	int sum1 = 0;
-	int sum2 = 0;
-	int i = 0;
+	long double sum1 = 0;
+	long double sum2 = 0;
 	for (byte* end=tab+size; tab != end; tab++)
 	{
-		i++;
-		int xq = *tab;
+		double xq = *tab;
 		for (int i = 1; i < Q; i++)
 			xq *= *tab;
 		sum1 += xq;
@@ -293,17 +291,6 @@ void Bitmap::cmean(int win_s, int Q)
 			while (i < ir)
 			{
 				make_arr(i, win_s, tab);
-				/*{
-					int sum1 = 0;
-					int sum2 = 0;
-					for (int i = 0 ; i<size; i++)
-					{
-						//int xq = tab[i];
-						sum1 += tab[i];
-						sum2 += tab[i] * tab[i];
-					}
-					*t = (sum2 / sum1);
-				}*/
 				*t = contr(tab, size, Q);
 				i++; t++;
 			}

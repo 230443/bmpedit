@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 {
 	string filename;
 	//cin >> filename;
-	filename = "lena_impulse2.bmp";
+	filename = "lena_normal2.bmp";
 	cout << filename<<endl;
 	Bitmap img(filename.c_str());
 	img.image.display();		//for debuging
@@ -17,6 +17,6 @@ int main(int argc, char* argv[])
 	//img.dflip();
 	//img.enlarge(2);
 	//img.alpha();
-	img.cmean(3);
+	img.cmean(2,4);
 	img.image.display();
 }
