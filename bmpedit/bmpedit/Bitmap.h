@@ -10,10 +10,10 @@ class Bitmap
 {
 public:
 	cimg_library::CImg<byte> image;
+	void optimize(cimg_library::CImg<byte>& image);
 private:
 	int H, W;
 	long offset;
-	void optimize(cimg_library::CImg<byte>& image);
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab);
 	byte contr(byte* tab, int size, int Q);
@@ -41,15 +41,15 @@ public:
 	void cmean(int win_s = 1, int Q=2);
 
 	//	(E1)Mean square error(--mse).
-	double mse(const char* const fname);
+	float mse(cimg_library::CImg<byte>& ref);
 	//	(E2)Peak mean square error(--pmse).
-	double pmse(const char* const fname);
+	float pmse(cimg_library::CImg<byte>& ref);
 	//	(E3)Signal to noise ratio(--snr).
-	double snr(const char* const fname);
+	float snr(cimg_library::CImg<byte>& ref);
 	//	(E4)Peak signal to noise ratio(--psnr).
-	double psnr(const char* const fname);
+	float psnr(cimg_library::CImg<byte>& ref);
 	//	(E5)Maximum difference(--md)
-	double md(const char* const fname);
+	float md(cimg_library::CImg<byte>& ref);
 
 
 

@@ -107,7 +107,6 @@ void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
 	 image = tmp;
 }
 
-
 void Bitmap::brightness(int val)
 {
 	byte* ptr = image.begin();
@@ -313,30 +312,53 @@ void Bitmap::cmean(int win_s, int Q)
 	copy_frame(tmp, win_s);
 }
 
-double Bitmap::mse(const char* const fname)
+float Bitmap::mse(cimg_library::CImg<byte>& ref)
 {
-	return 0.0;
+	double sum = 0;
+	byte* i = image.begin();					//iterator on the image
+	byte* r = ref.begin();						//iterator to reference image
+	for (; r < ref.end(); ++i, ++r)
+		sum += (*i - *r) * (*i - *r);
+	return sum/ref.size();
 }
 
-double Bitmap::pmse(const char* const fname)
+float Bitmap::pmse(cimg_library::CImg<byte>& ref)
 {
-	return 0.0;
+	double sum = 0;
+	byte max = 0;
+	byte* i = image.begin();					//iterator on the image
+	byte* r = ref.begin();						//iterator to reference image
+	for (; r < ref.end(); ++i, ++r)
+	{
+		sum += (*i - *r) * (*i - *r);
+		if (max < *r) max = *r;
+	}
+	return (sum / ref.size())/(max*max);
 }
 
-double Bitmap::snr(const char* const fname)
+float Bitmap::snr(cimg_library::CImg<byte>& ref)
 {
-	return 0.0;
+	return 0.0f;
 }
 
-double Bitmap::psnr(const char* const fname)
+float Bitmap::psnr(cimg_library::CImg<byte>& ref)
 {
-	return 0.0;
+
+	return 0.0f;
 }
 
-double Bitmap::md(const char* const fname)
+float Bitmap::md(cimg_library::CImg<byte>& ref)
 {
-	return 0.0;
+	int diff = 0;
+
+	byte* i = image.begin();					//iterator on the image
+	byte* r = ref.begin();						//iterator to reference image
+	for (; r < ref.end(); ++i, ++r)
+		if (diff < std::abs(*i - *r))	diff = std::abs(*i - *r);
+
+	return diff;
 }
+
 	
 void Bitmap::save(std::string ofname)
 {
