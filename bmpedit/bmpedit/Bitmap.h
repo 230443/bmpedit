@@ -13,7 +13,7 @@ public:
 private:
 	int H, W;
 	long offset;
-	bool is_mono;
+	void optimize(cimg_library::CImg<byte>& image);
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab);
 	byte contr(byte* tab, int size, int Q);
@@ -36,11 +36,20 @@ public:
 	//Alpha - trimmed mean filter(--alpha)
 	//win_s - window size - distance from a center pixel
 	//d - number of discarded pixels
-	void alpha(int win_s = 1, int d = 4);
-
-											
+	void alpha(int win_s = 1, int d = 4);									
 	//contraharmonic mean filter(--cmean).
 	void cmean(int win_s = 1, int Q=2);
+
+	//	(E1)Mean square error(--mse).
+	double mse(const char* const fname);
+	//	(E2)Peak mean square error(--pmse).
+	double pmse(const char* const fname);
+	//	(E3)Signal to noise ratio(--snr).
+	double snr(const char* const fname);
+	//	(E4)Peak signal to noise ratio(--psnr).
+	double psnr(const char* const fname);
+	//	(E5)Maximum difference(--md)
+	double md(const char* const fname);
 
 
 

@@ -1,18 +1,28 @@
 #include "Bitmap.h"
-
+#include <iostream>
 using namespace cimg_library;
 
 Bitmap::Bitmap(const char* const&& filename)
 	:image(filename), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
 	offset = W*H;
-	is_mono = true;
+	optimize(image);
+}
+Bitmap::~Bitmap()
+{
+	~image;
+}
+
+void Bitmap::optimize(cimg_library::CImg<byte>& image)
+{
+	bool is_mono = true;
 	if (image.spectrum() == 3)								//check bits per pixel
 	{
-		for (byte* ptr = image.begin(); ptr != (image.begin() + offset); ++ptr)
+		for (byte* ptr = image.begin(); ptr < (image.begin() + offset); ++ptr)
 		{
 			if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
 			{
+				std::cout << (int)(ptr - image.begin()) << std::endl;
 				is_mono = false;
 				break;
 			}
@@ -24,10 +34,7 @@ Bitmap::Bitmap(const char* const&& filename)
 		image = tmp;
 	}
 }
-Bitmap::~Bitmap()
-{
-	~image;
-}
+
 void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
 {
 	image = tmp;
@@ -97,7 +104,7 @@ void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
 			*(t++) = *(i++);
 		}
 	}
-	image = tmp;
+	 image = tmp;
 }
 
 
@@ -304,6 +311,31 @@ void Bitmap::cmean(int win_s, int Q)
 		last += offset;
 	}
 	copy_frame(tmp, win_s);
+}
+
+double Bitmap::mse(const char* const fname)
+{
+	return 0.0;
+}
+
+double Bitmap::pmse(const char* const fname)
+{
+	return 0.0;
+}
+
+double Bitmap::snr(const char* const fname)
+{
+	return 0.0;
+}
+
+double Bitmap::psnr(const char* const fname)
+{
+	return 0.0;
+}
+
+double Bitmap::md(const char* const fname)
+{
+	return 0.0;
 }
 	
 void Bitmap::save(std::string ofname)
