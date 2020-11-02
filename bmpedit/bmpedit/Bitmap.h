@@ -10,6 +10,7 @@ class Bitmap
 {
 public:
 	cimg_library::CImg<byte> image;
+	//make grayscale if possible
 	void optimize(cimg_library::CImg<byte>& image);
 private:
 	int H, W;
@@ -34,22 +35,18 @@ public:
 	void enlarge(int k);
 
 	//filters
-	//Alpha - trimmed mean filter(--alpha)
+	//Alpha - trimmed mean filter
 		//win_s - window size - distance from a center pixel
 		//d - number of discarded pixels
 	void alpha( int d = 4, int win_s = 1);									
-	//contraharmonic mean filter(--cmean).
+		//contraharmonic mean filter
 	void cmean(int Q=2, int win_s = 1);
 
-	//	(E1)Mean square error(--mse).
+	//	Similarity measures
 	float mse(cimg_library::CImg<byte>& ref);
-	//	(E2)Peak mean square error(--pmse).
 	float pmse(cimg_library::CImg<byte>& ref);
-	//	(E3)Signal to noise ratio(--snr).
 	float snr(cimg_library::CImg<byte>& ref);
-	//	(E4)Peak signal to noise ratio(--psnr).
 	float psnr(cimg_library::CImg<byte>& ref);
-	//	(E5)Maximum difference(--md)
 	float md(cimg_library::CImg<byte>& ref);
 
 
