@@ -21,7 +21,7 @@ void Bitmap::optimize(cimg_library::CImg<byte>& image)
 	{
 		for (byte* ptr = image.begin(); ptr < (image.begin() + offset); ++ptr)
 		{
-			if ((*ptr == *(ptr + offset)) && *ptr == *(ptr + offset * 2))
+			if (*ptr != *(ptr + offset) || *ptr != *(ptr + offset * 2))
 			{
 				std::cout << (int)(ptr - image.begin()) << std::endl;
 				is_mono = false;

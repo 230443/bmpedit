@@ -8,12 +8,18 @@ void show_usage(string name)
 {
 	std::cerr << "Usage: " << name << " infile [-r ref] [options] [-o outfile]"
 		<< "Options:\n"
-		<< "--brightness [val], --contrast [k], --negative, --shrink [k], --enlarge [k], --alpha [d,filter_size], --cmean[Q,filter_size]\n"
+		<< "--brightness [val], --contrast [a], --negative, --shrink [k], --enlarge [k], --alpha [d,filter_size], --cmean[Q,filter_size]\n"
 		<< "--mse, --pmse, --snr, --psnr, --md\n"
-		<< "ref \t reference image for similarity measurements"
+		<< "ref - reference image for similarity measurements\n"
+		<< "a == (0,1) - decrease contrast\n a == (1,inf) - increase contrast\n"
+		<< "filter_size - distance from center pixel"
 		<< endl;
 }
-
+void wrong_value(string name)
+{
+	std::cerr << "Value of " << name << " not specified correctly\n";
+	show_usage("bmpedit");
+}
 
 
 
@@ -25,8 +31,10 @@ int main(int argc, char* argv[])
 	}
 	string arg = argv[1];
 	Bitmap img(arg.c_str());
+	img.image.display();
+
 	cimg_library::CImg<byte>ref;
-	
+	bool ref_avaible = false;
 
 	for (int i = 2; i < argc; ++i)
 	{
@@ -37,22 +45,40 @@ int main(int argc, char* argv[])
 		}
 		else if (arg == "-r")
 		{
-			cimg_library::CImg<byte> tmp(argv[++i]);
-			ref = tmp;
+			ref.assign(argv[++i]);
 			img.optimize(ref);
+			ref_avaible = true;
 			ref.display();
-			img.image.display();
 			continue;
 		}
 		else if (arg == "--brightness")
 		{
-			img.brightness(atoi(argv[++i]));
+			int k = atoi(argv[++i]);
+			if (k)
+			{
+				img.brightness(k);
+				continue;
+			}
+			else
+			{
+				wrong_value(arg);
+				return 1;
+			}
 			continue;
 		}
 		else if (arg == "--constrast")
 		{
-			img.contrast(atof(argv[++i]));
-			continue;
+			int k = atof(argv[++i]);
+			if (k > 0)
+			{
+				img.contrast(k);
+				continue;
+			}
+			else
+			{
+				wrong_value(arg);
+				return 1;
+			}
 		}
 		else if (arg == "--negative")
 		{
@@ -76,32 +102,117 @@ int main(int argc, char* argv[])
 		}
 		else if (arg == "--shrink")
 		{
-			img.shrink(atoi(argv[++i]));
-			continue;
+			int k = atoi(argv[++i]);
+			if (k)
+			{
+				img.shrink(k);
+				continue;
+			}
+			else
+			{
+				wrong_value(arg);
+				return 1;
+			}
 		}
 		else if (arg == "--enlarge")
 		{
-			img.enlarge(atoi(argv[++i]));
-			continue;
+			int k = atoi(argv[++i]);
+			if (k)
+			{
+				img.enlarge(k);
+				continue;
+			}
+			else
+			{
+				wrong_value(arg);
+				return 1;
+			}
 		}
 		else if (arg == "--alpha")
 		{
-			img.alpha(atoi(argv[++i]),atoi(argv[++i]));
-			continue;
+			if (argc == i + 1 || *argv[i + 1] == '-')
+			{
+				img.alpha();
+				continue;
+			}
+			else
+			{
+				int d = atoi(argv[++i]);
+				if (argc == i + 1 || *argv[i + 1] == '-')
+				{
+					img.alpha(d);
+					continue;
+				}
+				else
+				{
+					int win_s = atoi(argv[++i]);
+					img.alpha(d, win_s);
+					continue;
+				}
+			}
 		}
 		else if (arg == "--cmean")
 		{
-			img.cmean(atoi(argv[++i]), atoi(argv[++i]));
-			continue;
+			int Q = atoi(argv[++i]);
+			if (argc == i + 1 || *argv[i + 1] == '-')
+			{
+				img.cmean(Q);
+				continue;
+			}
+			else
+			{
+				int win_s = atoi(argv[++i]);
+				img.alpha(Q, win_s);
+				continue;
+			}
 		}
-		else if (arg == "--mse")
+		else if (ref_avaible)
 		{
-			img.mse(ref);
-			continue;
+			if (arg == "--mse")
+			{
+				img.mse(ref);
+				continue;
+			}
+			else if (arg == "--pmse")
+			{
+				img.mse(ref);
+				continue;
+			}
+			else if (arg == "--sne")
+			{
+				img.mse(ref);
+				continue;
+			}
+			else if (arg == "--psnr")
+			{
+				img.mse(ref);
+				continue;
+			}
+			else if (arg == "--md")
+			{
+				img.mse(ref);
+				continue;
+			}
 		}
-
-	}/*
-	
+		else if (arg == "-o")
+		{
+			string ofname = argv[++i];
+			if (!ofname.empty())
+				img.save(ofname.c_str());
+			else
+			{
+				wrong_value(arg);
+				return 1;
+			}
+		}
+		else
+		{
+			cout << "Command not found or reference image not specified" << endl;
+			show_usage(argv[0]);
+			return 1;
+		}
+	}
+	img.image.display();/*
 
 
 
