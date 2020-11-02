@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <algorithm>
-#include <numeric>
+#include <cmath>
 #include "CImg.h"
 
 typedef unsigned char byte;
@@ -30,15 +30,16 @@ public:
 	void vflip();
 	void dflip();
 	//shrinking and enlargement
-	void shrink(int k);
+	void shrink(int k);			
 	void enlarge(int k);
-		//filters
+
+	//filters
 	//Alpha - trimmed mean filter(--alpha)
-	//win_s - window size - distance from a center pixel
-	//d - number of discarded pixels
-	void alpha(int win_s = 1, int d = 4);									
+		//win_s - window size - distance from a center pixel
+		//d - number of discarded pixels
+	void alpha( int d = 4, int win_s = 1);									
 	//contraharmonic mean filter(--cmean).
-	void cmean(int win_s = 1, int Q=2);
+	void cmean(int Q=2, int win_s = 1);
 
 	//	(E1)Mean square error(--mse).
 	float mse(cimg_library::CImg<byte>& ref);

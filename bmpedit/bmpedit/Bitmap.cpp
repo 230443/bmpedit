@@ -16,11 +16,12 @@ Bitmap::~Bitmap()
 void Bitmap::optimize(cimg_library::CImg<byte>& image)
 {
 	bool is_mono = true;
+	unsigned int offset = image.height()* image.width();
 	if (image.spectrum() == 3)								//check bits per pixel
 	{
 		for (byte* ptr = image.begin(); ptr < (image.begin() + offset); ++ptr)
 		{
-			if (*ptr == *(ptr + offset) == *(ptr + offset * 2))
+			if ((*ptr == *(ptr + offset)) && *ptr == *(ptr + offset * 2))
 			{
 				std::cout << (int)(ptr - image.begin()) << std::endl;
 				is_mono = false;
@@ -155,27 +156,35 @@ void Bitmap::negative()
 void Bitmap::vflip()
 {
 	int h = H - 1;
-	for (int x = 0; x != W; ++x)
-	{
-		for (int y = 0; y != H/2; ++y)
-		{
 
-				std::swap(image(x, y, 0), image(x, (h - y), 0));
-				std::swap(image(x, y, 1), image(x, (h - y), 1));
-				std::swap(image(x, y, 2), image(x, (h - y), 2));
+	for (int s = 0; s != image.spectrum(); ++s)
+	{
+
+		for (int x = 0; x != W; ++x)
+		{
+			for (int y = 0; y != H / 2; ++y)
+			{
+				std::swap(image(x, y, s), image(x, (h - y), s));
+			}
 		}
 	}
 }
 void Bitmap::hflip()
 {
 	int w = W - 1;
-	for (int x = 0; x != W/2; ++x)
+	byte* p;
+	byte* r;
+
+	for (int s = 0; s != image.spectrum(); ++s)
 	{
 		for (int y = 0; y != H; ++y)
 		{
-			std::swap(image(x, y, 0), image((w - x), y, 0));
-			std::swap(image(x, y, 1), image((w - x), y, 1));
-			std::swap(image(x, y, 2), image((w - x), y, 2));
+			p = image.data(0, y, s);
+			r = image.data(w, y, s);
+			while (p < r)
+			{
+				std::swap(*p++, *r--);
+			}
 		}
 	}
 }
@@ -246,7 +255,9 @@ void Bitmap::alpha(int win_s, int d)
 	byte* tab = new byte[size];
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 
-	int w = W - 2 * win_s;
+	int dwin_s = 2 * win_s;
+	int w = W - dwin_s;
+	
 
 	byte* i = image.data(win_s, win_s);					//iterator on the image
 	byte* t = tmp.data(win_s, win_s);					//iterator on the tmp
@@ -262,15 +273,18 @@ void Bitmap::alpha(int win_s, int d)
 				make_arr(i, win_s, tab);
 				std::sort(tab, tab + size);
 
-				*t = std::accumulate(tab + d, tab + size - d, 0) / (size - 2 * d);
+				int sum = 0;
+				for (int i = d; i < size - d; i++)
+					sum += tab[i];
+				*t = sum / (size - 2 * d);
 				i++; t++;
 			}
-			i += win_s * 2;				//go to the next line
-			t += win_s * 2;
+			i += dwin_s;				//go to the next line
+			t += dwin_s;
 			ir = i + w;
 		}
-		i += win_s * 2 * W;				//go to the next color
-		t += win_s * 2 * W;
+		i += dwin_s * W;				//go to the next color
+		t += dwin_s * W;
 		ir = i + w;
 		last += offset;
 	}
@@ -283,7 +297,8 @@ void Bitmap::cmean(int win_s, int Q)
 	byte* tab = new byte[size];
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 
-	int w = W - 2 * win_s;								//new width
+	int dwin_s = 2 * win_s;
+	int w = W - dwin_s;								//new width
 
 	byte* i = image.data(win_s, win_s);					//iterator on the image
 	byte* t = tmp.data(win_s, win_s);					//iterator on the tmp
@@ -300,12 +315,12 @@ void Bitmap::cmean(int win_s, int Q)
 				*t = contr(tab, size, Q);
 				i++; t++;
 			}
-			i += win_s * 2;				//go to the next line
-			t += win_s * 2;
+			i += dwin_s;				//go to the next line
+			t += dwin_s;
 			ir = i + w;
 		}
-		i += win_s * 2 * W;				//go to the next color
-		t += win_s * 2 * W;
+		i += dwin_s * W;				//go to the next color
+		t += dwin_s * W;
 		ir = i + w;
 		last += offset;
 	}
@@ -333,18 +348,35 @@ float Bitmap::pmse(cimg_library::CImg<byte>& ref)
 		sum += (*i - *r) * (*i - *r);
 		if (max < *r) max = *r;
 	}
-	return (sum / ref.size())/(max*max);
+	return (sum / ref.size()) / (max * max);
 }
 
 float Bitmap::snr(cimg_library::CImg<byte>& ref)
 {
-	return 0.0f;
+	double sum = 0;
+	double sumr = 0;
+	byte* i = image.begin();					//iterator on the image
+	byte* r = ref.begin();						//iterator to reference image
+	for (; r < ref.end(); ++i, ++r)
+	{
+		sum += (*i - *r) * (*i - *r);
+		sumr += (*r) * (*r);
+	}
+	return 10 * std::log10(sumr / sum);
 }
 
 float Bitmap::psnr(cimg_library::CImg<byte>& ref)
 {
-
-	return 0.0f;
+	double sum = 0;
+	byte max = 0;
+	byte* i = image.begin();					//iterator on the image
+	byte* r = ref.begin();						//iterator to reference image
+	for (; r < ref.end(); ++i, ++r)
+	{
+		sum += (*i - *r) * (*i - *r);
+		if (max < *r) max = *r;
+	}
+	return 10 * std::log10((max * max) / (sum/ref.size()));
 }
 
 float Bitmap::md(cimg_library::CImg<byte>& ref)
