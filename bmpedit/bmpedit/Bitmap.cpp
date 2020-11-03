@@ -249,7 +249,7 @@ void Bitmap::enlarge(int k)		//k=2,3,4...
 	set_new_image(tmp);
 }
 
-void Bitmap::alpha(int win_s, int d)
+void Bitmap::alpha(int d, int win_s)
 {
 	d = d / 2;
 	int size = (win_s * 2 + 1) * (win_s * 2 + 1);		//surface of the window
@@ -290,9 +290,10 @@ void Bitmap::alpha(int win_s, int d)
 		last += offset;
 	}
 	copy_frame(tmp, win_s);
+    delete[] tab;
 }
 
-void Bitmap::cmean(int win_s, int Q)
+void Bitmap::cmean(int Q, int win_s)
 {
 	int size = (win_s * 2 + 1) * (win_s * 2 + 1);		//surface of the window
 	byte* tab = new byte[size];
@@ -326,6 +327,7 @@ void Bitmap::cmean(int win_s, int Q)
 		last += offset;
 	}
 	copy_frame(tmp, win_s);
+	delete[] tab;
 }
 
 float Bitmap::mse(cimg_library::CImg<byte>& ref)

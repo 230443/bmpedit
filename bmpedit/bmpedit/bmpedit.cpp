@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 	}
 	string arg = argv[1];
 	Bitmap img(arg.c_str());
-	//img.image.display();
+	img.image.display("Before",false,0,true);
 
 	cimg_library::CImg<byte>ref;
 	bool ref_avaible = false;
@@ -238,5 +238,5 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 	}
-	//img.image.display();
+    img.image.display("After",false,0,true);
 }
