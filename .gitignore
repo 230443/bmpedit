@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Clion
+bmpedit/bmpedit/cmake-build-debug
+bmpedit/bmpedit/.idea
+
 # User-specific files
 *.rsuser
 *.suo
