@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
 				}
 				continue;
 			}
-			else if (arg == "--constrast")
+			else if (arg == "--contrast")
 			{
-				int k = atof(argv[++i]);
+				float k = atof(argv[++i]);
 				if (k > 0)
 				{
 					img.contrast(k);
@@ -207,27 +207,27 @@ int main(int argc, char* argv[])
 		{
 			if (arg == "--mse")
 			{
-				cout << "MSE: " << img.mse(ref) << endl;
+				cout << "MSE\t" << img.mse(ref) << endl;
 				continue;
 			}
 			else if (arg == "--pmse")
 			{
-				cout << "PMSE: " << img.pmse(ref) << endl;
+				cout << "PMSE\t" << img.pmse(ref) << endl;
 				continue;
 			}
 			else if (arg == "--snr")
 			{
-				cout << "SNR: " << img.snr(ref) << " dB" << endl;
+				cout << "SNR\t" << img.snr(ref) << " dB" << endl;
 				continue;
 			}
 			else if (arg == "--psnr")
 			{
-				cout << "PSNR: " << img.psnr(ref) << " dB" << endl;
+				cout << "PSNR\t" << img.psnr(ref) << " dB" << endl;
 				continue;
 			}
 			else if (arg == "--md")
 			{
-				cout << "MD: " << img.md(ref) << endl;
+				cout << "MD\t" << img.md(ref) << endl;
 				continue;
 			}
 		}

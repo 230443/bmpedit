@@ -43,7 +43,7 @@ void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
 	W = image.width();
 }
 
-void Bitmap::make_arr(byte* p, int& win_s, byte* tab)
+void Bitmap::make_arr(byte* p, int& win_s, byte* tab) const
 {
 	byte* pr = p + win_s * W; //end off loop
 	for (p -= win_s * W; p <= pr; p += W)
@@ -115,16 +115,31 @@ void Bitmap::brightness(int val)
 	{
 		for (; ptr != image.end(); ++ptr)
 		{
-			if (*ptr > 0)
+			if (*ptr > -val)
 				*ptr += val;
+            else
+            {
+                //std::cout << (int) (*ptr) << std::endl;
+                *ptr=0;
+            }
 		}
+
 	}
 	else 
 	{
 		for (; ptr != image.end(); ++ptr)
 		{
-			if (*ptr < 255)
-				*ptr += val;
+			if (*ptr < 255-val)
+			{
+                std::cout << (int) (*ptr) << "*"<<std::endl;
+                *ptr += val;
+            }
+			else
+            {
+                std::cout << (int) (*ptr) << std::endl;
+			   *ptr=255;
+            }
+
 		}
 	}
 
@@ -330,6 +345,8 @@ void Bitmap::cmean(int Q, int win_s)
 	delete[] tab;
 }
 
+
+//========================================
 float Bitmap::mse(cimg_library::CImg<byte>& ref)
 {
 	double sum = 0;
