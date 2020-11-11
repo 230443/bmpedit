@@ -55,7 +55,16 @@ void Bitmap::make_arr(byte* p, int& win_s, byte* tab) const
 	}
 }
 
-byte Bitmap::contr(byte* tab, int size, int Q)
+byte Bitmap::alpha(byte* tab, int size, int d)
+{
+	std::sort(tab, tab + size);
+	int sum = 0;
+	for (int i = d; i < size - d; i++)
+		sum += tab[i];
+	return sum / (size - 2 * d);
+}
+
+byte Bitmap::contra(byte* tab, int size, int Q)
 {
 	long double sum1 = 0;
 	long double sum2 = 0;
@@ -110,38 +119,26 @@ void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
 
 void Bitmap::brightness(int val)
 {
-	byte* ptr = image.begin();
-	if (val < 0)
-	{
-		for (; ptr != image.end(); ++ptr)
-		{
-			if (*ptr > -val)
-				*ptr += val;
-            else
-            {
-                //std::cout << (int) (*ptr) << std::endl;
-                *ptr=0;
-            }
-		}
-
-	}
-	else 
-	{
-		for (; ptr != image.end(); ++ptr)
-		{
-			if (*ptr < 255-val)
-			{
-                std::cout << (int) (*ptr) << "*"<<std::endl;
+    byte *ptr = image.begin();
+    if (val < 0)
+    {
+        for (; ptr != image.end(); ++ptr)
+        {
+            if (*ptr > -val)
                 *ptr += val;
-            }
-			else
-            {
-                std::cout << (int) (*ptr) << std::endl;
-			   *ptr=255;
-            }
-
-		}
-	}
+            else
+                *ptr = 0;
+        }
+    } else
+    {
+        for (; ptr != image.end(); ++ptr)
+        {
+            if (*ptr < 255 - val)
+                *ptr += val;
+            else
+                *ptr = 255;
+        }
+    }
 
 }
 void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point of the spectrum
@@ -163,10 +160,8 @@ void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point 
 }
 void Bitmap::negative()
 {
-	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
-	{
-		*ptr = ~*ptr;
-	}
+	for (byte & ptr : image)
+		ptr = ~ptr;
 }
 void Bitmap::vflip()
 {
@@ -174,7 +169,6 @@ void Bitmap::vflip()
 
 	for (int s = 0; s != image.spectrum(); ++s)
 	{
-
 		for (int x = 0; x != W; ++x)
 		{
 			for (int y = 0; y != H / 2; ++y)
@@ -264,6 +258,7 @@ void Bitmap::enlarge(int k)		//k=2,3,4...
 	set_new_image(tmp);
 }
 
+
 void Bitmap::alpha(int d, int win_s)
 {
 	d = d / 2;
@@ -329,7 +324,44 @@ void Bitmap::cmean(int Q, int win_s)
 			while (i < ir)
 			{
 				make_arr(i, win_s, tab);
-				*t = contr(tab, size, Q);
+				*t = contra(tab, size, Q);
+				i++; t++;
+			}
+			i += dwin_s;				//go to the next line
+			t += dwin_s;
+			ir = i + w;
+		}
+		i += dwin_s * W;				//go to the next color
+		t += dwin_s * W;
+		ir = i + w;
+		last += offset;
+	}
+	copy_frame(tmp, win_s);
+	delete[] tab;
+}
+
+void Bitmap::filter(int n, int win_s, func method)
+{
+	int size = (win_s * 2 + 1) * (win_s * 2 + 1);		//surface of the window
+	byte* tab = new byte[size];
+	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+
+	int dwin_s = 2 * win_s;
+	int w = W - dwin_s;								//new width
+
+	byte* i = image.data(win_s, win_s);					//iterator on the image
+	byte* t = tmp.data(win_s, win_s);					//iterator on the tmp
+	byte* ir = i + w;									//last in a row
+	byte* last = ir + W * (H - win_s * 2 - 1);			//last in a given color
+
+	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
+	{
+		while (i < last)
+		{
+			while (i < ir)
+			{
+				make_arr(i, win_s, tab);
+				*t = method(tab, size, n);
 				i++; t++;
 			}
 			i += dwin_s;				//go to the next line
@@ -347,7 +379,7 @@ void Bitmap::cmean(int Q, int win_s)
 
 
 //========================================
-float Bitmap::mse(cimg_library::CImg<byte>& ref)
+double Bitmap::mse(cimg_library::CImg<byte>& ref)
 {
 	double sum = 0;
 	byte* i = image.begin();					//iterator on the image
@@ -357,7 +389,7 @@ float Bitmap::mse(cimg_library::CImg<byte>& ref)
 	return sum/ref.size();
 }
 
-float Bitmap::pmse(cimg_library::CImg<byte>& ref)
+double Bitmap::pmse(cimg_library::CImg<byte>& ref)
 {
 	double sum = 0;
 	byte max = 0;
@@ -371,7 +403,7 @@ float Bitmap::pmse(cimg_library::CImg<byte>& ref)
 	return (sum / ref.size()) / (max * max);
 }
 
-float Bitmap::snr(cimg_library::CImg<byte>& ref)
+double Bitmap::snr(cimg_library::CImg<byte>& ref)
 {
 	double sum = 0;
 	double sumr = 0;
@@ -385,7 +417,7 @@ float Bitmap::snr(cimg_library::CImg<byte>& ref)
 	return 10 * std::log10(sumr / sum);
 }
 
-float Bitmap::psnr(cimg_library::CImg<byte>& ref)
+double Bitmap::psnr(cimg_library::CImg<byte>& ref)
 {
 	double sum = 0;
 	byte max = 0;
@@ -399,7 +431,7 @@ float Bitmap::psnr(cimg_library::CImg<byte>& ref)
 	return 10 * std::log10((max * max) / (sum/ref.size()));
 }
 
-float Bitmap::md(cimg_library::CImg<byte>& ref)
+double Bitmap::md(cimg_library::CImg<byte>& ref)
 {
 	int diff = 0;
 
@@ -411,7 +443,7 @@ float Bitmap::md(cimg_library::CImg<byte>& ref)
 }
 
 	
-void Bitmap::save(std::string ofname)
+void Bitmap::save(const std::string& ofname) const
 {
 	image.save(ofname.c_str());
 }
