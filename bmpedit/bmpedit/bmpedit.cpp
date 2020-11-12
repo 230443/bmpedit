@@ -22,18 +22,59 @@ std::cerr << "Usage: bmpedit	infile [-r ref] [options|similarity measures] [-o o
 		<< "	--mse, --pmse, --snr, --psnr, --md" << endl
 		<< endl;
 }
-void wrong_value(string name)
+void wrong_value(const string& name)
 {
-	std::cerr << "Value of " << name << " not specified correctly\n";
-	show_usage();
+	std::cerr << "Value of \"" << name << "\" not specified correctly. ";
 }
-
-
+int is_not_int(const string& arg, string&& val)
+{
+    cout<< "log_try_catch: " << arg <<" " << val << endl;
+	try {
+		int k = stoi(val);
+	}
+	catch (std::invalid_argument& e) {
+		wrong_value(arg);
+		cerr << "Invalid argument: " << val;
+		return 50;
+	}
+	catch (std::out_of_range& e) {
+		wrong_value(arg);
+		cerr << "Out of range: " << val;
+		return 1;
+	}
+	return 0;
+}
+int is_not_float(const string& arg, string&& val)
+{
+    cout<< "log_try_catch: " << arg <<" " << val << endl;
+	try {
+		float k = stof(val);
+	}
+	catch (std::invalid_argument& e) {
+		wrong_value(arg);
+		cerr << "Invalid argument: " << val ;
+		return 1;
+	}
+	catch (std::out_of_range& e) {
+		wrong_value(arg);
+        cerr << "Out of range: " << val;
+		return 1;
+	}
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
-	if (argc < 3) {
-		show_usage();
+	if (argc < 3)
+	{
+
+		if (argc > 1)
+			if (((string)argv[1] == "-h") || ((string)argv[1] == "--help"))
+			{
+				show_usage();
+				return 0;
+			}
+		std::cerr << "Not enough arguments. Check: bmpedit --help" << endl;
 		return 1;
 	}
 	string arg = argv[1];
@@ -41,83 +82,73 @@ int main(int argc, char* argv[])
 	img.image.display("Before",false,0,true);
 
 	cimg_library::CImg<byte>ref;
-	bool ref_avaible = false;
+	bool ref_available = false;
 
 	for (int i = 2; i < argc; ++i)
 	{
+
 		string arg = argv[i];
-		//cout << endl << arg << endl;
+        cout<<"log_argv[i]_loop: " <<arg<<" "<< i<<"\n";
+
 		if ((arg == "-h") || (arg == "--help")) {
 			show_usage();
 			return 0;
 		}
-		// must have an argument
-		if (i + 1 < argc)
+
+        if ((i + 2) < argc)        // must have 2 arguments
+        {
+            if (arg == "--alpha")
+            {
+                //cout << endl << "alpha" << endl;
+                if (is_not_int(arg, argv[i + 1])) return 1;
+                if (is_not_int(arg, argv[i + 2])) return 1;
+                img.alpha(atoi(argv[i + 1]), atoi(argv[i + 2]));
+                i += 2;
+                continue;
+            }
+            else if (arg == "--cmean")
+            {
+                cout << endl << "cmean" << endl;
+                if (is_not_int(arg, argv[i + 1])) return 1;
+                if (is_not_int(arg, argv[i + 2])) return 1;
+                img.cmean(atoi(argv[i + 1]), atoi(argv[i + 2]));
+                i += 2;
+                continue;
+            }
+        }
+		else if (i + 1 < argc)      // must have 1 argument
 		{
 			if (arg == "-r")
 			{
 				ref.assign(argv[++i]);
 				img.optimize(ref);
-				ref_avaible = true;
+				ref_available = true;
 				//ref.display();
 				continue;
 			}
 			else if (arg == "--brightness")
 			{
-				int k = atoi(argv[++i]);
-				if (k)
-				{
-					img.brightness(k);
-					continue;
-				}
-				else
-				{
-					wrong_value(arg);
-					return 1;
-				}
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.brightness(atoi(argv[++i]));
 				continue;
 			}
 			else if (arg == "--contrast")
 			{
-				float k = atof(argv[++i]);
-				if (k > 0)
-				{
-					img.contrast(k);
-					continue;
-				}
-				else
-				{
-					wrong_value(arg);
-					return 1;
-				}
+				if (is_not_float(arg, argv[i + 1])) return 1;
+				img.contrast(atof(argv[++i]));
+				continue;
 			}
 			else if (arg == "--shrink")
 			{
-				int k = atoi(argv[++i]);
-				if (k)
-				{
-					img.shrink(k);
-					continue;
-				}
-				else
-				{
-					wrong_value(arg);
-					return 1;
-				}
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.brightness(atoi(argv[++i]));
+				continue;
 			}
 			else if (arg == "--enlarge")
 			{
-				int k = atoi(argv[++i]);
-				if (k)
-				{
-					img.enlarge(k);
-					continue;
-				}
-				else
-				{
-					wrong_value(arg);
-					return 1;
-				}
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.brightness(atoi(argv[++i]));
+				continue;
 			}
 			else if (arg == "-o")
 			{
@@ -128,58 +159,6 @@ int main(int argc, char* argv[])
 				{
 					wrong_value(arg);
 					return 1;
-				}
-			}
-			else if ((i + 2) < argc)
-			{
-				if (arg == "--alpha")
-				{
-					if (*argv[i + 1] == '-')
-					{
-						img.alpha();
-						continue;
-					}
-					else if ((i + 2) < argc);
-					{
-						int d = atoi(argv[++i]);
-						arg = argv[i + 1];
-						if (arg.find('-') != string::npos)
-						{
-							img.alpha(d);
-							continue;
-						}
-						else
-						{
-							int win_s = atoi(argv[++i]);
-							img.alpha(d, win_s);
-							continue;
-						}
-					}
-				}
-				else if (arg == "--cmean")
-				{
-
-					if (*argv[i + 1] == '-')
-					{
-						img.cmean();
-						continue;
-					}
-					else if (i + 2 < argc)
-					{
-						int d = atoi(argv[++i]);
-						arg = argv[i + 1];
-						if (*argv[i + 1] == '-')
-						{
-							img.cmean(d);
-							continue;
-						}
-						else
-						{
-							int win_s = atoi(argv[++i]);
-							img.cmean(d, win_s);
-							continue;
-						}
-					}
 				}
 			}
 		}
@@ -203,8 +182,8 @@ int main(int argc, char* argv[])
 			img.dflip();
 			continue;
 		}
-		if (ref_avaible)
-		{
+		else if (ref_available)
+		{/*
 			if (arg == "--mse")
 			{
 				cout << "MSE\t" << img.mse(ref) << endl;
@@ -229,12 +208,37 @@ int main(int argc, char* argv[])
 			{
 				cout << "MD\t" << img.md(ref) << endl;
 				continue;
-			}
+			}*/
+			//==================================================================
+            if (arg == "--mse")
+            {
+                cout << "MSE\t"     << img.mse(ref)     << endl;
+                continue;
+            }
+            else if (arg == "--pmse")
+            {
+                cout << "PMSE\t"    << img.pmse(ref)    << endl;
+                continue;
+            }
+            else if (arg == "--snr")
+            {
+                cout << "SNR\t"     << img.snr(ref)     << endl;
+                continue;
+            }
+            else if (arg == "--psnr")
+            {
+                cout << "PSNR\t"    << img.psnr(ref)    << endl;
+                continue;
+            }
+            else if (arg == "--md")
+            {
+                cout << "MD\t"      << img.md(ref)      << endl;
+                continue;
+            }
 		}
 		else
 		{
-			cout << "Command not found or value not specified" << endl;
-			show_usage();
+			cout <<"i:" << i << " arg:"<<arg <<" Command not found or value not specified" << endl;
 			return 1;
 		}
 	}
