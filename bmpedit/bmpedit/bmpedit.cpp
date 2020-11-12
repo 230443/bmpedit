@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
                 continue;
             }
         }
-		else if (i + 1 < argc)      // must have 1 argument
+		if (i + 1 < argc)      // must have 1 argument
 		{
 			if (arg == "-r")
 			{
@@ -160,6 +160,7 @@ int main(int argc, char* argv[])
 					wrong_value(arg);
 					return 1;
 				}
+				continue;
 			}
 		}
 		else if (arg == "--negative")
@@ -182,7 +183,7 @@ int main(int argc, char* argv[])
 			img.dflip();
 			continue;
 		}
-		else if (ref_available)
+		if (ref_available)
 		{/*
 			if (arg == "--mse")
 			{
