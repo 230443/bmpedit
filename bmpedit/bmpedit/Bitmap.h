@@ -5,7 +5,7 @@
 #include "CImg.h"
 
 typedef unsigned char byte;
-
+typedef byte(*func)(byte* tab, int size, int parameter);
 class Bitmap 
 {
 public:
@@ -17,7 +17,8 @@ private:
 	long offset;
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
-	static byte contr(byte* tab, int size, int Q);
+	static byte alpha(byte* tab, int size, int d);
+	static byte contra(byte* tab, int size, int Q);
 	void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
 public:
 	Bitmap(const char* const&& filename);
@@ -38,22 +39,23 @@ public:
 	//Alpha - trimmed mean filter
 		//win_s - window size - distance from a center pixel
 		//d - number of discarded pixels
-	void alpha( int d = 4, int win_s = 1);									
-		//contraharmonic mean filter
+	void alpha( int d = 4, int win_s = 1);
+		//contra-harmonic mean filter
 	void cmean(int Q=2, int win_s = 1);
+	void filter(int d, int win_s, func method); //pass d/2 for the alpha filter
 
 	//	Similarity measures
-	float mse(cimg_library::CImg<byte>& ref);
-	float pmse(cimg_library::CImg<byte>& ref);
-	float snr(cimg_library::CImg<byte>& ref);
-	float psnr(cimg_library::CImg<byte>& ref);
-	float md(cimg_library::CImg<byte>& ref);
+    double mse(cimg_library::CImg<byte>& ref);
+	double pmse(cimg_library::CImg<byte>& ref);
+	double snr(cimg_library::CImg<byte>& ref);
+	double psnr(cimg_library::CImg<byte>& ref);
+	double md(cimg_library::CImg<byte>& ref);
 
 
 
 
 
 
-	void save(std::string ofname);	//method overloaded, save(const char* const)
+	void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
 };
 
