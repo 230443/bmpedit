@@ -141,13 +141,13 @@ int main(int argc, char* argv[])
 			else if (arg == "--shrink")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
-				img.brightness(atoi(argv[++i]));
+				img.shrink(atoi(argv[++i]));
 				continue;
 			}
 			else if (arg == "--enlarge")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
-				img.brightness(atoi(argv[++i]));
+				img.enlarge(atoi(argv[++i]));
 				continue;
 			}
 			else if (arg == "-o")
@@ -163,22 +163,22 @@ int main(int argc, char* argv[])
 				continue;
 			}
 		}
-		else if (arg == "--negative")
+		if (arg == "--negative")
 		{
 			img.negative();
 			continue;
 		}
-		else if (arg == "--hflip")
+		if (arg == "--hflip")
 		{
 			img.hflip();
 			continue;
 		}
-		else if (arg == "--vflip")
+		if (arg == "--vflip")
 		{
 			img.vflip();
 			continue;
 		}
-		else if (arg == "--dflip")
+		if (arg == "--dflip")
 		{
 			img.dflip();
 			continue;

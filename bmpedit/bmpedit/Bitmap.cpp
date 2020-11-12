@@ -219,8 +219,9 @@ void Bitmap::shrink(int k)
 		for (int y = 0; y < H-k; y = y + k)
 		{
 			i = image.data(0, y, s);
+			//t = tmp.data(0, y, s);
 			ir = i + W-k;
-			while (i < ir)
+			while (i <= ir)
 			{
 				*(t++) = *i;
 				i += k;
