@@ -86,7 +86,6 @@ int main(int argc, char* argv[])
 
 	for (int i = 2; i < argc; ++i)
 	{
-
 		string arg = argv[i];
         cout<<"log_argv[i]_loop: " <<arg<<" "<< i<<"\n";
 
@@ -184,33 +183,7 @@ int main(int argc, char* argv[])
 			continue;
 		}
 		if (ref_available)
-		{/*
-			if (arg == "--mse")
-			{
-				cout << "MSE\t" << img.mse(ref) << endl;
-				continue;
-			}
-			else if (arg == "--pmse")
-			{
-				cout << "PMSE\t" << img.pmse(ref) << endl;
-				continue;
-			}
-			else if (arg == "--snr")
-			{
-				cout << "SNR\t" << img.snr(ref) << " dB" << endl;
-				continue;
-			}
-			else if (arg == "--psnr")
-			{
-				cout << "PSNR\t" << img.psnr(ref) << " dB" << endl;
-				continue;
-			}
-			else if (arg == "--md")
-			{
-				cout << "MD\t" << img.md(ref) << endl;
-				continue;
-			}*/
-			//==================================================================
+		{
             if (arg == "--mse")
             {
                 cout << "MSE\t"     << img.mse(ref)     << endl;
@@ -237,11 +210,8 @@ int main(int argc, char* argv[])
                 continue;
             }
 		}
-		else
-		{
-			cout <<"i:" << i << " arg:"<<arg <<" Command not found or value not specified" << endl;
-			return 1;
-		}
+        cout << arg <<": Command not found or value not specified." << endl;
+        return 1;
 	}
     img.image.display("After",false,0,true);
 }

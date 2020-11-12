@@ -11,7 +11,7 @@ class Bitmap
 public:
 	cimg_library::CImg<byte> image;
 	//make grayscale if possible
-	void optimize(cimg_library::CImg<byte>& image);
+	static void optimize(cimg_library::CImg<byte>& image);
 private:
 	int H, W;
 	long offset;
