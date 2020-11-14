@@ -54,7 +54,43 @@ void Bitmap::make_arr(byte* p, int& win_s, byte* tab) const
 		}
 	}
 }
-
+void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
+{
+    int w = W - 1;
+    for (int s = 0; s != image.spectrum(); ++s)
+    {
+        if(win_s==1)	//reduce nested loop
+            for (int y = 1; y < H - 1; y++)
+            {
+                tmp(0, y, s) = tmp(1, y, s);
+                tmp(w, y, s) = tmp(w-1, y, s);
+            }
+        else
+            for (int y = win_s; y < H - win_s; y++)
+            {
+                for (int i = 0; i < win_s; i++)
+                {
+                    tmp(0 + i, y, s) = tmp(win_s, y, s);
+                    tmp(w - i, y, s) = tmp(w - win_s, y, s);
+                }
+            }
+        byte* i = tmp.begin() + W * win_s + W + offset * s; //last value in the first good row
+        byte* t = i - W;									//value above i
+        byte* tr = tmp.begin() + offset * s;
+        while (t != tr)
+        {
+            *(--t) = *(--i);
+        }
+        i += (H - 2 - win_s) * W;						//first value in the last good row
+        t = i + W;
+        tr += offset;
+        while (t != tr)
+        {
+            *(t++) = *(i++);
+        }
+    }
+    image = tmp;
+}
 byte Bitmap::alpha(byte* tab, int size, int d)
 {
 	std::sort(tab, tab + size);
@@ -72,52 +108,13 @@ byte Bitmap::contra(byte* tab, int size, int Q)
 	{
 		//double xq = *tab;
 		//for (int i = 1; i < Q; i++)
-		//	xq *= *tab;
+		//    xq *= *tab;
 		//sum1 += xq;
 		//sum2 += (*tab) * xq;
 		sum1 += pow(*tab,Q);
 		sum2 += sum1 * (*tab);
-
 	}
 	return (byte)(sum2/sum1);
-}
-
-void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
-{
-	int w = W - 1;
-	for (int s = 0; s != image.spectrum(); ++s)									
-	{
-		if(win_s==1)	//reduce nested loop
-			for (int y = 1; y < H - 1; y++)
-			{
-				tmp(0, y, s) = tmp(1, y, s);
-				tmp(w, y, s) = tmp(w-1, y, s);
-			}
-		else
-			for (int y = win_s; y < H - win_s; y++)
-			{
-				for (int i = 0; i < win_s; i++)
-				{
-					tmp(0 + i, y, s) = tmp(win_s, y, s);
-					tmp(w - i, y, s) = tmp(w - win_s, y, s);
-				}
-			}
-		byte* i = tmp.begin() + W * win_s + W + offset * s; //last value in the first good row
-		byte* t = i - W;									//value above i
-		byte* tr = tmp.begin() + offset * s;
-		while (t != tr)
-		{
-			*(--t) = *(--i);
-		}
-		i += (H - 2 - win_s) * W;						//first value in the last good row
-		t = i + W;
-		tr += offset;
-		while (t != tr)
-		{
-			*(t++) = *(i++);
-		}
-	}
-	 image = tmp;
 }
 
 void Bitmap::brightness(int val)

@@ -17,10 +17,11 @@ private:
 	long offset;
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
+    void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
+public:
 	static byte alpha(byte* tab, int size, int d);
 	static byte contra(byte* tab, int size, int Q);
-	void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
-public:
+
 	Bitmap(const char* const&& filename);
 	~Bitmap();
 	//modify brightness, contrast and RGB components
@@ -42,6 +43,7 @@ public:
 	void alpha( int d = 4, int win_s = 1);
 		//contra-harmonic mean filter
 	void cmean(int Q=2, int win_s = 1);
+
 	void filter(int d, int win_s, func method); //pass d/2 for the alpha filter
 
 	//	Similarity measures
