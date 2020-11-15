@@ -28,7 +28,7 @@ void wrong_value(const string& name)
 }
 int is_not_int(const string& arg, string&& val)
 {
-    cout<< "log_try_catch: " << arg <<" " << val << endl;
+    //cout<< "log_try_catch: " << arg <<" " << val << endl;
 	try {
 		int k = stoi(val);
 	}
@@ -46,7 +46,7 @@ int is_not_int(const string& arg, string&& val)
 }
 int is_not_float(const string& arg, string&& val)
 {
-    cout<< "log_try_catch: " << arg <<" " << val << endl;
+    //cout<< "log_try_catch: " << arg <<" " << val << endl;
 	try {
 		float k = stof(val);
 	}
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 	for (int i = 2; i < argc; ++i)
 	{
 		string arg = argv[i];
-        cout<<"log_argv[i]_loop: " <<arg<<" "<< i<<"\n";
+        //cout<<"log_argv[i]_loop: " <<arg<<" "<< i<<"\n";
 
 		if ((arg == "-h") || (arg == "--help")) {
 			show_usage();
@@ -184,6 +184,15 @@ int main(int argc, char* argv[])
 		}
 		if (ref_available)
 		{
+			if (arg == "--all")
+			{
+				cout << img.mse(ref) << "\t"
+					<< img.pmse(ref) << "\t"
+					<< img.snr(ref) << "\t"
+					<< img.psnr(ref) << "\t"
+					<< img.md(ref) << endl;
+				continue;
+			}
             if (arg == "--mse")
             {
                 cout << "MSE\t"     << img.mse(ref)     << endl;
