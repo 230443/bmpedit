@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	}
 	string arg = argv[1];
 	Bitmap img(arg.c_str());
-	img.image.display("Before",false,0,true);
+	//img.image.display("Before",false,0,true);
 
 	cimg_library::CImg<byte>ref;
 	bool ref_available = false;
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
             }
             else if (arg == "--cmean")
             {
-                cout << endl << "cmean" << endl;
+                //cout << endl << "cmean" << endl;
                 if (is_not_int(arg, argv[i + 1])) return 1;
                 if (is_not_int(arg, argv[i + 2])) return 1;
                 img.cmean(atoi(argv[i + 1]), atoi(argv[i + 2]));
@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
 					<< img.pmse(ref) << "\t"
 					<< img.snr(ref) << "\t"
 					<< img.psnr(ref) << "\t"
-					<< img.md(ref) << endl;
+					<< img.md(ref) << "\t";
 				continue;
 			}
             if (arg == "--mse")
@@ -222,5 +222,5 @@ int main(int argc, char* argv[])
         cout << arg <<": Command not found or value not specified." << endl;
         return 1;
 	}
-    img.image.display("After",false,0,true);
+    //img.image.display("After",false,0,true);
 }

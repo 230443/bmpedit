@@ -112,7 +112,8 @@ byte Bitmap::contra(byte* tab, int size, int Q)
 		//sum1 += xq;
 		//sum2 += (*tab) * xq;
 		sum1 += pow(*tab,Q);
-		sum2 += sum1 * (*tab);
+		sum2 += pow(*tab,Q+1);
+
 	}
 	return (byte)(sum2/sum1);
 }
