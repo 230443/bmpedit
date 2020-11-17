@@ -222,5 +222,5 @@ int main(int argc, char* argv[])
         cout << arg <<": Command not found or value not specified." << endl;
         return 1;
 	}
-    //img.image.display("After",false,0,true);
+    img.image.display("After",false,0,true);
 }

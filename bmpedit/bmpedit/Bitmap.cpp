@@ -103,19 +103,31 @@ byte Bitmap::alpha(byte* tab, int size, int d)
 byte Bitmap::contra(byte* tab, int size, int Q)
 {
 	long double sum1 = 0;
-	long double sum2 = 0;
-	for (byte* end=tab+size; tab != end; tab++)
+	if (Q == 0)
 	{
-		//double xq = *tab;
-		//for (int i = 1; i < Q; i++)
-		//    xq *= *tab;
-		//sum1 += xq;
-		//sum2 += (*tab) * xq;
-		sum1 += pow(*tab,Q);
-		sum2 += pow(*tab,Q+1);
-
+		for (byte* end = tab + size; tab != end; tab++)
+		{
+			sum1 += (*tab);
+		}
+		return sum1 / size;
 	}
-	return (byte)(sum2/sum1);
+	else
+	{
+		long double sum2 = 0;
+		for (byte* end = tab + size; tab != end; tab++)
+		{
+			double xq = *tab;
+			for (int i = 1; i < Q; i++)
+				xq *= *tab;
+			if (Q < 0) xq = 1 / xq;
+			sum1 += xq;
+			sum2 += (*tab) * xq;
+			//sum1 += pow(*tab,Q);
+			//sum2 += pow(*tab,Q+1);
+		}
+		return (byte)(sum2/sum1);
+	}
+	
 }
 
 void Bitmap::brightness(int val)
