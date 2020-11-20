@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
                 //cout << endl << "alpha" << endl;
                 if (is_not_int(arg, argv[i + 1])) return 1;
                 if (is_not_int(arg, argv[i + 2])) return 1;
-                img.alpha(atoi(argv[i + 1]), atoi(argv[i + 2]));
+                img.filter(atoi(argv[i + 1])/2, atoi(argv[i + 2]),Bitmap::alpha);
                 i += 2;
                 continue;
             }
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
                 //cout << endl << "cmean" << endl;
                 if (is_not_int(arg, argv[i + 1])) return 1;
                 if (is_not_int(arg, argv[i + 2])) return 1;
-                img.cmean(atoi(argv[i + 1]), atoi(argv[i + 2]));
+                img.filter(atoi(argv[i + 1]), atoi(argv[i + 2]),Bitmap::contra);
                 i += 2;
                 continue;
             }

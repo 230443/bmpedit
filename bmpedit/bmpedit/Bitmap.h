@@ -43,10 +43,6 @@ public:
 	//Alpha - trimmed mean filter
 		//win_s - window size - distance from a center pixel
 		//d - number of discarded pixels
-	void alpha( int d = 4, int win_s = 1);
-		//contra-harmonic mean filter
-	void cmean(int Q=2, int win_s = 1);
-
 	void filter(int d, int win_s, func method); //pass d/2 for the alpha filter
 
 	//	Similarity measures
