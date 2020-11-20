@@ -7,10 +7,12 @@ Bitmap::Bitmap(const char* const&& filename)
 {
 	offset = W*H;
 	optimize(image);
+	h = nullptr;
 }
 Bitmap::~Bitmap()
 {
 	~image;
+	delete[] h;
 }
 
 void Bitmap::optimize(cimg_library::CImg<byte>& image)
@@ -23,7 +25,7 @@ void Bitmap::optimize(cimg_library::CImg<byte>& image)
 		{
 			if (*ptr != *(ptr + offset) || *ptr != *(ptr + offset * 2))
 			{
-				std::cout << (int)(ptr - image.begin()) << std::endl;
+				//std::cout << (int)(ptr - image.begin()) << std::endl;
 				is_mono = false;
 				break;
 			}
@@ -90,6 +92,14 @@ void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
         }
     }
     image = tmp;
+}
+void Bitmap::make_hist(int color)
+{
+	h = new byte[offset];
+	byte* p = image.data(0, 0, color);
+	byte* r = p + offset;
+	while (p < r)
+		h[*(p++)]++;
 }
 byte Bitmap::alpha(byte* tab, int size, int d)
 {

@@ -15,9 +15,11 @@ public:
 private:
 	int H, W;
 	long offset;
+	byte* h;
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
     void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
+	void make_hist(int color = 0);
 public:
 	static byte alpha(byte* tab, int size, int d);
 	static byte contra(byte* tab, int size, int Q);
