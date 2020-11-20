@@ -7,12 +7,14 @@ Bitmap::Bitmap(const char* const&& filename)
 {
 	offset = W*H;
 	optimize(image);
-	h = nullptr;
+    for(int i = 0; i<256; i++)
+    {
+        h[i]=0;
+    }
 }
 Bitmap::~Bitmap()
 {
 	~image;
-	delete[] h;
 }
 
 void Bitmap::optimize(cimg_library::CImg<byte>& image)
@@ -93,13 +95,15 @@ void Bitmap::copy_frame(cimg_library::CImg<byte>& tmp, int win_s)
     }
     image = tmp;
 }
-void Bitmap::make_hist(int color)
+void Bitmap::make_hist(int&& color)
 {
-	h = new byte[offset];
 	byte* p = image.data(0, 0, color);
 	byte* r = p + offset;
 	while (p < r)
-		h[*(p++)]++;
+    {
+        h[*p]++;
+        p++;
+    }
 }
 byte Bitmap::alpha(byte* tab, int size, int d)
 {
@@ -176,9 +180,9 @@ void Bitmap::contrast(float a) // y=ax+y_0-ax_0, where (x_0,y_0)is middle point 
 		else if (y <= 0)	tab[i] = 0;
 		else				tab[i] = y;
 	}
-	for (byte* ptr = image.begin(); ptr != image.end(); ++ptr)
+	for (unsigned char & ptr : image)
 	{
-		*ptr = tab[*ptr];
+		ptr = tab[ptr];
 	}
 }
 void Bitmap::negative()
@@ -471,4 +475,33 @@ void Bitmap::save(const std::string& ofname) const
 {
 	image.save(ofname.c_str());
 }
+
+void Bitmap::hexponent(int gmin, int gmax)
+{
+    make_hist();
+    //for(int i = 0; i<256; i++)
+    //{
+    //    std::cout<< i<<": " <<h[i]<<std::endl;
+    //}
+    byte g[256]={0};
+    double sum=0;
+    double rN = (double)1/(H*W);
+    double eps= 0.01;
+    double a = -(double)(gmax-gmin)/std::log(eps);
+    for(int i = 0; i<256; i++)
+    {
+        sum+=h[i]*rN;
+        if(sum!=0)
+        std::cout<<sum<<std::endl;
+        g[i]=gmin - a*std::log(1-sum+eps);
+    }
+    for (auto& p : image)
+        p = g[p];
+}
+
+void Bitmap::histogram()
+{
+
+}
+
 

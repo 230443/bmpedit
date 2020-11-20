@@ -14,7 +14,7 @@ inline boost::posix_time::ptime now()
 
 
 BOOST_AUTO_TEST_SUITE(BitmapSuite)
-
+/*
     BOOST_AUTO_TEST_CASE(cmeanTime)
     {
         Bitmap img(IMAGE);
@@ -67,5 +67,18 @@ BOOST_AUTO_TEST_SUITE(BitmapSuite)
         std::cout << "filter_alpha " << elapsed << std::endl;
 
     }
+*/
+    BOOST_AUTO_TEST_CASE(histogram)
+    {
+        Bitmap img("lena.bmp");
+        img.contrast(0.5);
+        img.save("contrast.bmp");
+        img.image.display("contrast",false,0,true);
 
+        img.hexponent(10, 255);
+
+        img.image.display("After",false,0,true);
+        img.save("test.bmp");
+
+    }
 BOOST_AUTO_TEST_SUITE_END()

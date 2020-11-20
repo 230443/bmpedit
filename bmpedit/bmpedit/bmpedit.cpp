@@ -182,6 +182,11 @@ int main(int argc, char* argv[])
 			img.dflip();
 			continue;
 		}
+        if (arg == "--hexponent")
+        {
+            img.hexponent(2, 255);
+            continue;
+        }
 		if (ref_available)
 		{
 			if (arg == "--all")
