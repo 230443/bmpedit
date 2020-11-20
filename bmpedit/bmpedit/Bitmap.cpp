@@ -501,7 +501,20 @@ void Bitmap::hexponent(int gmin, int gmax)
 
 void Bitmap::histogram()
 {
-
+    make_hist();
+    uint32_t max=0;
+    for(auto i: h)
+        if (i > max) max = i;
+    CImg<byte> hist(256,256,1,1,0);
+    for(int i = 0; i<256; i++)
+    {
+        byte* p = hist.data(0,i,0);
+        byte* r = p + (int)(h[i]*255/max);
+        while (p < r)
+            *(p++)=255;
+    }
+    hist.rotate(270);
+    hist.save("histogram.bmp");
 }
 
 

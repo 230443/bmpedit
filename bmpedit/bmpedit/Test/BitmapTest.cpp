@@ -67,8 +67,8 @@ BOOST_AUTO_TEST_SUITE(BitmapSuite)
         std::cout << "filter_alpha " << elapsed << std::endl;
 
     }
-*/
-    BOOST_AUTO_TEST_CASE(histogram)
+
+    BOOST_AUTO_TEST_CASE(exponential)
     {
         Bitmap img("lena.bmp");
         img.contrast(0.5);
@@ -81,4 +81,12 @@ BOOST_AUTO_TEST_SUITE(BitmapSuite)
         img.save("test.bmp");
 
     }
+
+    */
+    BOOST_AUTO_TEST_CASE(histogram)
+    {
+        Bitmap img("lena.bmp");
+        img.histogram();
+    }
+
 BOOST_AUTO_TEST_SUITE_END()

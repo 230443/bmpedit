@@ -6,6 +6,7 @@
 
 typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
+typedef byte(*mask)(byte* tab, int size, int parameter[]);
 class Bitmap 
 {
 public:
@@ -57,9 +58,12 @@ public:
 	//  Task2
     void hexponent(int gmin, int gmax);
     void histogram();
+    //  Extraction of deteials III. Without direcition, laplacian filter (--slaplace).
+    void slaplace ();
 
 
 
-	void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
+
+    void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
 };
 
