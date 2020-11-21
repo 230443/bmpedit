@@ -16,10 +16,16 @@ std::cerr << "Usage: bmpedit	infile [-r ref] [options|similarity measures] [-o o
 		<< "	--shrink [k], --enlarge [k]," << endl
 		<< "	--alpha [d] [filter_size], --cmean [Q] [filter_size]" << endl
 		<< "		filter_size - distance from center pixel" << endl
+        << "    --histogram" << endl
+        << "    --hexponent [g_min] [g_max]" << endl
+        << "    --casyco" << endl
+        << "    --slaplace [n]" << endl
+        << "        n - mask number" << endl
+        << "    --osobel" << endl
 		<< "	-r ref" << endl
 		<< "		ref - filename of the original image" << endl
 		<< "	Similarity measures:\n"
-		<< "	--mse, --pmse, --snr, --psnr, --md" << endl
+		<< "	--mse, --pmse, --snr, --psnr, --md, --all" << endl
 		<< endl;
 }
 void wrong_value(const string& name)
@@ -200,7 +206,7 @@ int main(int argc, char* argv[])
         }
         else if (arg == "casyco")
         {
-            cout << "Assymetry\t" << img.casyco() << endl;
+            cout << "Asymmetry\t" << img.casyco() << endl;
             continue;
         }
 		if (ref_available)
