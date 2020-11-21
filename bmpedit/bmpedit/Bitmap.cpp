@@ -511,4 +511,87 @@ double Bitmap::casyco()
 
 
 
+void Bitmap::slaplace(int n)
+{
+    CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+
+    int w = W - 2;								//new width
+
+    byte* i = image.data(1, 1);					//iterator on the image
+    byte* t = tmp.data(1, 1);					//iterator on the tmp
+    byte* ir = i + w;									//last in a row
+    byte* last = ir + W * (H - 1 * 2 - 1);			//last in a given color
+
+    for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
+    {
+        while (i < last)
+        {
+            while (i < ir)
+            {
+
+                    int sum = 0;
+                    sum += *(i - W)*(-1);
+                    sum += *(i - 1)*(-1);
+                    sum += *(i  )*( 4);
+                    sum += *(i + 1)*(-1);
+                    sum += *(i + W)*(-1);
+                    *t = (byte)(sum*128/400+127);
+
+                i++; t++;
+            }
+            i += 2;				//go to the next line
+            t += 2;
+            ir = i + w;
+        }
+        i += 2 * W;				//go to the next color
+        t += 2 * W;
+        ir = i + w;
+        last += offset;
+    }
+    copy_frame(tmp, 1);
+}
+/*
+void Bitmap::slaplace(int d)
+{
+    CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
+
+    int w = W - 2;								//new width
+
+    byte* i = image.data(1, 1);					//iterator on the image
+    byte* t = tmp.data(1, 1);					//iterator on the tmp
+    byte* ir = i + w;									//last in a row
+    byte* last = ir + W * (H - 1 * 2 - 1);			//last in a given color
+
+    for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
+    {
+        while (i < last)
+        {
+            while (i < ir)
+            {
+                {
+                    int sum = 0;
+                    sum += *(i - W)*(-1);
+                    sum += *(i - 1)*(-1);
+                    sum += *(i  )*( 4);
+                    sum += *(i + 1)*(-1);
+                    sum += *(i + W)*(-1);
+                    std::cout<<sum<<std::endl;
+                    *t = (byte)(sum*128)/(5*255)+127;
+                }
+                i++; t++;
+            }
+            i += 2;				//go to the next line
+            t += 2;
+            ir = i + w;
+        }
+        i += 2 * W;				//go to the next color
+        t += 2 * W;
+        ir = i + w;
+        last += offset;
+    }
+    copy_frame(tmp, 1);
+}*/
+
+
+
 

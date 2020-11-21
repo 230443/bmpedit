@@ -158,7 +158,8 @@ int main(int argc, char* argv[])
             else if (arg == "--slaplace")
             {
                 if (is_not_int(arg, argv[i + 1])) return 1;
-                img.filter(atoi(argv[++i]),1,Bitmap::slaplace);
+                if      (stoi(argv[i + 1]) == 0)  img.slaplace(stoi(argv[++i]));
+                else    img.filter(stoi(argv[++i]),1,Bitmap::slaplace);
                 continue;
             }
 			else if (arg == "-o")

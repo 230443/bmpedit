@@ -56,12 +56,11 @@ public:
 	//  Task2
     void hexponent(int gmin, int gmax);
     void histogram();
-    //  Extraction of deteials III. Without direcition, laplacian filter (--slaplace).
     static byte slaplace (byte* tab, int size, int d);
     static byte osobel (byte* tab, int size, int d);
     double mean ();
     double casyco ();
-
+    void slaplace(int d=0);
 
 
 
