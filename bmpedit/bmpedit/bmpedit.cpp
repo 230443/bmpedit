@@ -204,7 +204,7 @@ int main(int argc, char* argv[])
             img.filter(0,1,Bitmap::osobel);
             continue;
         }
-        else if (arg == "casyco")
+        else if (arg == "--casyco")
         {
             cout << "Asymmetry\t" << img.casyco() << endl;
             continue;
