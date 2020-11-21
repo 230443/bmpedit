@@ -58,6 +58,7 @@ public:
     void histogram();
     //  Extraction of deteials III. Without direcition, laplacian filter (--slaplace).
     static byte slaplace (byte* tab, int size, int d);
+    static byte osobel (byte* tab, int size, int d);
 
 
 

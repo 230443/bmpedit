@@ -193,6 +193,11 @@ int main(int argc, char* argv[])
             img.hexponent(0, 255);
             continue;
         }
+        if (arg == "--osobel")
+        {
+            img.filter(0,1,Bitmap::osobel);
+            continue;
+        }
 		if (ref_available)
 		{
 			if (arg == "--all")
