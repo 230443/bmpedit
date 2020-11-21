@@ -17,6 +17,8 @@ private:
 	int H, W;
 	long offset;
 	uint32_t h[256];
+	int mask[3][9];
+	void set_mask();
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
     void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
@@ -55,7 +57,7 @@ public:
     void hexponent(int gmin, int gmax);
     void histogram();
     //  Extraction of deteials III. Without direcition, laplacian filter (--slaplace).
-    void slaplace ();
+    static byte slaplace (byte* tab, int size, int d);
 
 
 

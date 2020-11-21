@@ -7,10 +7,9 @@ Bitmap::Bitmap(const char* const&& filename)
 {
 	offset = W*H;
 	optimize(image);
-    for(int i = 0; i<256; i++)
-    {
-        h[i]=0;
-    }
+    for(unsigned int & i : h)
+        i=0;
+    set_mask();
 }
 Bitmap::~Bitmap()
 {
@@ -27,7 +26,6 @@ void Bitmap::optimize(cimg_library::CImg<byte>& image)
 		{
 			if (*ptr != *(ptr + offset) || *ptr != *(ptr + offset * 2))
 			{
-				//std::cout << (int)(ptr - image.begin()) << std::endl;
 				is_mono = false;
 				break;
 			}
@@ -38,6 +36,28 @@ void Bitmap::optimize(cimg_library::CImg<byte>& image)
 		CImg<byte> tmp(image.data(), image.width(), image.height());
 		image = tmp;
 	}
+}
+
+void Bitmap::set_mask()
+{
+    int tab[3][9]={+0,-1,+0,
+                   -1,+4,-1,
+                   +0,-1,+0,
+
+                   -1,-1,-1,
+                   -1,+8,-1,
+                   -1,-1,-1,
+
+                   +1,-2,+1,
+                   -2,+4,-2,
+                   +1,-2,+1,};
+
+    int* m = &mask[0][0];
+    int* t = &tab[0][0];
+    for(int i=0; i<27; i++)
+    {
+        *(m++) = *(t++);
+    }
 }
 
 void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
@@ -434,5 +454,26 @@ void Bitmap::histogram()
     hist.rotate(270);
     hist.save("histogram.bmp");
 }
+
+byte Bitmap::slaplace(byte* tab, int size, int d)
+{
+    int sum = 0;
+    int mask[3][9]={+0,-1,+0,
+                   -1,+4,-1,
+                   +0,-1,+0,
+
+                   -1,-1,-1,
+                   -1,+8,-1,
+                   -1,-1,-1,
+
+                   +1,-2,+1,
+                   -2,+4,-2,
+                   +1,-2,+1,};
+    for (int i = 0; i < 9; i++)
+        sum += tab[i] * mask[d][i];
+    return (sum*128)/(8*255)+127;
+}
+
+
 
 

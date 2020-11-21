@@ -149,6 +149,12 @@ int main(int argc, char* argv[])
 				img.enlarge(atoi(argv[++i]));
 				continue;
 			}
+            else if (arg == "--slaplace")
+            {
+                if (is_not_int(arg, argv[i + 1])) return 1;
+                img.filter(atoi(argv[++i]),1,Bitmap::slaplace);
+                continue;
+            }
 			else if (arg == "-o")
 			{
 				string ofname = argv[++i];
@@ -184,7 +190,7 @@ int main(int argc, char* argv[])
 		}
         if (arg == "--hexponent")
         {
-            img.hexponent(2, 255);
+            img.hexponent(0, 255);
             continue;
         }
 		if (ref_available)
