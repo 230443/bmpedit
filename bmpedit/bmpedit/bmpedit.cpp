@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
 		std::cerr << "Not enough arguments. Check: bmpedit --help" << endl;
 		return 1;
 	}
-	string arg = argv[1];
-	Bitmap img(arg.c_str());
-	//img.image.display("Before",false,0,true);
+        string arg = argv[1];
+        Bitmap img(arg.c_str());
+        //img.image.display("Before",false,0,true);
 
 	cimg_library::CImg<byte>ref;
 	bool ref_available = false;
@@ -196,6 +196,11 @@ int main(int argc, char* argv[])
         if (arg == "--osobel")
         {
             img.filter(0,1,Bitmap::osobel);
+            continue;
+        }
+        else if (arg == "casyco")
+        {
+            cout << "Assymetry\t" << img.casyco() << endl;
             continue;
         }
 		if (ref_available)

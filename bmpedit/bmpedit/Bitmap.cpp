@@ -486,6 +486,29 @@ byte Bitmap::osobel(byte *tab, int size, int d)
     //return std::sqrt(X*X+Y*Y);
 }
 
+double Bitmap::mean()
+{
+    make_hist();
+    uint64_t sum=0;
+    for (int i=0; i<255; ++i)
+        sum += i*h[i];
+    return (double)sum/offset;
+}
+
+double Bitmap::casyco()
+{
+    double mean = Bitmap::mean();
+    double sum2 = 0;
+    double sum3 = 0;
+    for (int i=0; i<255; ++i)
+    {
+        sum2 += (i - mean) * (i - mean) * h[i];
+        sum3 += (i - mean) * (i - mean) * (i - mean) * h[i];
+    }
+    double sd = sqrt(sum2/(double)offset);
+    return 1/(sd*sd*sd)*sum3/(double)offset;
+}
+
 
 
 

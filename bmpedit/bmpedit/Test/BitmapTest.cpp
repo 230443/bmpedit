@@ -88,5 +88,11 @@ BOOST_AUTO_TEST_SUITE(BitmapSuite)
         Bitmap img("lena.bmp");
         img.histogram();
     }
+    BOOST_AUTO_TEST_CASE(mean)
+    {
+        Bitmap img("lena.bmp");
+        std::cout<<img.mean()<<std::endl;
+        std::cout<<img.casyco();
+    }
 
 BOOST_AUTO_TEST_SUITE_END()
