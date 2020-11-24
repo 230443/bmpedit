@@ -22,7 +22,6 @@ private:
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
     void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
-	void make_hist(int&& color = 0);
 public:
 	static byte alpha(byte* tab, int size, int d);
 	static byte contra(byte* tab, int size, int Q);
@@ -54,6 +53,7 @@ public:
 	double psnr(cimg_library::CImg<byte>& ref);
 	double md(cimg_library::CImg<byte>& ref);
 	//  Task2
+	void make_hist(int&& color = 0);
     void hexponent(int gmin, int gmax);
     void histogram();
     static byte slaplace (byte* tab, int size, int d);
