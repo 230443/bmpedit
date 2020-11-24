@@ -14,7 +14,7 @@ inline boost::posix_time::ptime now()
 
 
 BOOST_AUTO_TEST_SUITE(BitmapSuite)
-/*
+
     BOOST_AUTO_TEST_CASE(cmeanTime)
     {
         Bitmap img(IMAGE);
@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_SUITE(BitmapSuite)
         std::cout << "cmean " << elapsed << std::endl;
 
     }
+
     BOOST_AUTO_TEST_CASE(FilterCmean_Time)
     {
         Bitmap img(IMAGE);

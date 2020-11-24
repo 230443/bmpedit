@@ -32,21 +32,21 @@ set(SOURCE_TEST_FILES
         Test/BitmapTest.cpp)
 
 include_directories(
-    ${Boost_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
 )
 
-add_executable (Test ${SOURCE_TEST_FILES}
+add_executable(Test ${SOURCE_TEST_FILES}
         Bitmap.h
         Bitmap.cpp)
 
-target_link_libraries (Test
+target_link_libraries(Test
         LibsModule
-${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
-)
+        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+        )
 
 add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_TEST_LOG_LEVEL=all
-${CMAKE_CTEST_COMMAND} -C $<CONFIG> --verbose
-WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+        ${CMAKE_CTEST_COMMAND} -C $<CONFIG> --verbose
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 enable_testing()
 add_test(LibraryTest Test)

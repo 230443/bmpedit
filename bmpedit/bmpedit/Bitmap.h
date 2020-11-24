@@ -16,6 +16,7 @@ public:
 private:
 	int H, W;
 	long offset;
+	std::string ifname;
 	uint32_t h[256];
 	//int mask[3][9];
 	void set_new_image(cimg_library::CImg<byte>& tmp);
@@ -25,7 +26,7 @@ public:
 	static byte alpha(byte* tab, int size, int d);
 	static byte contra(byte* tab, int size, int Q);
 
-	Bitmap(const char* const&& filename);
+	Bitmap(std::string&& filename);
 	~Bitmap();
 	//modify brightness, contrast and RGB components
 	void brightness(int val);

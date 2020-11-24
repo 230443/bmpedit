@@ -83,8 +83,8 @@ int main(int argc, char* argv[])
 		std::cerr << "Not enough arguments. Check: bmpedit --help" << endl;
 		return 1;
 	}
-        string arg = argv[1];
-        Bitmap img(arg.c_str());
+        //string arg = argv[1];
+        Bitmap img(argv[1]);
         //img.image.display("Before",false,0,true);
 
 	cimg_library::CImg<byte>ref;
@@ -229,6 +229,11 @@ int main(int argc, char* argv[])
             img.filter(0,1,Bitmap::osobel);
             continue;
         }
+		if (arg == "--histogram")
+		{
+			img.histogram();
+			continue;
+		}
         else if (arg == "--casyco")
         {
             cout << "Asymmetry\t" << img.casyco() << endl;

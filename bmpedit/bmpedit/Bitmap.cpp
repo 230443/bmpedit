@@ -2,8 +2,8 @@
 #include <iostream>
 using namespace cimg_library;
 
-Bitmap::Bitmap(const char* const&& filename)
-	:image(filename), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
+Bitmap::Bitmap(std::string&& filename)
+	:ifname(filename), image(filename.c_str()), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
 	offset = W*H;
 	optimize(image);

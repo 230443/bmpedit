@@ -50,7 +50,8 @@ void Bitmap::histogram()
 			*(p++)=255;
 	}
 	hist.rotate(270);
-	hist.save("histogram.bmp");
+	std::string histName = ifname.substr(0,ifname.size()-4) + "_hist.bmp";
+	hist.save(histName.c_str());
 }
 
 byte Bitmap::osobel(byte *tab, int size, int d)
@@ -155,6 +156,6 @@ byte Bitmap::mask9(const byte* i, int* kernel, int W)
 	sum += *(i + W 		) * (*(kernel++));
 	sum += *(i + W - 1	) * (*(kernel));
 
-	return (byte)(sum*128/400+127);
+	return (byte)(sum*128/800+127);
 }
 
