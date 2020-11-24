@@ -5,7 +5,6 @@
 #include <iostream>
 using namespace cimg_library;
 
-
 void Bitmap::make_hist(int&& color)
 {
 	byte* p = image.data(0, 0, color);
@@ -19,15 +18,14 @@ void Bitmap::make_hist(int&& color)
 void Bitmap::hexponent(int gmin, int gmax)
 {
 	make_hist();
-	//for(int i = 0; i<256; i++)
-	//{
-	//    std::cout<< i<<": " <<h[i]<<std::endl;
-	//}
+
 	byte g[256]={0};
 	double sum=0;
-	double rN = (double)1/(H*W);
-	double eps= 0.01;
-	double a = -(double)(gmax-gmin)/std::log(eps);
+
+	double rN = (double)1/(H*W);					// reciprocal N
+	double eps= 0.01;								// epsilon
+	double a = -(double)(gmax-gmin)/std::log(eps);	// reciprocal alpha
+
 	for(int i = 0; i<256; i++)
 	{
 		sum+=h[i]*rN;
@@ -53,25 +51,6 @@ void Bitmap::histogram()
 	}
 	hist.rotate(270);
 	hist.save("histogram.bmp");
-}
-
-byte Bitmap::slaplace(byte* tab, int size, int d)
-{
-	int sum = 0;
-	int mask[3][9]={+0,-1,+0,
-			-1,+4,-1,
-			+0,-1,+0,
-
-			-1,-1,-1,
-			-1,+8,-1,
-			-1,-1,-1,
-
-			+1,-2,+1,
-			-2,+4,-2,
-			+1,-2,+1,};
-	for (int i = 0; i < 9; i++)
-		sum += tab[i] * mask[d][i];
-	return (sum*128)/(8*255)+127;
 }
 
 byte Bitmap::osobel(byte *tab, int size, int d)
