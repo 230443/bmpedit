@@ -6,7 +6,7 @@
 
 typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
-typedef byte(*mask)(byte* tab, int size, int parameter[]);
+
 class Bitmap 
 {
 public:
@@ -17,12 +17,10 @@ private:
 	int H, W;
 	long offset;
 	uint32_t h[256];
-	int mask[3][9];
-	void set_mask();
+	//int mask[3][9];
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
     void copy_frame(cimg_library::CImg<byte>& tmp, int win_s);
-	void make_hist(int&& color = 0);
 public:
 	static byte alpha(byte* tab, int size, int d);
 	static byte contra(byte* tab, int size, int Q);
@@ -54,13 +52,16 @@ public:
 	double psnr(cimg_library::CImg<byte>& ref);
 	double md(cimg_library::CImg<byte>& ref);
 	//  Task2
+	void make_hist(int&& color = 0);
     void hexponent(int gmin, int gmax);
     void histogram();
-    static byte slaplace (byte* tab, int size, int d);
     static byte osobel (byte* tab, int size, int d);
     double mean ();
     double casyco ();
-    void slaplace(int d=0);
+    void slaplace(int* kernel);
+	static byte mask0(const byte* i, int* kernel, int W);
+    static byte mask9(const byte* i, int* kernel, int W);
+
 
 
 

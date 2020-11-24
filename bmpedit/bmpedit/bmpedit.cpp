@@ -120,6 +120,14 @@ int main(int argc, char* argv[])
                 i += 2;
                 continue;
             }
+			if (arg == "--hexponent")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				img.hexponent(stoi(argv[i + 1]), stoi(argv[i + 2]));
+				i += 2;
+				continue;
+			}
         }
 		if (i + 1 < argc)      // must have 1 argument
 		{
@@ -156,12 +164,33 @@ int main(int argc, char* argv[])
 				continue;
 			}
             else if (arg == "--slaplace")
-            {
-                if (is_not_int(arg, argv[i + 1])) return 1;
-                if      (stoi(argv[i + 1]) == 0)  img.slaplace(stoi(argv[++i]));
-                else    img.filter(stoi(argv[++i]),1,Bitmap::slaplace);
-                continue;
-            }
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				int mask_nr = stoi(argv[i + 1]);
+				if (mask_nr < 0 || mask_nr > 2)		//	exit when mask is not known
+				{
+					wrong_value(arg);
+					return 1;
+				}
+
+				if (mask_nr == 0) img.slaplace(nullptr);
+				else if (mask_nr == 1)
+				{
+					int mask[9] = { -1, -1, -1,
+							-1, +8, -1,
+							-1, -1, -1 };
+					img.slaplace(mask);
+				}
+				else if (mask_nr == 2)
+				{
+					int mask[9] = { +1, -2, +1,
+							-2, +4, -2,
+							+1, -2, +1 };
+					img.slaplace(mask);
+				}
+				i++;
+				continue;
+			}
 			else if (arg == "-o")
 			{
 				string ofname = argv[++i];
@@ -195,11 +224,6 @@ int main(int argc, char* argv[])
 			img.dflip();
 			continue;
 		}
-        if (arg == "--hexponent")
-        {
-            img.hexponent(0, 255);
-            continue;
-        }
         if (arg == "--osobel")
         {
             img.filter(0,1,Bitmap::osobel);

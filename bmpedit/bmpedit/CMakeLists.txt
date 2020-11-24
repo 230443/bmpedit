@@ -19,7 +19,7 @@ add_executable(bmpedit
         Bitmap.cpp
         Bitmap.h
         bmpedit.cpp
-        CImg.h)
+        CImg.h Task2.cpp)
 
 target_link_libraries(bmpedit LibsModule)
 
