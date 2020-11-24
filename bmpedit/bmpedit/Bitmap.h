@@ -17,7 +17,7 @@ private:
 	int H, W;
 	long offset;
 	uint32_t h[256];
-	int mask[3][9];
+	//int mask[3][9];
 	void set_mask();
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
@@ -60,7 +60,10 @@ public:
     static byte osobel (byte* tab, int size, int d);
     double mean ();
     double casyco ();
-    void slaplace(int d=0);
+    void slaplace(int* kernel);
+	static byte mask0(const byte* i, int* kernel, int W);
+    static byte mask9(const byte* i, int* kernel, int W);
+
 
 
 

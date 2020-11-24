@@ -9,7 +9,7 @@ Bitmap::Bitmap(const char* const&& filename)
 	optimize(image);
     for(unsigned int & i : h)
         i=0;
-    set_mask();
+//    set_mask();
 }
 Bitmap::~Bitmap()
 {
@@ -38,27 +38,27 @@ void Bitmap::optimize(cimg_library::CImg<byte>& image)
 	}
 }
 
-void Bitmap::set_mask()
-{
-    int tab[3][9]={+0,-1,+0,
-                   -1,+4,-1,
-                   +0,-1,+0,
-
-                   -1,-1,-1,
-                   -1,+8,-1,
-                   -1,-1,-1,
-
-                   +1,-2,+1,
-                   -2,+4,-2,
-                   +1,-2,+1,};
-
-    int* m = &mask[0][0];
-    int* t = &tab[0][0];
-    for(int i=0; i<27; i++)
-    {
-        *(m++) = *(t++);
-    }
-}
+//void Bitmap::set_mask()
+//{
+//    int tab[3][9]={+0,-1,+0,
+//                   -1,+4,-1,
+//                   +0,-1,+0,
+//
+//                   -1,-1,-1,
+//                   -1,+8,-1,
+//                   -1,-1,-1,
+//
+//                   +1,-2,+1,
+//                   -2,+4,-2,
+//                   +1,-2,+1,};
+//
+//    int* m = &mask[0][0];
+//    int* t = &tab[0][0];
+//    for(int i=0; i<27; i++)
+//    {
+//        *(m++) = *(t++);
+//    }
+//}
 
 void Bitmap::set_new_image(cimg_library::CImg<byte> &tmp)
 {
@@ -404,3 +404,5 @@ void Bitmap::save(const std::string& ofname) const
 {
 	image.save(ofname.c_str());
 }
+
+

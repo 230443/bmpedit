@@ -31,8 +31,6 @@ void Bitmap::hexponent(int gmin, int gmax)
 	for(int i = 0; i<256; i++)
 	{
 		sum+=h[i]*rN;
-		if(sum!=0)
-			std::cout<<sum<<std::endl;
 		g[i]=gmin - a*std::log(1-sum+eps);
 	}
 	for (auto& p : image)
@@ -113,8 +111,14 @@ double Bitmap::casyco()
 
 
 
-void Bitmap::slaplace(int n)
+void Bitmap::slaplace(int* kernel)
 {
+
+	byte(*mask)(const byte* i, int kernel[], int W);
+	if(kernel == nullptr)
+		mask = &mask0;
+	else
+		mask = &mask9;
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 
 	int w = W - 2;								//new width
@@ -130,16 +134,9 @@ void Bitmap::slaplace(int n)
 		{
 			while (i < ir)
 			{
-
-				int sum = 0;
-				sum += *(i - W)*(-1);
-				sum += *(i - 1)*(-1);
-				sum += *(i  )*( 4);
-				sum += *(i + 1)*(-1);
-				sum += *(i + W)*(-1);
-				*t = (byte)(sum*128/400+127);
-
-				i++; t++;
+				*t = mask(i, kernel, W);
+				i++;
+				t++;
 			}
 			i += 2;				//go to the next line
 			t += 2;
@@ -151,6 +148,35 @@ void Bitmap::slaplace(int n)
 		last += offset;
 	}
 	copy_frame(tmp, 1);
+}
+
+byte Bitmap::mask0(const byte* i, int* kernel, int W)
+{
+	int sum = 0;
+	sum += *(i - W)*(-1);
+	sum += *(i - 1)*(-1);
+	sum += *(i  )*( 4);
+	sum += *(i + 1)*(-1);
+	sum += *(i + W)*(-1);
+	return (byte)(sum*128/400+127);
+}
+byte Bitmap::mask9(const byte* i, int* kernel, int W)
+{
+
+	int sum = 0;
+	sum += *(i - W - 1	) * (*(kernel++));
+	sum += *(i - W		) * (*(kernel++));
+	sum += *(i - W + 1	) * (*(kernel++));
+
+	sum += *(i 		- 1	) * (*(kernel++));
+	sum += *(i 			) * (*(kernel++));
+	sum += *(i 		+ 1	) * (*(kernel++));
+
+	sum += *(i + W - 1	) * (*(kernel++));
+	sum += *(i + W 		) * (*(kernel++));
+	sum += *(i + W - 1	) * (*(kernel));
+
+	return (byte)(sum*128/400+127);
 }
 /*
 void Bitmap::slaplace(int d)
