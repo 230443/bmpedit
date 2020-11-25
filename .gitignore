@@ -5,6 +5,7 @@
 
 #Clion
 bmpedit/bmpedit/cmake-build-debug
+bmpedit/bmpedit/cmake-build-release
 bmpedit/bmpedit/.idea
 
 # User-specific files
