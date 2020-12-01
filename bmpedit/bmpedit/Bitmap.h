@@ -64,8 +64,6 @@ public:
     static byte mask9(const byte* i, int* kernel, int W);
 
 
-
-
     void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
 };
 

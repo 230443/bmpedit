@@ -129,6 +129,36 @@ BOOST_AUTO_TEST_SUITE(laplaceSuite)
 			sum += elapsed;
 		}
 		std::cout << "slaplace2 " << sum/n << std::endl;
-	}
+	} /*
+	BOOST_AUTO_TEST_CASE(slaplaceMix)
+	{
+		boost::posix_time::time_duration sum;
+		for (int i = 0; i < n; ++i)
+		{
+			int mask_nr = rand() %3;
+			Bitmap img(IMAGE);
+			boost::posix_time::ptime startTime = now();
+			if (mask_nr == 0)
+				img.slaplace(nullptr);
+			else if (mask_nr == 1)
+			{
+				int mask[9] = { -1, -1, -1,
+						-1, +8, -1,
+						-1, -1, -1 };
+				img.slaplace(mask);
+			}
+			else if (mask_nr == 2)
+			{
+				int mask[9] = { +1, -2, +1,
+						-2, +4, -2,
+						+1, -2, +1 };
+				img.slaplace(mask);
+			}
+			boost::posix_time::time_duration elapsed = now() - startTime;
+			sum += elapsed;
+		}
+		std::cout << "slaplace2 " << sum/n << std::endl;
+	}*/
+
 
 BOOST_AUTO_TEST_SUITE_END()

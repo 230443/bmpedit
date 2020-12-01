@@ -173,7 +173,8 @@ int main(int argc, char* argv[])
 					return 1;
 				}
 
-				if (mask_nr == 0) img.slaplace(nullptr);
+				if (mask_nr == 0)
+					img.slaplace(nullptr);
 				else if (mask_nr == 1)
 				{
 					int mask[9] = { -1, -1, -1,
