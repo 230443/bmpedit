@@ -61,8 +61,7 @@ byte Bitmap::osobel(byte *tab, int size, int d)
 	int Y = tab[0] + 2*tab[1] + tab[2]-
 			tab[6] - 2*tab[7] - tab[8];
 	int result =std::sqrt(X*X+Y*Y);
-	//if (result>255) return 255;
-	return result/8;
+	if (result>255) return 255;
 	//return std::sqrt(X*X+Y*Y);
 }
 
