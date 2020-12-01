@@ -62,7 +62,7 @@ byte Bitmap::osobel(byte *tab, int size, int d)
 			tab[6] - 2*tab[7] - tab[8];
 	int result =std::sqrt(X*X+Y*Y);
 	if (result>255) return 255;
-	return std::sqrt(X*X+Y*Y);
+	return result;
 }
 
 double Bitmap::mean()
