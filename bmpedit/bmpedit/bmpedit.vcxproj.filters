@@ -15,19 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bmpedit.cpp">
+    <ClCompile Include="src\Bitmap.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmap.cpp">
+    <ClCompile Include="src\main.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task2.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task3.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CImg.h">
+    <ClInclude Include="include\Bitmap.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Bitmap.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="include\CImg.h">
+      <Filter>Pliki zasobów</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

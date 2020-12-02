@@ -1,7 +1,7 @@
 //
 // Created by daniel on 24.11.2020.
 //
-#include "Bitmap.h"
+#include "../include/Bitmap.h"
 #include <iostream>
 using namespace cimg_library;
 

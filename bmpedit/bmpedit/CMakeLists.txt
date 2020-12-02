@@ -7,19 +7,19 @@ include_directories(.)
 
 
 ADD_LIBRARY(LibsModule
-        Bitmap.cpp
-        Bitmap.h
-        bmpedit.cpp
-        CImg.h
+        src/Bitmap.cpp
+        include/Bitmap.h
+        src/main.cpp
+        include/CImg.h
         )
 
 target_link_libraries(LibsModule -L/usr/X11R6/lib -lm -lpthread -lX11)
 
 add_executable(bmpedit
-        Bitmap.cpp
-        Bitmap.h
-        bmpedit.cpp
-        CImg.h Task2.cpp)
+        src/Bitmap.cpp
+        include/Bitmap.h
+        src/main.cpp
+        include/CImg.h src/Task2.cpp src/Task3.cpp)
 
 target_link_libraries(bmpedit LibsModule)
 
@@ -36,8 +36,8 @@ include_directories(
 )
 
 add_executable(Test ${SOURCE_TEST_FILES}
-        Bitmap.h
-        Bitmap.cpp)
+        include/Bitmap.h
+        src/Bitmap.cpp)
 
 target_link_libraries(Test
         LibsModule

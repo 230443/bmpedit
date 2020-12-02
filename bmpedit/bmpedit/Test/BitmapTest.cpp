@@ -5,8 +5,8 @@
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 #include <string>
-#include "Bitmap.h"
-#include "Task2.cpp"
+#include "include/Bitmap.h"
+#include "src/Task2.cpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #define IMAGE "/run/media/daniel/Shared/Images/lena/lena.bmp"
 inline boost::posix_time::ptime now()

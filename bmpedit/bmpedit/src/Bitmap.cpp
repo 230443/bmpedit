@@ -1,4 +1,4 @@
-#include "Bitmap.h"
+#include "../include/Bitmap.h"
 #include <iostream>
 using namespace cimg_library;
 
