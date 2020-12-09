@@ -29,6 +29,22 @@ BOOST_AUTO_TEST_SUITE(Task3Suite)
 		img.image.display("before",false,0,true);
 		img.basic_morph_operation(3, 'd');
 		img.image.display("dilation",false,0,true);
+		//img.save("/home/daniel/Desktop/dilation.bmp");
+	}
+	BOOST_AUTO_TEST_CASE(opening)
+	{
+		Bitmap img(IMAGE);
+		img.image.display("before",false,0,true);
+		img.opening(3);
+		img.image.display("opening",false,0,true);
+	}
+	BOOST_AUTO_TEST_CASE(closing)
+	{
+		Bitmap img(IMAGE);
+		img.image.display("before",false,0,true);
+		img.closing(3);
+		img.image.display("closing",false,0,true);
+		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
