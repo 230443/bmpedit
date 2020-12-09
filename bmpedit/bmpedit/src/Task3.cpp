@@ -86,3 +86,15 @@ void Bitmap::basic_morph_operation(unsigned SE_number, char type)
 	copy_frame(tmp, 1);
 }
 
+void Bitmap::opening(unsigned int SE_number)
+{
+	basic_morph_operation(SE_number, 'e');
+	basic_morph_operation(SE_number, 'd');
+}
+
+void Bitmap::closing(unsigned int SE_number)
+{
+	basic_morph_operation(SE_number, 'd');
+	basic_morph_operation(SE_number, 'e');
+}
+

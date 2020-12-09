@@ -88,6 +88,9 @@ public:
 	static byte dilation(const byte* i, const bool se[], int W);
 	static byte erosion(const byte* i, const bool se[], int W);
 
+	void opening(unsigned SE_number);
+	void closing(unsigned SE_number);
+
 
 
     void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
