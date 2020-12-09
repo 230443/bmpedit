@@ -7,6 +7,24 @@
 typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
 
+//	Simple structural elements for morphological operations
+constexpr bool SE[11][9]={
+		{0,0,0,0,1,0,0,0,0},
+		{0,0,0,0,1,1,0,0,0},
+		{0,0,0,0,1,0,0,1,0},
+		{1,1,1,1,1,1,1,1,1},
+		{0,1,0,1,1,1,0,1,0},
+		{0,0,0,0,1,1,0,1,0},
+		{0,0,0,0,0,1,0,1,0},
+		{0,0,0,1,1,1,0,0,0},
+		{0,0,0,1,0,1,0,0,0},
+		{0,0,0,1,1,0,1,0,0},
+		{0,1,1,0,1,0,0,0,0}
+};
+
+
+
+
 class Bitmap 
 {
 public:
@@ -18,6 +36,9 @@ private:
 	long offset;
 	std::string ifname;
 	uint32_t h[256];
+
+
+
 	//int mask[3][9];
 	void set_new_image(cimg_library::CImg<byte>& tmp);
 	void make_arr(byte* p, int& win_s, byte* tab) const;
@@ -62,6 +83,11 @@ public:
     void slaplace(int* kernel);
 	static byte mask0(const byte* i, int* kernel, int W);
     static byte mask9(const byte* i, int* kernel, int W);
+    //	task 3
+	void basic_morph_operation(unsigned SE_number, char type);
+	static byte dilation(const byte* i, const bool se[], int W);
+	static byte erosion(const byte* i, const bool se[], int W);
+
 
 
     void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
