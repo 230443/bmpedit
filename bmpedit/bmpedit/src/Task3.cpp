@@ -2,11 +2,22 @@
 // Created by daniel on 02.12.2020.
 //
 #include "../include/Bitmap.h"
+#include <iostream>
 
 using namespace cimg_library;
 
 byte Bitmap::dilation(const byte* i, const bool* se, int W)
 {
+	if (*(se++)	&& 	*(i - W - 1	) )	return 255;
+	if (*(se++)	&& 	*(i - W		) )	return 255;
+	if (*(se++)	&& 	*(i - W + 1	) )	return 255;
+	if (*(se++)	&& 	*(i 	- 1	) )	return 255;
+	if (*(se++)	&& 	*(i 		) )	return 255;
+	if (*(se++)	&& 	*(i 	+ 1	) )	return 255;
+	if (*(se++)	&& 	*(i + W - 1	) )	return 255;
+	if (*(se++)	&& 	*(i + W 	) )	return 255;
+	if (*(se)	&& 	*(i + W + 1	) )	return 255;
+	return 0;
 	if (*(se++)) if (	*(i - W - 1	) )	return 255;
 	if (*(se++)) if (	*(i - W		) )	return 255;
 	if (*(se++)) if (	*(i - W + 1	) )	return 255;
@@ -15,21 +26,12 @@ byte Bitmap::dilation(const byte* i, const bool* se, int W)
 	if (*(se++)) if (	*(i 	+ 1	) )	return 255;
 	if (*(se++)) if (	*(i + W - 1	) )	return 255;
 	if (*(se++)) if (	*(i + W 	) )	return 255;
-	if (*(se))	 if (	*(i + W - 1	) )	return 255;
+	if (*(se))	 if (	*(i + W + 1	) )	return 255;
 	return 0;
 }
 
 byte Bitmap::erosion(const byte* i, const bool* se, int W)
 {
-	//if (	*(i - W - 1	) && (*(se++))	)	return 255;
-	//if (	*(i - W		) && (*(se++))	)	return 255;
-	//if (	*(i - W + 1	) && (*(se++))	)	return 255;
-	//if (	*(i 	- 1	) && (*(se++))	)	return 255;
-	//if (	*(i 		) && (*(se++))	)	return 255;
-	//if (	*(i 	+ 1	) && (*(se++))	)	return 255;
-	//if (	*(i + W - 1	) && (*(se++))	)	return 255;
-	//if (	*(i + W 	) && (*(se++))	)	return 255;
-	//if (	*(i + W - 1	) && (*(se	))	)	return 255;
 	if (*(se++)) if (!*(i - W - 1	) )	return 0;
 	if (*(se++)) if (!*(i - W		) )	return 0;
 	if (*(se++)) if (!*(i - W + 1	) )	return 0;
@@ -38,7 +40,7 @@ byte Bitmap::erosion(const byte* i, const bool* se, int W)
 	if (*(se++)) if (!*(i 		+ 1	) )	return 0;
 	if (*(se++)) if (!*(i + W - 1	) )	return 0;
 	if (*(se++)) if (!*(i + W 		) )	return 0;
-	if (*(se))	 if (!*(i + W - 1	) )	return 0;
+	if (*(se))	 if (!*(i + W + 1	) )	return 0;
 	return 255;
 }
 
@@ -96,5 +98,62 @@ void Bitmap::closing(unsigned int SE_number)
 {
 	basic_morph_operation(SE_number, 'd');
 	basic_morph_operation(SE_number, 'e');
+}
+
+unsigned t_i_offset= 75555555;
+
+void fill(unsigned x,unsigned y, const bool* se, CImg<byte>& image, CImg<byte>& t)
+{
+	//byte* ir = i + W + 1; //end off loop
+	t(x,y) = 255;
+	//std::cout<<"	y:"<<y<<"	x:"<<x<<std::endl;
+	for (int i = -1; i <= 1;  ++i)
+	{
+		for (int j = -1; j <= 1; ++j)
+		{
+			//std::cout << "y:" << y + i << "	x:" << x + j << std::endl;
+			if (*(se++))
+				if (!t(x + j, y + i))
+					if(image(x + j, y + i))
+						fill(x + j, y + i, se, image, t);
+		}
+	}
+}
+
+byte fill(byte* i, byte* t, const bool* se, int W)
+{
+	byte* ir = i + W + 1; //end off loop
+	for (i -= W,t -= W; i <= ir; t += W,i += W)
+	{
+		for (int x = -1; x <= 1; ++x)
+		{
+			if (*se)
+				if (*i)
+				{
+					if (*t)
+						fill(i,t,se,W);
+				}
+		}
+	}
+	return 0;
+}
+
+cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
+{
+	CImgDisplay disp(image,"select point",0, false, false);
+	while (!disp.is_closed())
+		if (disp.button()&1)
+		{
+			x = disp.mouse_x();
+			y = disp.mouse_y();
+			disp.close();
+		}
+
+	CImg<byte> tmp(W, H, 1, 1,0);
+	const bool* se = &SE[SE_number][0];
+	fill(x,y,se,image,tmp);
+	tmp.display();
+
+	return tmp;
 }
 

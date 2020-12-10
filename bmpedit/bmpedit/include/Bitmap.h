@@ -91,6 +91,8 @@ public:
 	void opening(unsigned SE_number);
 	void closing(unsigned SE_number);
 
+	cimg_library::CImg<byte> M3(int x, int y,unsigned SE_number);
+
 
 
     void save(const std::string& ofname) const;	//method overloaded, save(const char* const)
