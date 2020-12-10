@@ -93,6 +93,7 @@ public:
 	void basic_morph_operation(unsigned SE_number, char type);
 	static byte dilation(const byte* i, const int8_t* se, int W);
 	static byte erosion(const byte* i, const int8_t* se, int W);
+	static byte HMT(const byte* i, const int8_t* se, int W);
 
 	void opening(unsigned SE_number);
 	void closing(unsigned SE_number);

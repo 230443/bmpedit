@@ -44,18 +44,37 @@ byte Bitmap::erosion(const byte* i, const int8_t* se, int W)
 	return 255;
 }
 
+byte Bitmap::HMT(const byte* i, const int8_t* se, int W)
+{
+	for (int y = -W; y <= W; y += W)
+	{
+		for (int x = -1; x <= 1; ++x)
+		{
+			if (*se)
+			{
+				if (*se > 0)
+					{if (!*(i+x+y)) return 0;}
+				else if (*(i+x+y))
+					return 0;
+			}
+			se++;
+		}
+	}
+	return 255;
+}
+
 
 void Bitmap::basic_morph_operation(unsigned SE_number, char type)
 {
 	byte(*operation)(const byte* i, const int8_t se[], int W);
 	const int8_t * se = &SE[SE_number][0]; 		//choose structural element
 
-	if (type == 'd')		//define operation [dilation/erosion]
+	if (type == 'd')		//define operation [dilation/erosion/HMT]
 		operation = dilation;
 	else if (type == 'e')
 		operation = erosion;
-
-
+	else if (type == 'h')
+		operation = HMT;
 
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 
