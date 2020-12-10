@@ -100,46 +100,6 @@ void Bitmap::closing(unsigned int SE_number)
 	basic_morph_operation(SE_number, 'e');
 }
 
-unsigned t_i_offset= 75555555;
-
-//void fill(unsigned x,unsigned y, const bool* se, CImg<byte>& image, CImg<byte>& t)
-//{
-//	//byte* ir = i + W + 1; //end off loop
-//	t(x,y) = 255;
-//	//std::cout<<"	y:"<<y<<"	x:"<<x<<std::endl;
-//
-//	for (int i = -1; i <= 1;  ++i)
-//	{
-//		for (int j = -1; j <= 1; ++j)
-//		{
-//			//std::cout << "y:" << y + i << "	x:" << x + j << std::endl;
-//			if (*(se++))
-//				if (!t(x + j, y + i))
-//					if(image(x + j, y + i))
-//						fill(x + j, y + i, se, image, t);
-//		}
-//	}
-//}
-
-void fill(unsigned x,unsigned y,const bool* se, CImg<byte>& image, CImg<byte>& t)
-{
-	//byte* ir = i + W + 1; //end off loop
-	//std::cout<<"	y:"<<y<<"	x:"<<x<<std::endl;
-
-	if (!t(x, y))
-		if (image(x, y))
-		{
-			t(x, y) = 255;
-			for (int i = -1; i <= 1; ++i)
-			{
-				for (int j = -1; j <= 1; ++j)
-				{
-					fill(x + j, y + i, se, image, t);
-				}
-			}
-		}
-}
-
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
 void Bitmap::fill(byte* i, byte* t, const bool* se)
 {
@@ -162,13 +122,10 @@ void Bitmap::fill(byte* i, byte* t, const bool* se)
 		}
 }
 
-
-
-
 cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 {
 	CImgDisplay disp(image,"select point",0, false, false);
-	while (!disp.is_closed())
+	while (!disp.is_closed())  //	event loop
 		if (disp.button()&1)
 		{
 			x = disp.mouse_x();

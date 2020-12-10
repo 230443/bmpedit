@@ -9,6 +9,7 @@ typedef byte(*func)(byte* tab, int size, int parameter);
 
 //	Simple structural elements for morphological operations
 constexpr bool SE[11][9]={
+	   //1,2,3,4,5,6,7,8,9
 		{0,0,0,0,1,0,0,0,0},	//0
 		{0,0,0,0,1,1,0,0,0},	//1
 		{0,0,0,0,1,0,0,1,0},	//2

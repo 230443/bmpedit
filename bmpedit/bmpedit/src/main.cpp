@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
         Bitmap img(argv[1]);
         //img.image.display("Before",false,0,true);
 
-	cimg_library::CImg<byte>ref;
+	cimg_library::CImg<unsigned char> ref;
 	bool ref_available = false;
 
 	for (int i = 2; i < argc; ++i)
