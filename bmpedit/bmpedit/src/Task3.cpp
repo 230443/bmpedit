@@ -102,41 +102,68 @@ void Bitmap::closing(unsigned int SE_number)
 
 unsigned t_i_offset= 75555555;
 
-void fill(unsigned x,unsigned y, const bool* se, CImg<byte>& image, CImg<byte>& t)
+//void fill(unsigned x,unsigned y, const bool* se, CImg<byte>& image, CImg<byte>& t)
+//{
+//	//byte* ir = i + W + 1; //end off loop
+//	t(x,y) = 255;
+//	//std::cout<<"	y:"<<y<<"	x:"<<x<<std::endl;
+//
+//	for (int i = -1; i <= 1;  ++i)
+//	{
+//		for (int j = -1; j <= 1; ++j)
+//		{
+//			//std::cout << "y:" << y + i << "	x:" << x + j << std::endl;
+//			if (*(se++))
+//				if (!t(x + j, y + i))
+//					if(image(x + j, y + i))
+//						fill(x + j, y + i, se, image, t);
+//		}
+//	}
+//}
+
+void fill(unsigned x,unsigned y,const bool* se, CImg<byte>& image, CImg<byte>& t)
 {
 	//byte* ir = i + W + 1; //end off loop
-	t(x,y) = 255;
 	//std::cout<<"	y:"<<y<<"	x:"<<x<<std::endl;
-	for (int i = -1; i <= 1;  ++i)
-	{
-		for (int j = -1; j <= 1; ++j)
+
+	if (!t(x, y))
+		if (image(x, y))
 		{
-			//std::cout << "y:" << y + i << "	x:" << x + j << std::endl;
-			if (*(se++))
-				if (!t(x + j, y + i))
-					if(image(x + j, y + i))
-						fill(x + j, y + i, se, image, t);
+			t(x, y) = 255;
+			for (int i = -1; i <= 1; ++i)
+			{
+				for (int j = -1; j <= 1; ++j)
+				{
+					fill(x + j, y + i, se, image, t);
+				}
+			}
 		}
-	}
 }
 
-byte fill(byte* i, byte* t, const bool* se, int W)
+//i - pixel from original image , t - pixel from new empty image, se - structural element B
+void Bitmap::fill(byte* i, byte* t, const bool* se)
 {
-	byte* ir = i + W + 1; //end off loop
-	for (i -= W,t -= W; i <= ir; t += W,i += W)
-	{
-		for (int x = -1; x <= 1; ++x)
+	if (!(*t))				//return if already filled
+		if (*i)				//return if centre pixel not white (mask must include centre pixel)
 		{
-			if (*se)
-				if (*i)
+			*t = 255;
+			if(i>image.begin()+W+1 && i<image.end()-W-1)	// W - image.width()
+			{
+				int index = 0;
+				for (int y = -W; y <= W; y += W)
 				{
-					if (*t)
-						fill(i,t,se,W);
+					for (int x = -1; x <= 1; ++x)
+					{
+						if (se[index++])
+							fill(i + x + y, t + x + y, se);
+					}
 				}
+			}
 		}
-	}
-	return 0;
 }
+
+
+
 
 cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 {
@@ -151,7 +178,7 @@ cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 	const bool* se = &SE[SE_number][0];
-	fill(x,y,se,image,tmp);
+	fill(image.data(x,y),tmp.data(x,y),se);
 	tmp.display();
 
 	return tmp;
