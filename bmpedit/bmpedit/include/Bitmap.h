@@ -8,9 +8,9 @@ typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
 
 //	Simple structural elements for morphological operations
-constexpr bool SE[11][9]={
+constexpr int8_t SE[][9]={
 	   //1,2,3,4,5,6,7,8,9
-		{0,0,0,0,1,0,0,0,0},	//0
+		{0,0,0,0,1,0,0,0,0},	//0 - empty
 		{0,0,0,0,1,1,0,0,0},	//1
 		{0,0,0,0,1,0,0,1,0},	//2
 		{1,1,1,1,1,1,1,1,1},	//3
@@ -20,10 +20,15 @@ constexpr bool SE[11][9]={
 		{0,0,0,1,1,1,0,0,0},	//7
 		{0,0,0,1,0,1,0,0,0},	//8
 		{0,0,0,1,1,0,1,0,0},	//9
-		{0,1,1,0,1,0,0,0,0}		//10
+		{0,1,1,0,1,0,0,0,0},	//10
+		//	HMT
+		{1,0,0,1,-1,0,1,0,0},	//11W
+		{1,1,1,0,-1,0,0,0,0},	//11N
+		{-1,-1,-1,0,1,0,1,1,1},	//12S
+		{0,-1,-1,1,1,-1,1,1,0},	//12SW
+		{1,0,-1,1,1,-1,1,0,-1},	//12W
+		{1,1,0,1,1,-1,0,-1,-1}	//12NW
 };
-
-
 
 
 class Bitmap 
@@ -86,14 +91,14 @@ public:
     static byte mask9(const byte* i, int* kernel, int W);
     //	task 3
 	void basic_morph_operation(unsigned SE_number, char type);
-	static byte dilation(const byte* i, const bool se[], int W);
-	static byte erosion(const byte* i, const bool se[], int W);
+	static byte dilation(const byte* i, const int8_t* se, int W);
+	static byte erosion(const byte* i, const int8_t* se, int W);
 
 	void opening(unsigned SE_number);
 	void closing(unsigned SE_number);
 
 
-	void fill(byte* i, byte* t, const bool* se);
+	void fill(byte* i, byte* t, const int8_t* se);
 	cimg_library::CImg<byte> M3(int x, int y,unsigned SE_number);
 
 

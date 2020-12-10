@@ -6,7 +6,7 @@
 
 using namespace cimg_library;
 
-byte Bitmap::dilation(const byte* i, const bool* se, int W)
+byte Bitmap::dilation(const byte* i, const int8_t* se, int W)
 {
 	if (*(se++)	&& 	*(i - W - 1	) )	return 255;
 	if (*(se++)	&& 	*(i - W		) )	return 255;
@@ -30,7 +30,7 @@ byte Bitmap::dilation(const byte* i, const bool* se, int W)
 	return 0;
 }
 
-byte Bitmap::erosion(const byte* i, const bool* se, int W)
+byte Bitmap::erosion(const byte* i, const int8_t* se, int W)
 {
 	if (*(se++)) if (!*(i - W - 1	) )	return 0;
 	if (*(se++)) if (!*(i - W		) )	return 0;
@@ -47,8 +47,8 @@ byte Bitmap::erosion(const byte* i, const bool* se, int W)
 
 void Bitmap::basic_morph_operation(unsigned SE_number, char type)
 {
-	byte(*operation)(const byte* i, const bool se[], int W);
-	const bool* se = &SE[SE_number][0]; 		//choose structural element
+	byte(*operation)(const byte* i, const int8_t se[], int W);
+	const int8_t * se = &SE[SE_number][0]; 		//choose structural element
 
 	if (type == 'd')		//define operation [dilation/erosion]
 		operation = dilation;
@@ -101,7 +101,7 @@ void Bitmap::closing(unsigned int SE_number)
 }
 
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
-void Bitmap::fill(byte* i, byte* t, const bool* se)
+void Bitmap::fill(byte* i, byte* t, const int8_t* se)
 {
 	if (!(*t))				//return if already filled
 		if (*i)				//return if centre pixel not white (mask must include centre pixel)
@@ -134,7 +134,7 @@ cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 		}
 
 	CImg<byte> tmp(W, H, 1, 1,0);
-	const bool* se = &SE[SE_number][0];
+	const int8_t* se = &SE[SE_number][0];
 	fill(image.data(x,y),tmp.data(x,y),se);
 	tmp.display();
 
