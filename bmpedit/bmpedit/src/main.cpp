@@ -191,23 +191,7 @@ int main(int argc, char* argv[])
 					wrong_value(arg);
 					return 1;
 				}
-
-				if (mask_nr == 0)
-					img.slaplace(nullptr);
-				else if (mask_nr == 1)
-				{
-					int mask[9] = { -1, -1, -1,
-							-1, +8, -1,
-							-1, -1, -1 };
-					img.slaplace(mask);
-				}
-				else if (mask_nr == 2)
-				{
-					int mask[9] = { +1, -2, +1,
-							-2, +4, -2,
-							+1, -2, +1 };
-					img.slaplace(mask);
-				}
+				img.operation_3x3(mask_nr,'l');
 				i++;
 				continue;
 			}

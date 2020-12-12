@@ -7,6 +7,15 @@
 typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
 
+
+constexpr int8_t LAPLACE_MASK[][9]={
+		{-1, -1, -1,
+		-1, +8, -1,
+		-1, -1, -1},
+		{+1, -2, +1,
+		-2, +4, -2,
+		+1, -2, +1}
+};
 //	Simple structural elements for morphological operations
 constexpr int8_t SE[][9]={
 	   //1,2,3,4,5,6,7,8,9
@@ -87,8 +96,8 @@ public:
     double mean ();
     double casyco ();
     void slaplace(int* kernel);
-	static byte mask0(const byte* i, int* kernel, int W);
-    static byte mask9(const byte* i, int* kernel, int W);
+	static byte mask0(const byte* i, const int8_t* kernel, int W);
+    static byte mask9(const byte* i, const int8_t* kernel, int W);
     //	task 3
 	void operation_3x3(unsigned SE_number, char type);
 	static byte dilation(const byte* i, const int8_t* se, int W);

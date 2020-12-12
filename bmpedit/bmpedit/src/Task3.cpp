@@ -75,6 +75,17 @@ void Bitmap::operation_3x3(unsigned SE_number, char type)
 		operation = erosion;
 	else if (type == 'h')
 		operation = HMT;
+	else if (type == 'l')
+	{
+		if (SE_number == 0)
+			operation = mask0;
+		else
+		{
+			se = &LAPLACE_MASK[SE_number-1][0];
+			operation = mask9;
+		}
+	}
+
 
 	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
 

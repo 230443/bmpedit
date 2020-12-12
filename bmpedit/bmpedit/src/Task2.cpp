@@ -89,47 +89,7 @@ double Bitmap::casyco()
 }
 
 
-
-void Bitmap::slaplace(int* kernel)
-{
-
-	byte(*mask)(const byte* i, int kernel[], int W);
-	if(kernel == nullptr)
-		mask = &mask0;
-	else
-		mask = &mask9;
-	CImg<byte> tmp(W, H, 1, image.spectrum());			//temporary image
-
-	int w = W - 2;								//new width
-
-	byte* i = image.data(1, 1);					//iterator on the image
-	byte* t = tmp.data(1, 1);					//iterator on the tmp
-	byte* ir = i + w;									//last in a row
-	byte* last = ir + W * (H - 1 * 2 - 1);			//last in a given color
-
-	for (int s = 0; s != image.spectrum(); ++s)			//select pixel to apply filter to
-	{
-		while (i < last)
-		{
-			while (i < ir)
-			{
-				*t = mask(i, kernel, W);
-				i++;
-				t++;
-			}
-			i += 2;				//go to the next line
-			t += 2;
-			ir = i + w;
-		}
-		i += 2 * W;				//go to the next color
-		t += 2 * W;
-		ir = i + w;
-		last += offset;
-	}
-	copy_frame(tmp, 1);
-}
-
-byte Bitmap::mask0(const byte* i, int* kernel, int W)
+byte Bitmap::mask0(const byte* i, const int8_t* kernel, int W)
 {
 	int sum = 0;
 	sum += *(i - W)*(-1);
@@ -139,7 +99,7 @@ byte Bitmap::mask0(const byte* i, int* kernel, int W)
 	sum += *(i + W)*(-1);
 	return (byte)(sum*128/400+127);
 }
-byte Bitmap::mask9(const byte* i, int* kernel, int W)
+byte Bitmap::mask9(const byte* i, const int8_t* kernel, int W)
 {
 
 	int sum = 0;

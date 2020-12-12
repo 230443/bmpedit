@@ -8,7 +8,7 @@
 #include "include/Bitmap.h"
 #include "src/Task2.cpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
-#define IMAGE "/run/media/daniel/Shared/Images/lena/lena.bmp"
+#define IMAGE "../../Images/lena/lena.bmp"
 inline boost::posix_time::ptime now()
 {
     return boost::posix_time::microsec_clock::local_time();
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_SUITE(laplaceSuite)
 			Bitmap img(IMAGE);
 			boost::posix_time::ptime startTime = now();
 
-			img.slaplace(nullptr);
+			img.operation_3x3(0,'l');
 
 			boost::posix_time::time_duration elapsed = now() - startTime;
 			sum += elapsed;
@@ -100,10 +100,7 @@ BOOST_AUTO_TEST_SUITE(laplaceSuite)
 			Bitmap img(IMAGE);
 			boost::posix_time::ptime startTime = now();
 
-			int mask[9] = { -1, -1, -1,
-					-1, +8, -1,
-					-1, -1, -1 };
-			img.slaplace(mask);
+			img.operation_3x3(1,'l');
 
 			boost::posix_time::time_duration elapsed = now() - startTime;
 			sum += elapsed;
@@ -120,10 +117,7 @@ BOOST_AUTO_TEST_SUITE(laplaceSuite)
 			Bitmap img(IMAGE);
 			boost::posix_time::ptime startTime = now();
 
-			int mask[9] = { +1, -2, +1,
-					-2, +4, -2,
-					+1, -2, +1 };
-			img.slaplace(mask);
+			img.operation_3x3(2,'l');
 
 			boost::posix_time::time_duration elapsed = now() - startTime;
 			sum += elapsed;
