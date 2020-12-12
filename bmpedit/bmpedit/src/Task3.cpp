@@ -140,6 +140,26 @@ void Bitmap::fill(byte* i, byte* t, const int8_t* se)
 			}
 		}
 }
+void Bitmap::grow(byte* i, byte* t, const int8_t* se)
+{
+	if (!(*t))				//return if already filled
+		if (*i)				//return if centre pixel not white (mask must include centre pixel)
+		{
+			*t = 255;
+			if(i>image.begin()+W+1 && i<image.end()-W-1 && (i-image.begin())%W != W-1 && (i-image.begin())%W != 0)	// W - image.width()
+			{
+				int index = 0;
+				for (int y = -W; y <= W; y += W)
+				{
+					for (int x = -1; x <= 1; ++x)
+					{
+						if (se[index++])
+							fill(i + x + y, t + x + y, se);
+					}
+				}
+			}
+		}
+}
 
 cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 {
@@ -156,6 +176,30 @@ cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 	const int8_t* se = &SE[SE_number][0];
 	fill(image.data(x,y),tmp.data(x,y),se);
 	tmp.display();
+
+	return tmp;
+}
+
+cimg_library::CImg<byte> Bitmap::R1(CImg<byte>& seeds, unsigned int SE_number)
+{
+	const int8_t* se = &SE[SE_number][0];
+
+	CImg<byte> tmp(W, H, 1, 1,0);
+	//for (byte* i = image.begin();i<image.end();i++)
+	//{
+	//	if(*s)
+	//		fill(i,s,se);
+	//	s++;
+	//}
+	byte* i = image.begin();
+	byte* t = tmp.begin();
+	for (auto& seed : seeds)
+	{
+		if (seed)
+			fill(i,t,se);
+		i++;
+		t++;
+	}
 
 	return tmp;
 }

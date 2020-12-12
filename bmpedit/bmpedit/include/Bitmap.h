@@ -101,6 +101,8 @@ public:
 
 	void fill(byte* i, byte* t, const int8_t* se);
 	cimg_library::CImg<byte> M3(int x, int y,unsigned SE_number);
+	void grow(byte* i, byte* t, const int8_t* se);
+	cimg_library::CImg<byte> R1(cimg_library::CImg<byte>& seeds, unsigned SE_number);
 
 
 

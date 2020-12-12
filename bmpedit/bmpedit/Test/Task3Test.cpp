@@ -7,7 +7,7 @@
 #include "include/Bitmap.h"
 #include "src/Task3.cpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
-#define IMAGE "../../Images/mono/mandrilbw.bmp"
+#define IMAGE "../../Images/mono/girlbw.bmp"
 inline boost::posix_time::ptime now()
 {
 	return boost::posix_time::microsec_clock::local_time();
@@ -74,6 +74,22 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 		Bitmap img(IMAGE);
 		//img.image.display("before",false,0,true);
 		img.M3(333,222,4).save("/home/daniel/Desktop/M3_2.bmp");
+		//img.save("/home/daniel/Desktop/closing.bmp");
+	}
+	BOOST_AUTO_TEST_CASE(R1)
+	{
+		{
+			Bitmap img(IMAGE);
+			img.image.display("original",false,0,true);
+			img.basic_morph_operation(14, 'h');
+			img.save("HMT.bmp");
+		}
+		Bitmap img(IMAGE);
+		CImg<unsigned char> seeds("HMT.bmp");
+		seeds.display("seeds",false,0,true);
+		//img.image.display("before",false,0,true);
+		img.R1(seeds,4).display("R1",false,0,true);
+
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 BOOST_AUTO_TEST_SUITE_END()
