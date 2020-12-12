@@ -90,7 +90,7 @@ public:
 	static byte mask0(const byte* i, int* kernel, int W);
     static byte mask9(const byte* i, int* kernel, int W);
     //	task 3
-	void basic_morph_operation(unsigned SE_number, char type);
+	void operation_3x3(unsigned SE_number, char type);
 	static byte dilation(const byte* i, const int8_t* se, int W);
 	static byte erosion(const byte* i, const int8_t* se, int W);
 	static byte HMT(const byte* i, const int8_t* se, int W);
@@ -98,10 +98,8 @@ public:
 	void opening(unsigned SE_number);
 	void closing(unsigned SE_number);
 
-
-	void fill(byte* i, byte* t, const int8_t* se);
 	cimg_library::CImg<byte> M3(int x, int y,unsigned SE_number);
-	void grow(byte* i, byte* t, const int8_t* se);
+	void fill(byte* i, byte* t, const int8_t* se, byte color=255);
 	cimg_library::CImg<byte> R1(cimg_library::CImg<byte>& seeds, unsigned SE_number);
 
 

@@ -20,14 +20,14 @@ BOOST_AUTO_TEST_SUITE(Task3Suite)
 	{
 		Bitmap img(IMAGE);
 		img.image.display("before",false,0,true);
-		img.basic_morph_operation(3, 'e');
+		img.operation_3x3(3, 'e');
 		img.image.display("erosion",false,0,true);
 	}
 	BOOST_AUTO_TEST_CASE(dilation)
 	{
 		Bitmap img(IMAGE);
 		img.image.display("before",false,0,true);
-		img.basic_morph_operation(3, 'd');
+		img.operation_3x3(3, 'd');
 		img.image.display("dilation",false,0,true);
 		img.save("/home/daniel/Desktop/dilation_new.bmp");
 	}
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_SUITE(Task3Suite)
 	{
 		Bitmap img(IMAGE);
 		img.image.display("before",false,0,true);
-		img.basic_morph_operation(14,'h');
+		img.operation_3x3(14, 'h');
 		img.image.display("HMT",false,0,true);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 		{
 			Bitmap img(IMAGE);
 			img.image.display("original",false,0,true);
-			img.basic_morph_operation(14, 'h');
+			img.operation_3x3(14, 'h');
 			img.save("HMT.bmp");
 		}
 		Bitmap img(IMAGE);
