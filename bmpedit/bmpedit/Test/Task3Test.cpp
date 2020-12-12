@@ -66,14 +66,14 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 	{
 		Bitmap img(IMAGE);
 		//img.image.display("before",false,0,true);
-		img.M3(333,222,3).save("/home/daniel/Desktop/M3_3.bmp");
+		img.M3(333,222,3);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 	BOOST_AUTO_TEST_CASE(M3_2)
 	{
 		Bitmap img(IMAGE);
 		//img.image.display("before",false,0,true);
-		img.M3(333,222,4).save("/home/daniel/Desktop/M3_2.bmp");
+		img.M3(333,222,4);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 	BOOST_AUTO_TEST_CASE(R1)
@@ -86,9 +86,14 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 		}
 		Bitmap img(IMAGE);
 		CImg<unsigned char> seeds("HMT.bmp");
-		seeds.display("seeds",false,0,true);
+		//seeds.display("seeds",false,0,true);
 		//img.image.display("before",false,0,true);
-		img.R1(seeds,4).display("R1",false,0,true);
+		auto points = img.select_seeds();
+		points.display("seeds",false,0,true);
+		img.R1(points,4);
+		img.image.display("R1",false,0,true);
+
+
 
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}

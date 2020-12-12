@@ -98,9 +98,10 @@ public:
 	void opening(unsigned SE_number);
 	void closing(unsigned SE_number);
 
-	cimg_library::CImg<byte> M3(int x, int y,unsigned SE_number);
+	void M3(int x, int y,unsigned SE_number);
 	void fill(byte* i, byte* t, const int8_t* se, byte color=255);
-	cimg_library::CImg<byte> R1(cimg_library::CImg<byte>& seeds, unsigned SE_number);
+	void R1(cimg_library::CImg<byte>& seeds, unsigned SE_number);
+	cimg_library::CImg<byte> select_seeds();
 
 
 

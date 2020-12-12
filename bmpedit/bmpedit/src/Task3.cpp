@@ -122,7 +122,7 @@ void Bitmap::closing(unsigned int SE_number)
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
 
 
-cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
+void Bitmap::M3(int x, int y,unsigned SE_number)
 {
 	CImgDisplay disp(image,"select point",0, false, false);
 	while (!disp.is_closed())  //	event loop
@@ -138,7 +138,7 @@ cimg_library::CImg<byte> Bitmap::M3(int x, int y,unsigned SE_number)
 	fill(image.data(x,y),tmp.data(x,y),se);
 	tmp.display();
 
-	return tmp;
+	image = tmp;
 }
 
 void Bitmap::fill(byte* i, byte* t, const int8_t* se, byte color)
@@ -162,7 +162,22 @@ void Bitmap::fill(byte* i, byte* t, const int8_t* se, byte color)
 		}
 }
 
-cimg_library::CImg<byte> Bitmap::R1(CImg<byte>& seeds, unsigned int SE_number)
+
+cimg_library::CImg<byte> Bitmap::select_seeds()
+{
+	CImg<byte> tmp(W, H, 1, 1,0);;
+
+	CImgDisplay disp(image,"select point",0, false, false);
+	while (!disp.is_closed())  //	event loop
+		if (disp.button()&1)
+		{
+			tmp(disp.mouse_x(),disp.mouse_y())=255;
+		}
+
+	return tmp;
+}
+
+void Bitmap::R1(CImg<byte>& seeds, unsigned int SE_number)
 {
 	const int8_t* se = &SE[SE_number][0];
 
@@ -183,6 +198,6 @@ cimg_library::CImg<byte> Bitmap::R1(CImg<byte>& seeds, unsigned int SE_number)
 		t++;
 	}
 
-	return tmp;
+	image = tmp;
 }
 
