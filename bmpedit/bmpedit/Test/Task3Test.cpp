@@ -7,7 +7,7 @@
 #include "include/Bitmap.h"
 #include "src/Task3.cpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
-#define IMAGE "/run/media/daniel/Shared/Images/mono/lenabw.bmp"
+#define IMAGE "../../Images/mono/mandrilbw.bmp"
 inline boost::posix_time::ptime now()
 {
 	return boost::posix_time::microsec_clock::local_time();
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_SUITE(Task3Suite)
 	{
 		Bitmap img(IMAGE);
 		img.image.display("before",false,0,true);
-		img.basic_morph_operation(15,'h');
+		img.basic_morph_operation(14,'h');
 		img.image.display("HMT",false,0,true);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}

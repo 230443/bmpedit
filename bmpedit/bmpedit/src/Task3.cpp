@@ -126,7 +126,7 @@ void Bitmap::fill(byte* i, byte* t, const int8_t* se)
 		if (*i)				//return if centre pixel not white (mask must include centre pixel)
 		{
 			*t = 255;
-			if(i>image.begin()+W+1 && i<image.end()-W-1)	// W - image.width()
+			if(i>image.begin()+W+1 && i<image.end()-W-1 && (i-image.begin())%W != W-1 && (i-image.begin())%W != 0)	// W - image.width()
 			{
 				int index = 0;
 				for (int y = -W; y <= W; y += W)

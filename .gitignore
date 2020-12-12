@@ -7,6 +7,7 @@
 bmpedit/bmpedit/cmake-build-debug
 bmpedit/bmpedit/cmake-build-release
 bmpedit/bmpedit/.idea
+bmpedit/Images
 
 # User-specific files
 *.rsuser
