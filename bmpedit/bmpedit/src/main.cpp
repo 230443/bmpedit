@@ -128,13 +128,32 @@ int main(int argc, char* argv[])
 				i += 2;
 				continue;
 			}
+			if (arg == "--R1")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (strcmp(argv[i + 2],"-select") == 0)
+				{
+					cimg_library::CImg<unsigned char> seeds = img.select_seeds();
+					seeds.display("seeds",false,0,true);
+					img.R1(stoi(argv[i + 1]),seeds);
+				}
+				else
+				{
+					cimg_library::CImg<unsigned char> seeds(argv[i + 2]);
+					seeds.display("seeds",false,0,true);
+					img.R1(stoi(argv[i + 1]),seeds);
+				}
+				i += 2;
+				continue;
+			}
+
         }
 		if (i + 1 < argc)      // must have 1 argument
 		{
 			if (arg == "-r")
 			{
 				ref.assign(argv[++i]);
-				img.optimize(ref);
+				Bitmap::optimize(ref);
 				ref_available = true;
 				//ref.display();
 				continue;
@@ -190,6 +209,42 @@ int main(int argc, char* argv[])
 					img.slaplace(mask);
 				}
 				i++;
+				continue;
+			}
+			if (arg == "--dilation")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.operation_3x3(stoi(argv[++i]),'d');
+				continue;
+			}
+			if (arg == "--erosion")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.operation_3x3(stoi(argv[++i]),'e');
+				continue;
+			}
+			if (arg == "--HMT")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.operation_3x3(stoi(argv[++i]),'h');
+				continue;
+			}
+			if (arg == "--opening")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.opening(stoi(argv[++i]));
+				continue;
+			}
+			if (arg == "--closing")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.closing(stoi(argv[++i]));
+				continue;
+			}
+			if (arg == "--M3")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.M3(stoi(argv[++i]));
 				continue;
 			}
 			else if (arg == "-o")

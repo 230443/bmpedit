@@ -122,9 +122,10 @@ void Bitmap::closing(unsigned int SE_number)
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
 
 
-void Bitmap::M3(int x, int y,unsigned SE_number)
+void Bitmap::M3(unsigned SE_number)
 {
 	CImgDisplay disp(image,"select point",0, false, false);
+	unsigned x,y;
 	while (!disp.is_closed())  //	event loop
 		if (disp.button()&1)
 		{
@@ -163,21 +164,28 @@ void Bitmap::fill(byte* i, byte* t, const int8_t* se, byte color)
 }
 
 
-cimg_library::CImg<byte> Bitmap::select_seeds()
+cimg_library::CImg<byte> Bitmap::select_seeds() const
 {
 	CImg<byte> tmp(W, H, 1, 1,0);;
 
 	CImgDisplay disp(image,"select point",0, false, false);
-	while (!disp.is_closed())  //	event loop
-		if (disp.button()&1)
+	while (!disp.is_closed())//	event loop
+	{
+		if (disp.button() & 1)
 		{
-			tmp(disp.mouse_x(),disp.mouse_y())=255;
+			tmp(disp.mouse_x(), disp.mouse_y()) = 255;
 		}
+		if (disp.is_keyQ())
+		{
+			disp.close();
+		}
+	}
+	disp.close();
 
 	return tmp;
 }
 
-void Bitmap::R1(CImg<byte>& seeds, unsigned int SE_number)
+void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 {
 	const int8_t* se = &SE[SE_number][0];
 

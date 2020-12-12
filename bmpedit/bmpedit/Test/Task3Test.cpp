@@ -66,14 +66,14 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 	{
 		Bitmap img(IMAGE);
 		//img.image.display("before",false,0,true);
-		img.M3(333,222,3);
+		img.M3(3);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 	BOOST_AUTO_TEST_CASE(M3_2)
 	{
 		Bitmap img(IMAGE);
 		//img.image.display("before",false,0,true);
-		img.M3(333,222,4);
+		img.M3(4);
 		//img.save("/home/daniel/Desktop/closing.bmp");
 	}
 	BOOST_AUTO_TEST_CASE(R1)
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 		//img.image.display("before",false,0,true);
 		auto points = img.select_seeds();
 		points.display("seeds",false,0,true);
-		img.R1(points,4);
+		img.R1(4, points);
 		img.image.display("R1",false,0,true);
 
 
