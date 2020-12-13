@@ -137,6 +137,11 @@ int main(int argc, char* argv[])
 					seeds.display("seeds",false,0,true);
 					img.R1(stoi(argv[i + 1]),seeds);
 				}
+				else if (strcmp(argv[i + 2],"-self") == 0)
+				{
+					img.image.display("seeds",false,0,true);
+					img.R1(stoi(argv[i + 1]),img.image);
+				}
 				else
 				{
 					cimg_library::CImg<unsigned char> seeds(argv[i + 2]);
