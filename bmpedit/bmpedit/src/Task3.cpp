@@ -18,16 +18,16 @@ byte Bitmap::dilation(const byte* i, const int8_t* se, int W)
 	if (*(se++)	&& 	*(i + W 	) )	return 255;
 	if (*(se)	&& 	*(i + W + 1	) )	return 255;
 	return 0;
-	if (*(se++)) if (	*(i - W - 1	) )	return 255;
-	if (*(se++)) if (	*(i - W		) )	return 255;
-	if (*(se++)) if (	*(i - W + 1	) )	return 255;
-	if (*(se++)) if (	*(i 	- 1	) )	return 255;
-	if (*(se++)) if (	*(i 		) )	return 255;
-	if (*(se++)) if (	*(i 	+ 1	) )	return 255;
-	if (*(se++)) if (	*(i + W - 1	) )	return 255;
-	if (*(se++)) if (	*(i + W 	) )	return 255;
-	if (*(se))	 if (	*(i + W + 1	) )	return 255;
-	return 0;
+	//if (*(se++)) if (	*(i - W - 1	) )	return 255;
+	//if (*(se++)) if (	*(i - W		) )	return 255;
+	//if (*(se++)) if (	*(i - W + 1	) )	return 255;
+	//if (*(se++)) if (	*(i 	- 1	) )	return 255;
+	//if (*(se++)) if (	*(i 		) )	return 255;
+	//if (*(se++)) if (	*(i 	+ 1	) )	return 255;
+	//if (*(se++)) if (	*(i + W - 1	) )	return 255;
+	//if (*(se++)) if (	*(i + W 	) )	return 255;
+	//if (*(se))	 if (	*(i + W + 1	) )	return 255;
+	//return 0;
 }
 
 byte Bitmap::erosion(const byte* i, const int8_t* se, int W)
@@ -67,6 +67,7 @@ byte Bitmap::HMT(const byte* i, const int8_t* se, int W)
 void Bitmap::operation_3x3(unsigned SE_number, char type)
 {
 	byte(*operation)(const byte* i, const int8_t se[], int W);
+	operation = dilation;
 	const int8_t * se = &SE[SE_number][0]; 		//choose structural element
 
 	if (type == 'd')		//define operation [dilation/erosion/HMT]
@@ -78,7 +79,10 @@ void Bitmap::operation_3x3(unsigned SE_number, char type)
 	else if (type == 'l')
 	{
 		if (SE_number == 0)
+		{
 			operation = mask0;
+			se = nullptr;
+		}
 		else
 		{
 			se = &LAPLACE_MASK[SE_number-1][0];
@@ -177,7 +181,7 @@ void Bitmap::fill(byte* i, byte* t, const int8_t* se, byte color)
 
 cimg_library::CImg<byte> Bitmap::select_seeds() const
 {
-	CImg<byte> tmp(W, H, 1, 1,0);;
+	CImg<byte> tmp(W, H, 1, 1,0);
 
 	CImgDisplay disp(image,"select point",0, false, false);
 	while (!disp.is_closed())//	event loop
