@@ -8,15 +8,15 @@ using namespace cimg_library;
 
 byte Bitmap::dilation(const byte* i, const int8_t* se, int W)
 {
-	if (*(se++)	&& 	*(i - W - 1	) )	return 255;
-	if (*(se++)	&& 	*(i - W		) )	return 255;
-	if (*(se++)	&& 	*(i - W + 1	) )	return 255;
-	if (*(se++)	&& 	*(i 	- 1	) )	return 255;
-	if (*(se++)	&& 	*(i 		) )	return 255;
-	if (*(se++)	&& 	*(i 	+ 1	) )	return 255;
-	if (*(se++)	&& 	*(i + W - 1	) )	return 255;
-	if (*(se++)	&& 	*(i + W 	) )	return 255;
-	if (*(se)	&& 	*(i + W + 1	) )	return 255;
+	if ( 	*(i - W - 1	) && *(se++)	)	return 255;
+	if ( 	*(i - W		) && *(se++)	)	return 255;
+	if ( 	*(i - W + 1	) && *(se++)	)	return 255;
+	if ( 	*(i 	- 1	) && *(se++)	)	return 255;
+	if ( 	*(i 		) && *(se++)	)	return 255;
+	if ( 	*(i 	+ 1	) && *(se++)	)	return 255;
+	if ( 	*(i + W - 1	) && *(se++)	)	return 255;
+	if ( 	*(i + W 	) && *(se++)	)	return 255;
+	if ( 	*(i + W + 1	) && *(se)		)	return 255;
 	return 0;
 	//if (*(se++)) if (	*(i - W - 1	) )	return 255;
 	//if (*(se++)) if (	*(i - W		) )	return 255;
@@ -136,6 +136,9 @@ void Bitmap::closing(unsigned int SE_number)
 
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
 
+const int8_t* se;
+byte color;
+unsigned t_i_offset;
 
 void Bitmap::M3(unsigned SE_number)
 {
@@ -150,32 +153,39 @@ void Bitmap::M3(unsigned SE_number)
 		}
 
 	CImg<byte> tmp(W, H, 1, 1,0);
-	const int8_t* se = &SE[SE_number][0];
-	fill(image.data(x,y),tmp.data(x,y),se);
+	se = &SE[SE_number][0];
+	color = 255;
+	fill(image.data(x,y),tmp.data(x,y));
 	tmp.display();
 
 	image = tmp;
 }
 
-void Bitmap::fill(byte* i, byte* t, const int8_t* se, byte color)
+void Bitmap::fill(byte* i, byte* t)
 {
-	if (!(*t))				//return if already filled
-		if (*i)				//return if centre pixel not white (mask must include centre pixel)
-		{
-			*t = color;
-			if(i>image.begin()+W+1 && i<image.end()-W-1 && (i-image.begin())%W != W-1 && (i-image.begin())%W != 0)	// W - image.width()
-			{
-				int index = 0;
-				for (int y = -W; y <= W; y += W)
-				{
-					for (int x = -1; x <= 1; ++x)
-					{
-						if (se[index++])
-							fill(i + x + y, t + x + y, se, color);
-					}
-				}
-			}
-		}
+	if (*t) return;		//return if already filled
+	if (!(*i)) return;	//return if centre pixel is background (mask must include centre pixel)
+
+	*t = color;
+	if (
+			i > image.begin() + W + 1 &&
+			i < image.end() - W - 1 &&
+			(i - image.begin()) % W != W - 1 &&
+			(i - image.begin()) % W != 0
+	)    // W - image.width()
+	{
+		auto s = (int8_t*)se;		//to prevent fast overflow loop is not used
+		if (*(i - W - 1) && *(s++)) fill((i - W - 1), (t - W - 1));
+		if (*(i - W) && *(s++)) fill((i - W), (t - W));
+		if (*(i - W + 1) && *(s++)) fill((i - W + 1), (t - W + 1));
+		if (*(i - 1) && *(s++)) fill((i - 1), (t - 1));
+		if (*(i) && *(s++)) fill((i), (t));
+		if (*(i + 1) && *(s++)) fill((i + 1), (t + 1));
+		if (*(i + W - 1) && *(s++)) fill((i + W - 1), (t + W - 1));
+		if (*(i + W) && *(s++)) fill((i + W), (t + W));
+		if (*(i + W + 1) && *(s)) fill((i + W + 1), (t + W + 1));
+	}
+
 }
 
 
@@ -195,25 +205,24 @@ cimg_library::CImg<byte> Bitmap::select_seeds() const
 			disp.close();
 		}
 	}
-	disp.close();
 
 	return tmp;
 }
 
 void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 {
-	const int8_t* se = &SE[SE_number][0];
+	se = &SE[SE_number][0];
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 
 	byte* i = image.begin();
 	byte* t = tmp.begin();
-	byte color = 255;
+	color = 255;
 	for (auto& seed : seeds)
 	{
 		if (seed)
 		{
-			fill(i, t, se, color);
+			fill(i, t);
 			color-=7;						//choose pseudorandom color
 			if (color<30)	color=-31;
 		}
