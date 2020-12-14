@@ -113,7 +113,7 @@ public:
 	void closing(unsigned SE_number);
 
 	void M3(unsigned SE_number);
-	void fill(byte* i, byte* t);
+	void fill(byte* i);
 	void R1(unsigned SE_number, cimg_library::CImg<byte>& seeds);
 	cimg_library::CImg<byte> select_seeds() const;
 

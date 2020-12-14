@@ -138,7 +138,7 @@ void Bitmap::closing(unsigned int SE_number)
 
 const int8_t* se;
 byte color;
-unsigned t_i_offset;
+long int t_i_offset;
 
 void Bitmap::M3(unsigned SE_number)
 {
@@ -155,18 +155,18 @@ void Bitmap::M3(unsigned SE_number)
 	CImg<byte> tmp(W, H, 1, 1,0);
 	se = &SE[SE_number][0];
 	color = 255;
-	fill(image.data(x,y),tmp.data(x,y));
-	tmp.display();
+	t_i_offset=tmp.begin()-image.begin();
+	fill(image.data(x,y));
+	//tmp.display();
 
 	image = tmp;
 }
 
-void Bitmap::fill(byte* i, byte* t)
+void Bitmap::fill(byte* i)
 {
-	if (*t) return;		//return if already filled
+	if (*(i+t_i_offset)) return;		//return if already filled
 	if (!(*i)) return;	//return if centre pixel is background (mask must include centre pixel)
-
-	*t = color;
+	*(i+t_i_offset) = color;
 	if (
 			i > image.begin() + W + 1 &&
 			i < image.end() - W - 1 &&
@@ -174,19 +174,17 @@ void Bitmap::fill(byte* i, byte* t)
 			(i - image.begin()) % W != 0
 	)    // W - image.width()
 	{
-		auto s = (int8_t*)se;		//to prevent fast overflow loop is not used
-		if (*(i - W - 1) && *(s++)) fill((i - W - 1), (t - W - 1));
-		if (*(i - W) && *(s++)) fill((i - W), (t - W));
-		if (*(i - W + 1) && *(s++)) fill((i - W + 1), (t - W + 1));
-		if (*(i - 1) && *(s++)) fill((i - 1), (t - 1));
-		if (*(i) && *(s++)) fill((i), (t));
-		if (*(i + 1) && *(s++)) fill((i + 1), (t + 1));
-		if (*(i + W - 1) && *(s++)) fill((i + W - 1), (t + W - 1));
-		if (*(i + W) && *(s++)) fill((i + W), (t + W));
-		if (*(i + W + 1) && *(s)) fill((i + W + 1), (t + W + 1));
+		if (*(i - W - 1) && *(se)) 		fill((i - W - 1));
+		if (*(i - W) && *(se+1)) 		fill((i - W));
+		if (*(i - W + 1) && *(se+2)) 	fill((i - W + 1));
+		if (*(i - 1) && *(se+3)) 		fill((i - 1));
+		if (*(i + 1) && *(se+5)) 		fill((i + 1));
+		if (*(i + W - 1) && *(se+6)) 	fill((i + W - 1));
+		if (*(i + W) && *(se+7)) 		fill((i + W));
+		if (*(i + W + 1) && *(se+8)) 	fill((i + W + 1));
 	}
-
 }
+
 
 
 cimg_library::CImg<byte> Bitmap::select_seeds() const
@@ -215,19 +213,18 @@ void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 
-	byte* i = image.begin();
-	byte* t = tmp.begin();
+	t_i_offset=tmp.begin()-image.begin();
+	byte* i=image.begin();
 	color = 255;
 	for (auto& seed : seeds)
 	{
 		if (seed)
 		{
-			fill(i, t);
+			fill(i);
 			color-=7;						//choose pseudorandom color
-			if (color<30)	color=-31;
+			if (color<30)	color=-30;
 		}
 		i++;
-		t++;
 	}
 
 	image = tmp;
