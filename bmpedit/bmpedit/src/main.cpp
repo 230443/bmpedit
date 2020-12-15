@@ -22,6 +22,13 @@ std::cerr << "Usage: bmpedit	infile [-r ref] [options|similarity measures] [-o o
         << "    --slaplace [n]" << endl
         << "        n - mask number" << endl
         << "    --osobel" << endl
+        << "    --dilation [n]" << endl
+        << "    --erosion [n]" << endl
+        << "    --HMT [n]" << endl
+        << "    --opening [n]" << endl
+        << "    --closing [n]" << endl
+        << "    --M3 [n]" << endl
+        << "    --R1 [n] [filename|-select|-self]" << endl
 		<< "	-r ref" << endl
 		<< "		ref - filename of the original image" << endl
 		<< "	Similarity measures:\n"
