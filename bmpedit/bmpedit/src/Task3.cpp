@@ -18,16 +18,6 @@ byte Bitmap::dilation(const byte* i, const int8_t* se, int W)
 	if ( 	*(i + W 	) && *(se++)	)	return 255;
 	if ( 	*(i + W + 1	) && *(se)		)	return 255;
 	return 0;
-	//if (*(se++)) if (	*(i - W - 1	) )	return 255;
-	//if (*(se++)) if (	*(i - W		) )	return 255;
-	//if (*(se++)) if (	*(i - W + 1	) )	return 255;
-	//if (*(se++)) if (	*(i 	- 1	) )	return 255;
-	//if (*(se++)) if (	*(i 		) )	return 255;
-	//if (*(se++)) if (	*(i 	+ 1	) )	return 255;
-	//if (*(se++)) if (	*(i + W - 1	) )	return 255;
-	//if (*(se++)) if (	*(i + W 	) )	return 255;
-	//if (*(se))	 if (	*(i + W + 1	) )	return 255;
-	//return 0;
 }
 
 byte Bitmap::erosion(const byte* i, const int8_t* se, int W)
@@ -182,18 +172,8 @@ void Bitmap::fill(byte* i)
 		if (*(se+6)) 	fill((i + W - 1));
 		if (*(se+7)) 	fill((i + W));
 		if (*(se+8)) 	fill((i + W + 1));
-		//if (*(i - W - 1) && *(se)) 		fill((i - W - 1));
-		//if (*(i - W) && *(se+1)) 		fill((i - W));
-		//if (*(i - W + 1) && *(se+2)) 	fill((i - W + 1));
-		//if (*(i - 1) && *(se+3)) 		fill((i - 1));
-		//if (*(i + 1) && *(se+5)) 		fill((i + 1));
-		//if (*(i + W - 1) && *(se+6)) 	fill((i + W - 1));
-		//if (*(i + W) && *(se+7)) 		fill((i + W));
-		//if (*(i + W + 1) && *(se+8)) 	fill((i + W + 1));
 	}
 }
-
-
 
 cimg_library::CImg<byte> Bitmap::select_seeds() const
 {
@@ -234,7 +214,5 @@ void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 		}
 		i++;
 	}
-
 	image = tmp;
 }
-
