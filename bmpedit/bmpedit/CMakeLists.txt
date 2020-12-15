@@ -29,7 +29,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 set(SOURCE_TEST_FILES
         Test/config.cpp
-        Test/BitmapTest.cpp Test/Task3Test.cpp)
+        Test/BitmapTest.cpp Test/Task3Test.cpp Test/Task3TimeTest.cpp)
 
 include_directories(
         ${Boost_INCLUDE_DIRS}
