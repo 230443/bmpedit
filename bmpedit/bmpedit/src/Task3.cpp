@@ -130,7 +130,6 @@ void Bitmap::closing(unsigned int SE_number)
 //i - pixel from original image , t - pixel from new empty image, se - structural element B
 
 const int8_t* se;
-byte color;
 long int t_i_offset;
 
 void Bitmap::M3(unsigned SE_number)
@@ -147,7 +146,6 @@ void Bitmap::M3(unsigned SE_number)
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 	se = &SE[SE_number][0];
-	color = 255;
 	t_i_offset=tmp.begin()-image.begin();
 	fill(image.data(x,y));
 	//tmp.display();
@@ -159,7 +157,7 @@ void Bitmap::fill(byte* i)
 {
 	if (*(i+t_i_offset)) return;		//return if already filled
 	if (!(*i)) return;	//return if centre pixel is background (mask must include centre pixel)
-	*(i+t_i_offset) = color;
+	*(i+t_i_offset) = 255;
 	if (
 			i > image.begin() + W + 1 &&
 			i < image.end() - W - 1 &&
@@ -206,50 +204,63 @@ void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 
 	t_i_offset=tmp.begin()-image.begin();
 	byte* i=image.begin();
-	color = 255;
 	using namespace std;
-	vector<unique_ptr<queue<unsigned char>>> regions;
+	vector<queue<unsigned char*>> regions;
 	for (auto& seed : seeds)
 	{
 		if (seed)
 		{
-			queue<unsigned char> region;
-			region.push(seed);
-			regions.push_back(make_unique<queue<unsigned char>>(region));
+			queue<unsigned char*> region;
+			region.push(i);
+			regions.emplace_back(region);
+			//cout<<"seed:"<< (int)*i <<endl;
 		}
 		i++;
 	}
 	for(auto region : regions)
 	{
-
+		grow(region);
 	}
 	image = tmp;
 }
 
-
-
-
-std::stack<byte*> to_be_filled;
-
-void Bitmap::grow(byte* i)
+void Bitmap::grow(std::queue<unsigned char*>& region)
 {
-	if (*(i+t_i_offset)) return;		//return if already filled
-	if (!(*i)) return;	//return if centre pixel is background (mask must include centre pixel)
-	*(i+t_i_offset) = color;
-	if (
-			i > image.begin() + W + 1 &&
-					i < image.end() - W - 1 &&
-					(i - image.begin()) % W != W - 1 &&
-					(i - image.begin()) % W != 0
-			)    // W - image.width()
+	byte threshold = 50;
+	byte color = *region.front();
+	byte threshold_min = color<threshold ? 0 : color-threshold;
+	byte threshold_max = color>255-threshold ? 255 : color+threshold;
+	while(!region.empty())
 	{
-		if (*(se)) 		to_be_filled.push(i - W - 1);
-		if (*(se+1)) 	to_be_filled.push(i - W);
-		if (*(se+2)) 	to_be_filled.push(i - W + 1);
-		if (*(se+3)) 	to_be_filled.push(i - 1);
-		if (*(se+5)) 	to_be_filled.push(i + 1);
-		if (*(se+6)) 	to_be_filled.push(i + W - 1);
-		if (*(se+7)) 	to_be_filled.push(i + W);
-		if (*(se+8)) 	to_be_filled.push(i + W + 1);
+		auto pixel = region.front();
+		region.pop();
+		if (*(pixel+t_i_offset))
+		{
+			continue;		//return if already filled
+		}
+		if (*pixel<threshold_min || *pixel>threshold_max)
+		{
+			continue;		//return if centre pixel do not match threshold
+		}
+		*(pixel+t_i_offset) = color;
+		if (
+				pixel > image.begin() + W + 1 &&
+				pixel < image.end() - W - 1 &&
+				(pixel - image.begin()) % W != W - 1 &&
+				(pixel - image.begin()) % W != 0
+				)    // W - image.width()
+		{
+			byte* pixelR = pixel + W; //end off loop
+			auto localSE = se;
+			for (pixel -= W; pixel <= pixelR; pixel += W)
+			{
+				for (int xw = -1 ; xw <= 1; ++xw)
+				{
+					if (*(localSE++) && *(pixel+xw)>threshold_min && *(pixel+xw)<threshold_max)
+						region.push(pixel + xw);
+				}
+			}
+		}
 	}
+
 }

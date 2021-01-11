@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <queue>
 #include "CImg.h"
 
 typedef unsigned char byte;
@@ -117,7 +118,7 @@ public:
 	void fill(byte* i);
 	void R1(unsigned SE_number, cimg_library::CImg<byte>& seeds);
 	cimg_library::CImg<byte> select_seeds() const;
-	void grow(byte* i);
+	void grow(std::queue<unsigned char*>& region);
 
 
 
