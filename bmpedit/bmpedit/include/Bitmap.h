@@ -116,9 +116,10 @@ public:
 
 	void M3(unsigned SE_number);
 	void fill(byte* i);
-	void R1(unsigned SE_number, cimg_library::CImg<byte>& seeds);
+	void R1(unsigned SE_number, cimg_library::CImg<byte>& seeds, unsigned char homogenity);
 	cimg_library::CImg<byte> select_seeds() const;
 	void grow(std::queue<unsigned char*>& region);
+	void regionGrowing(std::queue<unsigned char*>& region);
 
 
 

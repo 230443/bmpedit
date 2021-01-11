@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_SUITE(M3Suite)
 		//img.image.display("before",false,0,true);
 		auto points = img.select_seeds();
 		points.display("seeds",false,0,true);
-		img.R1(4, points);
+		img.R1(4, points, 20);
 		img.image.display("R1",false,0,true);
 
 

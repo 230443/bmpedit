@@ -138,24 +138,25 @@ int main(int argc, char* argv[])
 			if (arg == "--R1")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
-				if (strcmp(argv[i + 2],"-select") == 0)
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				if (strcmp(argv[i + 3],"-select") == 0)
 				{
 					cimg_library::CImg<unsigned char> seeds = img.select_seeds();
 					seeds.display("seeds",false,0,true);
-					img.R1(stoi(argv[i + 1]),seeds);
+					img.R1(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
 				}
-				else if (strcmp(argv[i + 2],"-self") == 0)
+				else if (strcmp(argv[i + 3],"-self") == 0)
 				{
 					img.image.display("seeds",false,0,true);
-					img.R1(stoi(argv[i + 1]),img.image);
+					img.R1(stoi(argv[i + 1]), img.image, stoi(argv[i + 2]));
 				}
 				else
 				{
-					cimg_library::CImg<unsigned char> seeds(argv[i + 2]);
+					cimg_library::CImg<unsigned char> seeds(argv[i + 3]);
 					seeds.display("seeds",false,0,true);
-					img.R1(stoi(argv[i + 1]),seeds);
+					img.R1(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
 				}
-				i += 2;
+				i += 3;
 				continue;
 			}
 

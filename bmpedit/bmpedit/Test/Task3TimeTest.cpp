@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(dilation)
 				cimg_library::CImg<unsigned char> seeds("seeds.bmp");
 				boost::posix_time::ptime startTime = now();
 
-				img.R1(j,seeds);
+				img.R1(j, seeds, 20);
 
 				boost::posix_time::time_duration elapsed = now() - startTime;
 				sum += elapsed;

@@ -196,19 +196,23 @@ cimg_library::CImg<byte> Bitmap::select_seeds() const
 	return tmp;
 }
 
-void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
+
+byte threshold=20;
+
+void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds, unsigned char homogenity)
 {
 	se = &SE[SE_number][0];
+	threshold = homogenity;
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 
 	t_i_offset=tmp.begin()-image.begin();
-	byte* i=image.begin();
+	byte* i=image.begin()+image.width();
 	using namespace std;
 	vector<queue<unsigned char*>> regions;
-	for (auto& seed : seeds)
+	for (unsigned char* seed = seeds.begin()+seeds.width();seed<seeds.end();seed++)
 	{
-		if (seed)
+		if (*seed)
 		{
 			queue<unsigned char*> region;
 			region.push(i);
@@ -226,10 +230,10 @@ void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 
 void Bitmap::grow(std::queue<unsigned char*>& region)
 {
-	byte threshold = 50;
 	byte color = *region.front();
 	byte threshold_min = color<threshold ? 0 : color-threshold;
 	byte threshold_max = color>255-threshold ? 255 : color+threshold;
+
 	while(!region.empty())
 	{
 		auto pixel = region.front();
@@ -237,10 +241,6 @@ void Bitmap::grow(std::queue<unsigned char*>& region)
 		if (*(pixel+t_i_offset))
 		{
 			continue;		//return if already filled
-		}
-		if (*pixel<threshold_min || *pixel>threshold_max)
-		{
-			continue;		//return if centre pixel do not match threshold
 		}
 		*(pixel+t_i_offset) = color;
 		if (
@@ -262,5 +262,4 @@ void Bitmap::grow(std::queue<unsigned char*>& region)
 			}
 		}
 	}
-
 }
