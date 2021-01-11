@@ -3,6 +3,9 @@
 //
 #include "../include/Bitmap.h"
 #include <iostream>
+#include <queue>
+#include <memory>
+#include <vector>
 
 using namespace cimg_library;
 
@@ -204,15 +207,49 @@ void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds)
 	t_i_offset=tmp.begin()-image.begin();
 	byte* i=image.begin();
 	color = 255;
+	using namespace std;
+	vector<unique_ptr<queue<unsigned char>>> regions;
 	for (auto& seed : seeds)
 	{
 		if (seed)
 		{
-			fill(i);
-			color-=7;						//choose pseudorandom color
-			if (color<30)	color=-30;
+			queue<unsigned char> region;
+			region.push(seed);
+			regions.push_back(make_unique<queue<unsigned char>>(region));
 		}
 		i++;
 	}
+	for(auto region : regions)
+	{
+
+	}
 	image = tmp;
+}
+
+
+
+
+std::stack<byte*> to_be_filled;
+
+void Bitmap::grow(byte* i)
+{
+	if (*(i+t_i_offset)) return;		//return if already filled
+	if (!(*i)) return;	//return if centre pixel is background (mask must include centre pixel)
+	*(i+t_i_offset) = color;
+	if (
+			i > image.begin() + W + 1 &&
+					i < image.end() - W - 1 &&
+					(i - image.begin()) % W != W - 1 &&
+					(i - image.begin()) % W != 0
+			)    // W - image.width()
+	{
+		if (*(se)) 		to_be_filled.push(i - W - 1);
+		if (*(se+1)) 	to_be_filled.push(i - W);
+		if (*(se+2)) 	to_be_filled.push(i - W + 1);
+		if (*(se+3)) 	to_be_filled.push(i - 1);
+		if (*(se+5)) 	to_be_filled.push(i + 1);
+		if (*(se+6)) 	to_be_filled.push(i + W - 1);
+		if (*(se+7)) 	to_be_filled.push(i + W);
+		if (*(se+8)) 	to_be_filled.push(i + W + 1);
+	}
 }

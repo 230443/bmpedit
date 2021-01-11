@@ -19,7 +19,7 @@ constexpr int8_t LAPLACE_MASK[][9]={
 //	Simple structural elements for morphological operations
 constexpr int8_t SE[][9]={
 	   //1,2,3,4,5,6,7,8,9
-		{0,0,0,0,1,0,0,0,0},	//0 - empty
+		{1,1,-1,-1,1,-1,-1,1,-1},	//0 - empty
 		{0,0,0,0,1,1,0,0,0},	//1
 		{0,0,0,0,1,0,0,1,0},	//2
 		{1,1,1,1,1,1,1,1,1},	//3
@@ -42,7 +42,8 @@ constexpr int8_t SE[][9]={
 		{1,1,1,0,1,0,-1,-1,-1},	//12N	19
 		{0,1,1,-1,1,1,-1,-1,0},	//12NE	20
 		{-1,0,1,-1,1,1,-1,0,1},	//12E	21
-		{-1,-1,0,-1,1,1,0,1,1}	//12SE	22
+		{-1,-1,0,-1,1,1,0,1,1},	//12SE	22
+		{-1,-1,-1,1,1,-1,-1,1,-1} //12SE	23
 };
 
 
@@ -116,6 +117,7 @@ public:
 	void fill(byte* i);
 	void R1(unsigned SE_number, cimg_library::CImg<byte>& seeds);
 	cimg_library::CImg<byte> select_seeds() const;
+	void grow(byte* i);
 
 
 
