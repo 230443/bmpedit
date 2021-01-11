@@ -159,6 +159,30 @@ int main(int argc, char* argv[])
 				i += 3;
 				continue;
 			}
+			if (arg == "--R1grad")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				if (strcmp(argv[i + 3],"-select") == 0)
+				{
+					cimg_library::CImg<unsigned char> seeds = img.select_seeds();
+					seeds.display("seeds",false,0,true);
+					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
+				}
+				else if (strcmp(argv[i + 3],"-self") == 0)
+				{
+					img.image.display("seeds",false,0,true);
+					img.R1grad(stoi(argv[i + 1]), img.image, stoi(argv[i + 2]));
+				}
+				else
+				{
+					cimg_library::CImg<unsigned char> seeds(argv[i + 3]);
+					seeds.display("seeds",false,0,true);
+					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
+				}
+				i += 3;
+				continue;
+			}
 
         }
 		if (i + 1 < argc)      // must have 1 argument

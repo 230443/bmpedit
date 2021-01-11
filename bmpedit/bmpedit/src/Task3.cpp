@@ -196,7 +196,6 @@ cimg_library::CImg<byte> Bitmap::select_seeds() const
 	return tmp;
 }
 
-
 byte threshold=20;
 
 void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds, unsigned char homogenity)
@@ -248,6 +247,78 @@ void Bitmap::grow(std::queue<unsigned char*>& region)
 				pixel < image.end() - W - 1 &&
 				(pixel - image.begin()) % W != W - 1 &&
 				(pixel - image.begin()) % W != 0
+				)    // W - image.width()
+		{
+			byte* pixelR = pixel + W; //end off loop
+			auto localSE = se;
+			for (pixel -= W; pixel <= pixelR; pixel += W)
+			{
+				for (int xw = -1 ; xw <= 1; ++xw)
+				{
+					if (*(localSE++) && *(pixel+xw)>threshold_min && *(pixel+xw)<threshold_max)
+						region.push(pixel + xw);
+				}
+			}
+		}
+	}
+}
+
+struct Reg
+{
+	byte* seed;
+	byte mean;
+	std::queue<unsigned char*> pixel_queue;
+	std::vector<unsigned char*> grown_region;
+};
+long int p_i_offset;
+void Bitmap::R1grad(unsigned int SE_number, CImg<byte>& seeds, unsigned char homogenity)
+{
+	se = &SE[SE_number][0];
+	threshold = homogenity;
+	Bitmap original(ifname.c_str());
+	filter(0,1,Bitmap::osobel);
+
+	CImg<byte> tmp(W, H, 1, 1,0);
+
+	t_i_offset=tmp.begin()-image.begin();
+	p_i_offset=original.image.begin()-image.begin();
+	byte* i=image.begin()+image.width();
+	using namespace std;
+	vector<queue<unsigned char*>> regions;
+	for (unsigned char* seed = seeds.begin()+seeds.width();seed<seeds.end();seed++)
+	{
+		if (*seed)
+		{
+			queue<unsigned char*> region;
+			region.push(i);
+			regions.emplace_back(region);
+			//cout<<"seed:"<< (int)*i <<endl;
+			R1gradient(region);
+		}
+		i++;
+	}
+
+	image = tmp;
+}
+void Bitmap::R1gradient(std::queue<unsigned char*>& region)
+{
+	byte color = *(region.front()+ p_i_offset);
+	while(!region.empty())
+	{
+		byte threshold_min = *region.front()<threshold ? 0 : *region.front()-threshold;
+		byte threshold_max = *region.front()>255-threshold ? 255 : *region.front()+threshold;
+		auto pixel = region.front();
+		region.pop();
+		if (*(pixel+t_i_offset))
+		{
+			continue;		//return if already filled
+		}
+		*(pixel+t_i_offset) = color;
+		if (
+				pixel > image.begin() + W + 1 &&
+						pixel < image.end() - W - 1 &&
+						(pixel - image.begin()) % W != W - 1 &&
+						(pixel - image.begin()) % W != 0
 				)    // W - image.width()
 		{
 			byte* pixelR = pixel + W; //end off loop

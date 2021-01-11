@@ -382,3 +382,4 @@ void Bitmap::save(const std::string& ofname) const
 	image.save(ofname.c_str());
 }
 
+
