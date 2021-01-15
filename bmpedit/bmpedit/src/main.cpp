@@ -321,6 +321,10 @@ int main(int argc, char* argv[])
             cout << "Asymmetry\t" << img.casyco() << endl;
             continue;
         }
+		else if (arg == "--dft")
+		{
+			continue;
+		}
 		if (ref_available)
 		{
 			if (arg == "--all")

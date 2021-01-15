@@ -16,11 +16,10 @@ private:
 	cimg_library::CImg<std::complex<double>> img_transformed;
 	void DFT_1D();
 	void transform_row(int row_number);
-	void DFT();
-
 
 public:
 	Task4(std::string&& filename);
+	void DFT();
 
 
 };

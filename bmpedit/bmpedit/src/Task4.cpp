@@ -6,7 +6,7 @@
 #include "include/Task4.h"
 
 Task4::Task4(std::string&& filename)
-		:Bitmap("filename"), img_transformed(Bitmap::image.width(), Bitmap::image.height())
+		:Bitmap("../../Images/misc/pentagon.bmp"), img_transformed(Bitmap::image.width(), Bitmap::image.height())
 {
 }
 
