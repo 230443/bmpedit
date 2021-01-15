@@ -4,6 +4,7 @@
 #include <cmath>
 #include <queue>
 #include "CImg.h"
+#include "Task4.h"
 
 typedef unsigned char byte;
 typedef byte(*func)(byte* tab, int size, int parameter);
@@ -48,7 +49,7 @@ constexpr int8_t SE[][9]={
 };
 
 
-class Bitmap 
+class Bitmap : public Task4
 {
 public:
 	cimg_library::CImg<byte> image;
@@ -59,6 +60,8 @@ private:
 	long offset;
 	std::string ifname;
 	uint32_t h[256];
+
+
 
 
 
@@ -121,6 +124,7 @@ public:
 	cimg_library::CImg<byte> select_seeds() const;
 	void grow(std::queue<unsigned char*>& region);
 	void R1gradient(std::queue<unsigned char*>& region);
+
 
 
 

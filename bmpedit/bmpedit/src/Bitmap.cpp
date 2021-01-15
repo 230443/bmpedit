@@ -3,7 +3,11 @@
 using namespace cimg_library;
 
 Bitmap::Bitmap(std::string&& filename)
-	:ifname(filename), image(filename.c_str()), H(image.height()), W(image.width()) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
+	:ifname(filename),
+	image(filename.c_str()),
+	H(image.height()),
+	W(image.width()),
+	Task4(image) 	//CImg creates one pixel array. First all red pixels then G and B.									//RRR..BBB...GGG not RGBRGBRGB
 {
 	offset = W*H;
 	optimize(image);

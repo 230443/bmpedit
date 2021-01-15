@@ -7,6 +7,7 @@
 #include <string>
 #include <complex>
 #include "include/Task4.h"
+#include "include/Bitmap.h"
 #include "src/Task4.cpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #define IMAGE "../../Images/misc/pentagon.bmp"
@@ -22,7 +23,7 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 
 	BOOST_AUTO_TEST_CASE(erosion)
 	{
-		Task4 img(IMAGE);
+		Bitmap img(IMAGE);
 		img.DFT();
 	}
 
