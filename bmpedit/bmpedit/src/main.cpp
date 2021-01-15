@@ -163,24 +163,29 @@ int main(int argc, char* argv[])
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
 				if (is_not_int(arg, argv[i + 2])) return 1;
-				if (strcmp(argv[i + 3],"-select") == 0)
+				if (*argv[i + 3] != 'l' && *argv[i + 3] != 's')
+				{
+					cout << "type:"<< argv[i + 3] <<" does not exist"<<endl;
+					return 1;
+				}
+				if (strcmp(argv[i + 4],"-select") == 0)
 				{
 					cimg_library::CImg<unsigned char> seeds = img.select_seeds();
 					seeds.display("seeds",false,0,true);
-					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
+					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]), *argv[i + 3]);
 				}
-				else if (strcmp(argv[i + 3],"-self") == 0)
+				else if (strcmp(argv[i + 4],"-self") == 0)
 				{
 					img.image.display("seeds",false,0,true);
-					img.R1grad(stoi(argv[i + 1]), img.image, stoi(argv[i + 2]));
+					img.R1grad(stoi(argv[i + 1]), img.image, stoi(argv[i + 2]), *argv[i + 3]);
 				}
 				else
 				{
-					cimg_library::CImg<unsigned char> seeds(argv[i + 3]);
+					cimg_library::CImg<unsigned char> seeds(argv[i + 4]);
 					seeds.display("seeds",false,0,true);
-					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]));
+					img.R1grad(stoi(argv[i + 1]), seeds, stoi(argv[i + 2]), *argv[i + 3]);
 				}
-				i += 3;
+				i += 4;
 				continue;
 			}
 

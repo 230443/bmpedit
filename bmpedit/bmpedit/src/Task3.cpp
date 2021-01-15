@@ -198,10 +198,10 @@ cimg_library::CImg<byte> Bitmap::select_seeds() const
 
 byte threshold=20;
 
-void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds, unsigned char homogenity)
+void Bitmap::R1(unsigned SE_number, cimg_library::CImg<byte>& seeds, unsigned char homogeneity)
 {
 	se = &SE[SE_number][0];
-	threshold = homogenity;
+	threshold = homogeneity;
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 
@@ -271,12 +271,15 @@ struct Reg
 	std::vector<unsigned char*> grown_region;
 };
 long int p_i_offset;
-void Bitmap::R1grad(unsigned int SE_number, CImg<byte>& seeds, unsigned char homogenity)
+void Bitmap::R1grad(unsigned int SE_number, CImg<byte>& seeds, unsigned char homogeneity, char transform_type)
 {
 	se = &SE[SE_number][0];
-	threshold = homogenity;
+	threshold = homogeneity;
 	Bitmap original(ifname.c_str());
-	filter(0,1,Bitmap::osobel);
+	if (transform_type=='s')
+		filter(0,1,Bitmap::osobel);
+	if (transform_type=='l')
+		operation_3x3(2,'l');
 
 	CImg<byte> tmp(W, H, 1, 1,0);
 
@@ -297,16 +300,16 @@ void Bitmap::R1grad(unsigned int SE_number, CImg<byte>& seeds, unsigned char hom
 		}
 		i++;
 	}
-
 	image = tmp;
 }
 void Bitmap::R1gradient(std::queue<unsigned char*>& region)
 {
 	byte color = *(region.front()+ p_i_offset);
+	byte threshold_min = *region.front()<threshold ? 0 : *region.front()-threshold;
+	byte threshold_max = *region.front()>255-threshold ? 255 : *region.front()+threshold;
 	while(!region.empty())
 	{
-		byte threshold_min = *region.front()<threshold ? 0 : *region.front()-threshold;
-		byte threshold_max = *region.front()>255-threshold ? 255 : *region.front()+threshold;
+
 		auto pixel = region.front();
 		region.pop();
 		if (*(pixel+t_i_offset))
