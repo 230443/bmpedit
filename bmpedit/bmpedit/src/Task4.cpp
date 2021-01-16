@@ -7,10 +7,17 @@
 
 
 Task4::Task4(cimg_library::CImg<unsigned char>* img)
-		:img(img)
+		:img(img),img_transformed(512),img_transformed_shifted(512)
 {
-	img_transformed.reserve(512);
-	img_transformed_shifted.reserve(512);
+	//for (int y = 0; y<img->height(); y++)
+	//{
+	//	img_transformed_shifted.emplace_back();
+	//	for (int y = 0; y<img->height(); y++)
+	//	{
+	//		img_transformed_shifted[y].emplace_back();
+	//	}
+	//}
+
 }
 
 void Task4::DFT_1D()
@@ -27,59 +34,52 @@ void Task4::DFT_1D()
 
 void Task4::transform_row(int row_number)
 {
+	img_transformed.emplace_back();
 	unsigned char* first_pixel = img->data(0,row_number);
 	//byte* last_pixel = img->data(img->width()-1,row_number);
 	for (int k = 0; k<img->width(); k++)
 	{
-		{
-			using namespace std;
-			cout<<"in transform_row_\n"<<";";
-		}
 			//-j*2*pi*k/N
 		double row_coefficient = -2 * M_PI * k / img->width();
-
-		{
-			using namespace std;
-			cout<<"("<<row_number<<","<<k<<")";
-		}
-
 		std::complex<double> transformed_pixel;
-
-
 		unsigned char* pixel = first_pixel;
+
 		for (int n=0; n<img->width(); n++)
 		{
-
 			transformed_pixel += std::polar((double)*pixel, row_coefficient * n);
 			pixel++;
 		}
 
-		img_transformed[row_number][k] = transformed_pixel;
+		//img_transformed.resize(512);
+		//{
+		//	using namespace std;
+		//	cout<<"after transform_row"<<endl;
+		//	cout<<"vector size:"<<img_transformed[0].capacity()<<endl;
+		//}
+
+		//img_transformed[row_number][k] = transformed_pixel;
+		img_transformed[row_number].push_back(transformed_pixel);
 	}
 }
 
 void Task4::DFT()
 {
-	{
-		using namespace std;
-		cout<<"in DFT \n"<<";";
-	}
 	for (int y = 0; y<img->height(); y++)
 	{
 		transform_row(y);
 		{
 			using namespace std;
-			cout<<y<<";";
+			cout<<y<<",";
 		}
 	}
-	for (int y = 0; y<img->height(); y++)
-	{
-		transform_col(y);
-		{
-			using namespace std;
-			cout<<y<<";";
-		}
-	}
+	//for (int y = 0; y<img->height(); y++)
+	//{
+	//	transform_col(y);
+	//	{
+	//		using namespace std;
+	//		cout<<y<<";";
+	//	}
+	//}
 
 
 	print_spatial_domain();
