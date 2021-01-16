@@ -7,7 +7,7 @@
 
 
 Task4::Task4(cimg_library::CImg<unsigned char>* img)
-		:img(img),img_transformed(512),img_transformed_shifted(512)
+		:img(img)
 {
 	//for (int y = 0; y<img->height(); y++)
 	//{
@@ -22,6 +22,7 @@ Task4::Task4(cimg_library::CImg<unsigned char>* img)
 
 void Task4::DFT_1D()
 {
+	//std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_transformed;
 	for (int y = 0; y<img->height(); y++)
 	{
 		transform_row(y);
@@ -34,7 +35,6 @@ void Task4::DFT_1D()
 
 void Task4::transform_row(int row_number)
 {
-	img_transformed.emplace_back();
 	unsigned char* first_pixel = img->data(0,row_number);
 	//byte* last_pixel = img->data(img->width()-1,row_number);
 	for (int k = 0; k<img->width(); k++)
@@ -57,8 +57,8 @@ void Task4::transform_row(int row_number)
 		//	cout<<"vector size:"<<img_transformed[0].capacity()<<endl;
 		//}
 
-		//img_transformed[row_number][k] = transformed_pixel;
-		img_transformed[row_number].push_back(transformed_pixel);
+		img_transformed[row_number][k] = transformed_pixel;
+		//img_transformed[row_number].push_back(transformed_pixel);
 	}
 }
 
