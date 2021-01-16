@@ -323,6 +323,7 @@ int main(int argc, char* argv[])
         }
 		else if (arg == "--dft")
 		{
+			img.DFT();
 			continue;
 		}
 		if (ref_available)
