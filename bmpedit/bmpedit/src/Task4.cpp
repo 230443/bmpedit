@@ -94,21 +94,10 @@ void Task4::DFT()
 	{
 		transform_row_and_shift(y, &img_tmp[y][0]);
 	}
-
-	//print_magnitude();
 }
 
-void Task4::print_magnitude()
-{
-	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
 
-	for(int y = 0 ; y<512 ; y++)
-		for(int x = 0 ; x<512 ; x++)
-		{
-			new_img(x,y)=log10(abs(img_transformed[x][y]));
-		}
-	new_img.display("After DFT",false,0,true);
-}
+
 
 void Task4::IDFT()
 {
@@ -134,18 +123,11 @@ void Task4::IDFT()
 void Task4::i_transform_row_and_shift(int row_number, std::complex<double>* first_pixel,
 		std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output)
 {
-	//{
-	//	using namespace std;
-	//	cerr<<*first_pixel<<";";
-	//	//if (!y%7)
-	//	//cout<<"#";
-	//}
 	unsigned column;
 	if(row_number<WIDTH/2)
 		column = row_number+WIDTH/2;
 	else
 		column = row_number-WIDTH/2;
-
 
 	for (int k = 0; k<HEIGHT; k++)
 	{
@@ -166,7 +148,6 @@ void Task4::i_transform_row_and_shift(int row_number, std::complex<double>* firs
 
 void Task4::i_transform_row(int row_number, std::complex<double>* first_pixel, cimg_library::CImg<double>& img_output)
 {
-
 	for (int k = 0; k<img->width(); k++)
 	{
 		//-j*2*pi*k/N
@@ -180,9 +161,54 @@ void Task4::i_transform_row(int row_number, std::complex<double>* first_pixel, c
 			transformed_pixel += *pixel * std::exp(tmp);
 			pixel++;
 		}
-
 		img_output(row_number,k) = abs(transformed_pixel);
 	}
+}
+
+void Task4::print_abs()
+{
+	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
+	auto pixel = new_img.begin();
+
+	for(auto& row : img_transformed)
+		for(auto& value : row)
+			*pixel++ = log10(abs(value));
+
+	new_img.display("DFT. Magnitude spectrum",false,0,true);
+}
+
+void Task4::print_arg()
+{
+	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
+	auto pixel = new_img.begin();
+
+	for(auto& row : img_transformed)
+		for(auto& value : row)
+			*pixel++ = arg(value);
+
+	new_img.display("DFT. Phase spectrum",false,0,true);
+}
+
+void Task4::print_real()
+{
+	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
+	auto pixel = new_img.begin();
+	for(auto& row : img_transformed)
+		for(auto& value : row)
+			*pixel++ = log10(real(value));
+
+	new_img.display("DFT. Real spectrum",false,0,true);
+}
+
+void Task4::print_imag()
+{
+	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
+	auto pixel = new_img.begin();
+	for(auto& row : img_transformed)
+		for(auto& value : row)
+			*pixel++ = imag(value);
+
+	new_img.display("DFT. Imaginary spectrum",false,0,true);
 }
 
 

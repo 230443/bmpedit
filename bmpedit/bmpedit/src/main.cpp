@@ -331,6 +331,26 @@ int main(int argc, char* argv[])
 			img.IDFT();
 			continue;
 		}
+		else if (arg == "--print-abs")
+		{
+			img.print_abs();
+			continue;
+		}
+		else if (arg == "--print-arg")
+		{
+			img.print_arg();
+			continue;
+		}
+		else if (arg == "--print-real")
+		{
+			img.print_real();
+			continue;
+		}
+		else if (arg == "--print-imag")
+		{
+			img.print_imag();
+			continue;
+		}
 		if (ref_available)
 		{
 			if (arg == "--all")

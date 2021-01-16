@@ -46,7 +46,10 @@ class Bitmap;
 		void DFT();
 		void IDFT();
 
-		void print_magnitude();
+		void print_abs();
+		void print_arg();
+		void print_real();
+		void print_imag();
 
 
 
