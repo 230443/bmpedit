@@ -7,17 +7,18 @@
 
 
 Task4::Task4(cimg_library::CImg<unsigned char>* img)
-		:img(img),img_transformed_shifted(512)
+		:img(img),img_transformed(512)
 {
 	for (int y = 0; y < WIDTH; y++)
 	{
-		img_transformed_shifted[y].resize(HEIGHT);
+		img_transformed[y].resize(HEIGHT);
 	}
 }
 
 
 
-void Task4::transform_row(int row_number, unsigned char* first_pixel)
+void Task4::transform_row(int row_number, unsigned char* first_pixel,
+		std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output)
 {
 	for (int k = 0; k<img->width(); k++)
 	{
@@ -32,7 +33,7 @@ void Task4::transform_row(int row_number, unsigned char* first_pixel)
 			pixel++;
 		}
 
-		img_transformed_shifted[k][row_number] = transformed_pixel;
+		img_output[k][row_number] = transformed_pixel;
 	}
 }
 void Task4::transform_row(int row_number, std::complex<double>* first_pixel)
@@ -55,53 +56,22 @@ void Task4::transform_row(int row_number, std::complex<double>* first_pixel)
 	}
 }
 
-void Task4::transform_col(int row_number)
-{
-
-	auto* first_pixel = img_transformed_shifted[row_number].data();
-	//byte* last_pixel = img->data(img->width()-1,row_number);
-	//img_transformed_shifted.emplace_back();
-	for (int k = 0; k < WIDTH; k++)
-	{
-		//-j*2*pi*k/N
-		double row_coefficient = -2 * M_PI * k / img->width();
-		std::complex<double> transformed_pixel;
-		auto* pixel = first_pixel;
-
-		for (int n = 0; n < WIDTH; n++)
-		{
-			std::complex<double> tmp(0,row_coefficient*n);
-			transformed_pixel += *pixel * std::exp(tmp);
-			pixel++;
-		}
-
-		//img_transformed.resize(512);
-		//{
-		//	using namespace std;
-		//	cout<<"after transform_row"<<endl;
-		//	cout<<"vector size:"<<img_transformed[0].capacity()<<endl;
-		//}
-
-		img_transformed[row_number][k] = transformed_pixel;
-		//img_transformed_shifted[row_number].push_back(transformed_pixel);
-	}
-
-}
 
 void Task4::DFT()
 {
+	std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_tmp;
 	for (int y = 0; y<img->height(); y++)
 	{
-		transform_row(y, img->data(0,y));
+		transform_row(y, img->data(0, y), img_tmp);
 		{
 			using namespace std;
-			//cout<<img_transformed_shifted[0][y]<<";";
-			cout<<".";
+			cout<<img_tmp[0][y]<<";";
+			//cout<<".";
 		}
 	}
 	for (int y = 0; y<img->height(); y++)
 	{
-		transform_row(y,&img_transformed_shifted[y][0]);
+		transform_row(y,&img_tmp[y][0]);
 		{
 			using namespace std;
 			//cout<<img_transformed[0][y]<<",";

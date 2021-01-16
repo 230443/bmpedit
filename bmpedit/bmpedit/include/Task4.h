@@ -25,15 +25,15 @@ class Bitmap;
 		static const size_t WIDTH = 512;
 
 
-		std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_transformed;
+		std::vector<std::vector<std::complex<double>>> img_transformed;
 		//std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_transformed_shifted;
 		//std::vector<std::vector<std::complex<double>>> img_transformed;
-		std::vector<std::vector<std::complex<double>>> img_transformed_shifted;
+		//std::vector<std::vector<std::complex<double>>> img_transformed_shifted;
 
 		//template <typename T>
-		void transform_row(int row_number, unsigned char* first_pixel);
+		void transform_row(int row_number, unsigned char* first_pixel,
+				std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output);
 		void transform_row(int row_number, std::complex<double>* first_pixel);
-		void transform_col(int row_number);
 	public:
 		Task4(cimg_library::CImg<unsigned char>* img);
 		void DFT();
