@@ -326,6 +326,11 @@ int main(int argc, char* argv[])
 			img.DFT();
 			continue;
 		}
+		else if (arg == "--idft")
+		{
+			img.IDFT();
+			continue;
+		}
 		if (ref_available)
 		{
 			if (arg == "--all")

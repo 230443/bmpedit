@@ -38,12 +38,16 @@ class Bitmap;
 		void i_transform_row_and_shift(int row_number,
 				std::complex<double>* first_pixel,
 				std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output);
+		void i_transform_row(int row_number,
+				std::complex<double>* first_pixel,
+				cimg_library::CImg<double>& img_output);
 	public:
 		Task4(cimg_library::CImg<unsigned char>* img);
 		void DFT();
 		void IDFT();
 
 		void print_magnitude();
+
 
 
 	};

@@ -27,6 +27,46 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 		img.DFT();
 	}
 
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
+
+	int n = 1;
+	BOOST_AUTO_TEST_CASE(DFT)
+	{
+
+		boost::posix_time::time_duration sum;
+		for (int i = 0; i < n; ++i)
+		{
+			Bitmap img(IMAGE);
+			boost::posix_time::ptime startTime = now();
+
+			img.DFT();
+
+			boost::posix_time::time_duration elapsed = now() - startTime;
+			sum += elapsed;
+		}
+		std::cout << "DFT	"<< IMAGE << "	" << sum / n << std::endl;
+	}
+
+	BOOST_AUTO_TEST_CASE(IDFT)
+	{
+
+		boost::posix_time::time_duration sum;
+		for (int i = 0; i < n; ++i)
+		{
+			Bitmap img(IMAGE);
+			img.DFT();
+			boost::posix_time::ptime startTime = now();
+
+			img.IDFT();
+
+			boost::posix_time::time_duration elapsed = now() - startTime;
+			sum += elapsed;
+		}
+		std::cout << "IDFT	"<< IMAGE << "	" << sum / n << std::endl;
+	}
 
 BOOST_AUTO_TEST_SUITE_END()
 
