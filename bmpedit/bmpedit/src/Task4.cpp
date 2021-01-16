@@ -36,11 +36,33 @@ void Task4::transform_row(int row_number, unsigned char* first_pixel,
 		img_output[k][row_number] = transformed_pixel;
 	}
 }
-void Task4::transform_row(int row_number, std::complex<double>* first_pixel)
+void Task4::transform_row_and_shift(int row_number, std::complex<double>* first_pixel)
+// resulting values are inserted at shifted position
 {
-	for (int k = 0; k<img->width(); k++)
+	unsigned column;
+	if(row_number<WIDTH/2)
+		column = row_number+WIDTH/2;
+	else
+		column = row_number-WIDTH/2;
+
+
+	for (int k = 0; k<HEIGHT/2; k++)
 	{
-		//-j*2*pi*k/N
+		double row_coefficient = -2 * M_PI * k / img->width();
+
+		std::complex<double> transformed_pixel;
+		auto* pixel = first_pixel;
+
+		for (int n = 0; n < WIDTH; n++)
+		{
+			std::complex<double> tmp(0,row_coefficient*n);
+			transformed_pixel += *pixel * std::exp(tmp);
+			pixel++;
+		}
+		img_transformed[k+HEIGHT/2][column] = transformed_pixel;
+	}
+	for (int k = HEIGHT/2; k<HEIGHT; k++)
+	{
 		double row_coefficient = -2 * M_PI * k / img->width();
 
 		std::complex<double> transformed_pixel;
@@ -51,9 +73,9 @@ void Task4::transform_row(int row_number, std::complex<double>* first_pixel)
 			transformed_pixel += *pixel * std::exp(tmp);
 			pixel++;
 		}
-
-		img_transformed[k][row_number] = transformed_pixel;
+		img_transformed[k-HEIGHT/2][column] = transformed_pixel;
 	}
+
 }
 
 
@@ -66,12 +88,13 @@ void Task4::DFT()
 		{
 			using namespace std;
 			cout<<img_tmp[0][y]<<";";
-			//cout<<".";
+			//if (!y%7)
+			//cout<<"#";
 		}
 	}
 	for (int y = 0; y<img->height(); y++)
 	{
-		transform_row(y,&img_tmp[y][0]);
+		transform_row_and_shift(y, &img_tmp[y][0]);
 		{
 			using namespace std;
 			//cout<<img_transformed[0][y]<<",";
@@ -79,12 +102,11 @@ void Task4::DFT()
 		}
 	}
 
-	print_spatial_domain();
+	print_magnitude();
 }
 
-void Task4::print_spatial_domain()
+void Task4::print_magnitude()
 {
-
 	cimg_library::CImg<double> new_img(HEIGHT,WIDTH);
 
 	for(int y = 0 ; y<512 ; y++)
@@ -93,52 +115,73 @@ void Task4::print_spatial_domain()
 			new_img(x,y)=log10(abs(img_transformed[x][y]));
 		}
 	new_img.display();
-
-	//auto* data = img_transformed.begin();
-	//for(auto & pixel : *img)
-	//{
-	//	pixel=log10(std::abs(*data));
-	//}
 }
 
-/*
-
-void Task4::transform_col(int row_number)
+void Task4::IDFT()
 {
-	unsigned new_col;
-
-	if (row_number < WIDTH / 2)
-		new_col = row_number + WIDTH / 2;
-	else
-		new_col = row_number - WIDTH / 2;
-
-for (int k = 0; k < HEIGHT / 2; k++)
+	std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_tmp;
+	for (int y = 0; y<img->height(); y++)
 	{
-		//-j*2*pi*k/N
-		double row_coefficient = -2 * M_PI * k / HEIGHT;
-		std::complex<double> transformed_pixel = 0.0;
-
-		int n = 0;
-
-		for (auto& pixel : img_transformed_shifted[row_number])
+		i_transform_row_and_shift(y, &img_transformed[y][0], img_tmp);
 		{
-			transformed_pixel += pixel * std::exp(row_coefficient * n);
+			using namespace std;
+			cout<<img_tmp[0][y]<<";";
+			//if (!y%7)
+			//cout<<"#";
 		}
-		img_transformed[k + 512 / 2][new_col] = transformed_pixel;
 	}
-	for (int k = HEIGHT / 2; k < HEIGHT; k++)
+	for (int y = 0; y<img->height(); y++)
 	{
-		//-j*2*pi*k/N
-		double row_coefficient = -2 * M_PI * k / HEIGHT;
-		std::complex<double> transformed_pixel = 0.0;
-
-		int n = 0;
-
-		for (auto& pixel : img_transformed_shifted[row_number])
+		transform_row_and_shift(y, &img_tmp[y][0]);
 		{
-			transformed_pixel += pixel * pixel * std::exp(row_coefficient * n);
+			using namespace std;
+			//cout<<img_transformed[0][y]<<",";
+			cout<<",";
 		}
-		img_transformed[k - 512 / 2][new_col] = transformed_pixel;
 	}
+	print_magnitude();
 }
-*/
+
+void Task4::i_transform_row_and_shift(int row_number, std::complex<double>* first_pixel,
+		std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output)
+{
+	unsigned column;
+	if(row_number<WIDTH/2)
+		column = row_number+WIDTH/2;
+	else
+		column = row_number-WIDTH/2;
+
+
+	for (int k = 0; k<HEIGHT/2; k++)
+	{
+		double row_coefficient = 2 * M_PI * k / HEIGHT;
+
+		std::complex<double> transformed_pixel;
+		auto* pixel = first_pixel;
+
+		for (int n = 0; n < WIDTH; n++)
+		{
+			std::complex<double> tmp(0,row_coefficient*n);
+			transformed_pixel += *pixel * std::exp(tmp);
+			pixel++;
+		}
+		img_transformed[k+HEIGHT/2][column] = ((double)1/HEIGHT) * transformed_pixel;
+	}
+	for (int k = HEIGHT/2; k<HEIGHT; k++)
+	{
+		double row_coefficient = 2 * M_PI * k / HEIGHT;
+
+		std::complex<double> transformed_pixel;
+		auto* pixel = first_pixel;
+		for (int n = 0; n < WIDTH; n++)
+		{
+			std::complex<double> tmp(0,row_coefficient*n);
+			transformed_pixel += *pixel * std::exp(tmp);
+			pixel++;
+		}
+		img_transformed[k-HEIGHT/2][column] = ((double)1/HEIGHT) * transformed_pixel;
+	}
+
+}
+
+

@@ -31,13 +31,19 @@ class Bitmap;
 		//std::vector<std::vector<std::complex<double>>> img_transformed_shifted;
 
 		//template <typename T>
-		void transform_row(int row_number, unsigned char* first_pixel,
+		void transform_row(int row_number,
+				unsigned char* first_pixel,
 				std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output);
-		void transform_row(int row_number, std::complex<double>* first_pixel);
+		void transform_row_and_shift(int row_number, std::complex<double>* first_pixel);
+		void i_transform_row_and_shift(int row_number,
+				std::complex<double>* first_pixel,
+				std::array<std::array<std::complex<double>, WIDTH>, HEIGHT>& img_output);
 	public:
 		Task4(cimg_library::CImg<unsigned char>* img);
 		void DFT();
-		void print_spatial_domain();
+		void IDFT();
+
+		void print_magnitude();
 
 
 	};
