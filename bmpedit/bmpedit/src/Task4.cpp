@@ -150,3 +150,20 @@ void Task4::print_imag()
 
 	new_img.display("DFT. Imaginary spectrum", false, nullptr, true);
 }
+
+void Task4::apply_mask(cimg_library::CImg<double>& mask)
+{
+	auto* pixel = mask.begin();
+	for (auto& row : img_transformed)
+		for (auto& value : row)
+			value *= *pixel++;
+}
+
+void Task4::LPF(int max_band)
+{
+	cimg_library::CImg<double> mask(WIDTH,HEIGHT,1,1,0);
+
+	const double color[] = {1};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,max_band,color);
+	apply_mask(mask);
+}
