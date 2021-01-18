@@ -35,87 +35,6 @@ void Task4::constructor()
 }
 
 
-void Task4::transform_row(int row_number, unsigned char* first_pixel,
-		std::vector<std::vector<std::complex<double>>>& img_output)
-{
-	for (int k = 0; k<WIDTH; k++)
-	{
-			//-j*2*pi*k/N
-		double row_coefficient = -2 * M_PI * k / WIDTH;
-
-		std::complex<double> transformed_pixel;
-		auto* pixel = first_pixel;
-		for (int n = 0; n < WIDTH; n++)
-		{
-			transformed_pixel += std::polar((double)*pixel, row_coefficient * n);
-			pixel++;
-		}
-
-		img_output[k][row_number] = transformed_pixel;
-	}
-}
-void Task4::transform_row_and_shift(int row_number, std::complex<double>* first_pixel)
-// resulting values are inserted at shifted position
-{
-	unsigned column;
-	if(row_number<WIDTH/2)
-		column = row_number+WIDTH/2;
-	else
-		column = row_number-WIDTH/2;
-
-
-	for (int k = 0; k<HEIGHT/2; k++)
-	{
-		double row_coefficient = -2 * M_PI * k / HEIGHT;
-
-		std::complex<double> transformed_pixel;
-		auto* pixel = first_pixel;
-
-		for (int n = 0; n < WIDTH; n++)
-		{
-			std::complex<double> tmp(0,row_coefficient*n);
-			transformed_pixel += *pixel * std::exp(tmp);
-			pixel++;
-		}
-		img_transformed[k+HEIGHT/2][column] = transformed_pixel;
-	}
-	for (unsigned k = HEIGHT/2; k<HEIGHT; k++)
-	{
-		double row_coefficient = -2 * M_PI * k / HEIGHT;
-
-		std::complex<double> transformed_pixel;
-		auto* pixel = first_pixel;
-		for (int n = 0; n < WIDTH; n++)
-		{
-			std::complex<double> tmp(0,row_coefficient*n);
-			transformed_pixel += *pixel * std::exp(tmp);
-			pixel++;
-		}
-		img_transformed[k-HEIGHT/2][column] = transformed_pixel;
-	}
-
-}
-
-
-void Task4::DFT()
-{
-	std::vector<std::vector<std::complex<double>>> img_tmp(WIDTH,std::vector<std::complex<double>>(HEIGHT));
-	for (int y = 0; y<HEIGHT; y++)
-	{
-		transform_row(y, img->data(0, y), img_tmp);
-		//{
-		//	using namespace std;
-		//	cout<<img_tmp[0][y]<<";";
-		//}
-	}
-	for (int y = 0; y<HEIGHT; y++)
-	{
-		transform_row_and_shift(y, &img_tmp[y][0]);
-	}
-}
-
-
-
 
 void Task4::IDFT()
 {
@@ -134,7 +53,7 @@ void Task4::IDFT()
 		i_transform_row(y, &img_tmp[y][0], new_img);
 	}
 
-	//new_img.display("After IDFT",false,0,true);
+	new_img.display("After IDFT",false,0,true);
 
 }
 
@@ -240,5 +159,66 @@ uint32_t Task4::reverse_bits(uint32_t n, size_t size)
 	}
 	return x;
 }
+
+template<typename T>
+void Task4::DFT_1D(const T* input_row, int output_column_nr, std::vector<std::vector<std::complex<double>>>& output_matrix)
+{
+	for (int k = 0; k<WIDTH; k++)
+	{
+		//-j*2*pi*k/N
+		//double row_coefficient = 2 * M_PI * k / WIDTH;
+
+		std::complex<double> transformed_pixel;
+		auto element = input_row;
+		for (int n = 0; n < WIDTH; n++)
+		{
+			transformed_pixel += (std::complex<double>)*element * std::polar(1.0, coefficients_for_k[k] * n);
+			element++;
+		}
+		output_matrix[k][output_column_nr] = transformed_pixel;
+	}
+}
+
+void Task4::DFT_2D()
+{
+	initialize_coefficiens(false);
+	std::vector<std::vector<std::complex<double>>> matrix_tmp(WIDTH,std::vector<std::complex<double>>(HEIGHT));
+
+	for (unsigned y = 0; y<HEIGHT/2; y++)
+		DFT_1D(img->data(0,y),y+HEIGHT/2,matrix_tmp);
+	for (unsigned y = HEIGHT/2; y<HEIGHT; y++)
+	{
+		DFT_1D(img->data(0,y),y-HEIGHT/2,matrix_tmp);
+		{
+			using namespace std;
+			cout<<matrix_tmp[y][y]<<";";
+		}
+	}
+
+	for (unsigned y = 0; y<HEIGHT/2; y++)
+		DFT_1D(&matrix_tmp[y][0],y+HEIGHT/2,this->img_transformed);
+
+	for (unsigned y = HEIGHT/2; y<HEIGHT; y++)
+	{
+		DFT_1D(&matrix_tmp[y][0],y-HEIGHT/2,this->img_transformed);
+		{
+			using namespace std;
+			cout<<matrix_tmp[0][y]<<",";
+		}
+	}
+}
+
+void Task4::initialize_coefficiens(bool inverse)
+{
+	double sign = inverse? -2 : 2;
+	coefficients_for_k = std::vector<double>(HEIGHT);
+	for (unsigned k = 0; k<HEIGHT; k++)
+	{
+		coefficients_for_k[k]=sign * M_PI * k / WIDTH;
+	}
+
+}
+
+
 
 

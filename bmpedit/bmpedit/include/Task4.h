@@ -26,15 +26,17 @@ class Bitmap;
 
 
 		std::vector<std::vector<std::complex<double>>> img_transformed;
+
+		std::vector<double> coefficients_for_k;
+
+
+
 		//std::array<std::array<std::complex<double>,WIDTH>,HEIGHT> img_transformed_shifted;
 		//std::vector<std::vector<std::complex<double>>> img_transformed;
 		//std::vector<std::vector<std::complex<double>>> img_transformed_shifted;
 
 		//template <typename T>
-		void transform_row(int row_number,
-				unsigned char* first_pixel,
-				std::vector<std::vector<std::complex<double>>>& img_output);
-		void transform_row_and_shift(int row_number, std::complex<double>* first_pixel);
+
 		void i_transform_row_and_shift(int row_number,
 				std::complex<double>* first_pixel,
 				std::vector<std::vector<std::complex<double>>>& img_output);
@@ -42,13 +44,19 @@ class Bitmap;
 				std::complex<double>* first_pixel,
 				cimg_library::CImg<double>& img_output);
 
+		template<typename T>
+		void DFT_1D(const T* input_row, int output_column_nr,
+				std::vector<std::vector<std::complex<double>>>& output_matrix);
+
+		void initialize_coefficiens(bool inverse);
+
+
 	protected:
 
 		void constructor();
 
 	public:
 		Task4(cimg_library::CImg<unsigned char>* img);
-		void DFT();
 		void IDFT();
 
 		void print_abs();
@@ -58,6 +66,7 @@ class Bitmap;
 
 		void FFT(std::vector<double>&);
 		uint32_t reverse_bits(uint32_t,size_t size);
+		void DFT_2D();
 
 
 

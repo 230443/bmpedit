@@ -323,7 +323,7 @@ int main(int argc, char* argv[])
         }
 		else if (arg == "--dft")
 		{
-			img.DFT();
+			img.DFT_2D();
 			continue;
 		}
 		else if (arg == "--idft")
