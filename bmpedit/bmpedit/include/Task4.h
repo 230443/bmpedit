@@ -11,46 +11,46 @@
 #include <vector>
 
 
-	//const double PI = 3.141592653589793238463;
+//const double PI = 3.141592653589793238463;
 class Bitmap;
 
-	class Task4
-	{
-	private:
-		cimg_library::CImg<unsigned char>* img;
+class Task4
+{
+private:
+	cimg_library::CImg<unsigned char>* img;
 
-		size_t HEIGHT;
-		size_t WIDTH;
+	size_t HEIGHT;
+	size_t WIDTH;
 
-		std::vector<std::vector<std::complex<double>>> img_transformed;
-		std::vector<double> coefficients_for_k;
-		
-		template<typename T>
-		void DFT_1D(const T* input_row, int output_column_nr,
-				std::vector<std::vector<std::complex<double>>>& output_matrix);
+	std::vector<std::vector<std::complex<double>>> img_transformed;
+	std::vector<double> coefficients_for_k;
 
-		void initialize_coefficients(bool inverse);
+	template<typename T>
+	void DFT_1D(const T* input_row, int output_column_nr,
+			std::vector<std::vector<std::complex<double>>>& output_matrix);
 
+	void initialize_coefficients(bool inverse);
 
-	protected:
+protected:
 
-		void constructor();
+	void constructor();
 
-	public:
-		Task4(cimg_library::CImg<unsigned char>* img);
+public:
+	Task4(cimg_library::CImg<unsigned char>* img);
 
-		//	DFT
-		void DFT_2D();
-		void IDFT_2D();
+	//	DFT
+	void DFT_2D();
+	void IDFT_2D();
 
-		//	Presenting DFT
-		void print_abs();
-		void print_arg();
-		void print_real();
-		void print_imag();
+	//	Presenting DFT
+	void print_abs();
+	void print_arg();
+	void print_real();
+	void print_imag();
 
-		void FFT(std::vector<double>&);
-		uint32_t reverse_bits(uint32_t,size_t size);
-	};
+	void FFT(std::vector<double>&);
+
+	uint32_t reverse_bits(uint32_t, size_t size);
+};
 
 #endif //BMPEDIT_TASK4_H
