@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 	BOOST_AUTO_TEST_CASE(DFT)
 	{
 		Bitmap img(IMAGE);
-		img.DFT();
+		img.DFT_2D();
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 
-	int n = 4;
+	int n = 2;
 	BOOST_AUTO_TEST_CASE(DFT)
 	{
 
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 			Bitmap img(IMAGE);
 			boost::posix_time::ptime startTime = now();
 
-			img.DFT();
+			img.DFT_2D();
 
 			boost::posix_time::time_duration elapsed = now() - startTime;
 			sum += elapsed;
@@ -61,13 +61,13 @@ BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 
 
 			boost::posix_time::ptime startTime1 = now();
-			img.DFT();
+			img.DFT_2D();
 			boost::posix_time::time_duration elapsed1 = now() - startTime1;
 			sum1 += elapsed1;
 
 			boost::posix_time::ptime startTime = now();
 
-			img.IDFT();
+			img.IDFT_2D();
 
 			boost::posix_time::time_duration elapsed = now() - startTime;
 			sum += elapsed;
@@ -79,6 +79,14 @@ BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 	{
 		Bitmap img(IMAGE);
 		BOOST_REQUIRE_EQUAL(img.reverse_bits(128+256,9),3);
+	}
+	BOOST_AUTO_TEST_CASE(test_dft_idft)
+	{
+		Bitmap img(IMAGE);
+
+		img.DFT_2D();
+		img.print_abs();
+		img.IDFT_2D();
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -96,3 +104,11 @@ BOOST_AUTO_TEST_SUITE_END()
 //DFT	../../Images/misc/pentagon.bmp	00:00:06.705549
 //IDFT	../../Images/misc/pentagon.bmp	00:00:07.623555
 
+//DFT	../../Images/misc/pentagon.bmp	00:00:05.976103
+//IDFT	../../Images/misc/pentagon.bmp	00:00:07.606136
+//	swap_ranges
+//DFT	../../Images/misc/pentagon.bmp	00:00:06.281634
+//IDFT	../../Images/misc/pentagon.bmp	00:00:07.771092
+//	swap_ranges , inverse not swapping
+//DFT	../../Images/misc/pentagon.bmp	00:00:06.075908
+//IDFT	../../Images/misc/pentagon.bmp	00:00:05.907310
