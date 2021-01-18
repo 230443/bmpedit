@@ -56,6 +56,9 @@ class Bitmap;
 		void print_real();
 		void print_imag();
 
+		void FFT(std::vector<double>&);
+		uint32_t reverse_bits(uint32_t,size_t size);
+
 
 
 	};

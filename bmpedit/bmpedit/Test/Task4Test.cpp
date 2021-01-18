@@ -75,6 +75,11 @@ BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 		std::cout << "DFT	"<< IMAGE << "	" << sum1 / n << std::endl;
 		std::cout << "IDFT	"<< IMAGE << "	" << sum / n << std::endl;
 	}
+	BOOST_AUTO_TEST_CASE(bit_reversal)
+	{
+		Bitmap img(IMAGE);
+		BOOST_REQUIRE_EQUAL(img.reverse_bits(128+256,9),3);
+	}
 
 BOOST_AUTO_TEST_SUITE_END()
 

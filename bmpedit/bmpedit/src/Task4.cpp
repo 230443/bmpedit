@@ -229,4 +229,16 @@ void Task4::print_imag()
 	new_img.display("DFT. Imaginary spectrum",false,nullptr,true);
 }
 
+uint32_t Task4::reverse_bits(uint32_t n, size_t size)
+{
+	uint32_t x=0;
+	for(; size>0; size--)
+	{
+		x<<=1;
+		x |= n&1;
+		n>>=1;
+	}
+	return x;
+}
+
 
