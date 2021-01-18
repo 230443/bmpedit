@@ -279,6 +279,12 @@ int main(int argc, char* argv[])
 				img.LPF(stoi(argv[++i]));
 				continue;
 			}
+			if (arg == "--HPF")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				img.HPF(stoi(argv[++i]));
+				continue;
+			}
 			else if (arg == "-o")
 			{
 				string ofname = argv[++i];

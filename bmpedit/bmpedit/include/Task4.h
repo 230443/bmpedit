@@ -49,7 +49,8 @@ public:
 	void print_imag();
 
 	void apply_mask(cimg_library::CImg<double>&);
-	void LPF(int max_band);
+	void LPF(int size);
+	void HPF(int size);
 
 	void FFT(std::vector<double>&);
 

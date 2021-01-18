@@ -159,11 +159,19 @@ void Task4::apply_mask(cimg_library::CImg<double>& mask)
 			value *= *pixel++;
 }
 
-void Task4::LPF(int max_band)
+void Task4::LPF(int size)
 {
 	cimg_library::CImg<double> mask(WIDTH,HEIGHT,1,1,0);
 
 	const double color[] = {1};
-	mask.draw_circle(HEIGHT/2,WIDTH/2,max_band,color);
+	mask.draw_circle(HEIGHT/2,WIDTH/2,size,color);
+	apply_mask(mask);
+}
+void Task4::HPF(int size)
+{
+	cimg_library::CImg<double> mask(WIDTH,HEIGHT,1,1,1);
+
+	const double color[] = {0};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,size,color);
 	apply_mask(mask);
 }
