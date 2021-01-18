@@ -48,9 +48,11 @@ public:
 	void print_real();
 	void print_imag();
 
-	void apply_mask(cimg_library::CImg<double>&);
+	template<typename T>
+	void apply_mask(T*);
 	void LPF(int size);
 	void HPF(int size);
+	void PMF(int k,int l);
 
 	void FFT(std::vector<double>&);
 

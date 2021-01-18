@@ -135,6 +135,14 @@ int main(int argc, char* argv[])
 				i += 2;
 				continue;
 			}
+			if (arg == "--pmf")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				img.PMF(stoi(argv[i + 1]), stoi(argv[i + 2]));
+				i += 2;
+				continue;
+			}
 			if (arg == "--R1")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;

@@ -151,12 +151,12 @@ void Task4::print_imag()
 	new_img.display("DFT. Imaginary spectrum", false, nullptr, true);
 }
 
-void Task4::apply_mask(cimg_library::CImg<double>& mask)
+template<typename T>
+void Task4::apply_mask(T* mask_value)
 {
-	auto* pixel = mask.begin();
 	for (auto& row : img_transformed)
 		for (auto& value : row)
-			value *= *pixel++;
+			value *= *mask_value++;
 }
 
 void Task4::LPF(int size)
@@ -165,7 +165,7 @@ void Task4::LPF(int size)
 
 	const double color[] = {1};
 	mask.draw_circle(HEIGHT/2,WIDTH/2,size,color);
-	apply_mask(mask);
+	apply_mask(mask.begin());
 }
 void Task4::HPF(int size)
 {
@@ -173,5 +173,15 @@ void Task4::HPF(int size)
 
 	const double color[] = {0};
 	mask.draw_circle(HEIGHT/2,WIDTH/2,size,color);
-	apply_mask(mask);
+	apply_mask(mask.begin());
+}
+
+void Task4::PMF(int k, int l)
+{
+	double coefficient_k = -2 * M_PI * k / WIDTH;
+	double coefficient_l = -2 * M_PI * l / HEIGHT;
+	double k_l_pi = (k+l)* M_PI;
+	for (int m = 0; m < HEIGHT; ++m)
+		for (int n = 0; n < WIDTH; ++n)
+			img_transformed[m][n] *= std::polar(1.0,coefficient_k*n + coefficient_l*m + k_l_pi);
 }
