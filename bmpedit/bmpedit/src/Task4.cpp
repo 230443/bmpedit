@@ -173,6 +173,7 @@ void Task4::HPF(int size)
 
 	const double color[] = {0};
 	mask.draw_circle(HEIGHT/2,WIDTH/2,size,color);
+	mask(HEIGHT/2,WIDTH/2)=1;
 	apply_mask(mask.begin());
 }
 
@@ -184,4 +185,29 @@ void Task4::PMF(int k, int l)
 	for (int m = 0; m < HEIGHT; ++m)
 		for (int n = 0; n < WIDTH; ++n)
 			img_transformed[m][n] *= std::polar(1.0,coefficient_k*n + coefficient_l*m + k_l_pi);
+}
+
+void Task4::BPF(int min, int max)
+{
+	cimg_library::CImg<double> mask(WIDTH,HEIGHT,1,1,0);
+
+	double color[] = {1};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,max,color);
+	color[0]={0};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,min,color);
+	mask(HEIGHT/2,WIDTH/2)=1;
+
+	apply_mask(mask.begin());
+}
+
+void Task4::BCF(int min, int max)
+{
+	cimg_library::CImg<double> mask(WIDTH,HEIGHT,1,1,1);
+
+	double color[] = {0};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,max,color);
+	color[0]={1};
+	mask.draw_circle(HEIGHT/2,WIDTH/2,min,color);
+
+	apply_mask(mask.begin());
 }

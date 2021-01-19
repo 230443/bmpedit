@@ -143,6 +143,22 @@ int main(int argc, char* argv[])
 				i += 2;
 				continue;
 			}
+			if (arg == "--bpf")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				img.BPF(stoi(argv[i + 1]), stoi(argv[i + 2]));
+				i += 2;
+				continue;
+			}
+			if (arg == "--bcf")
+			{
+				if (is_not_int(arg, argv[i + 1])) return 1;
+				if (is_not_int(arg, argv[i + 2])) return 1;
+				img.BCF(stoi(argv[i + 1]), stoi(argv[i + 2]));
+				i += 2;
+				continue;
+			}
 			if (arg == "--R1")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
@@ -281,13 +297,13 @@ int main(int argc, char* argv[])
 				img.M3(stoi(argv[++i]));
 				continue;
 			}
-			if (arg == "--LPF")
+			if (arg == "--lpf")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
 				img.LPF(stoi(argv[++i]));
 				continue;
 			}
-			if (arg == "--HPF")
+			if (arg == "--hpf")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
 				img.HPF(stoi(argv[++i]));

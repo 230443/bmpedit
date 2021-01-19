@@ -53,6 +53,8 @@ public:
 	void LPF(int size);
 	void HPF(int size);
 	void PMF(int k,int l);
+	void BPF(int min, int max);
+	void BCF(int min, int max);
 
 	void FFT(std::vector<double>&);
 
