@@ -48,7 +48,7 @@ void Task4::DFT_1D(const T* input_row, int output_column_nr,
 		auto element = input_row;
 		for (int n = 0; n < WIDTH; n++)
 		{
-			transformed_pixel += (std::complex<double>)*element * std::polar(1.0, coefficients_for_k[k] * n);
+			transformed_pixel += (std::complex<double>)*element * coefficients_for_k[k*n];
 			element++;
 		}
 		output_matrix[k][output_column_nr] = transformed_pixel;
@@ -75,10 +75,12 @@ void Task4::DFT_2D()
 void Task4::initialize_coefficients(bool inverse)
 {
 	double sign = inverse ? -2 : 2;
-	coefficients_for_k = std::vector<double>(HEIGHT);
-	for (unsigned k = 0; k < HEIGHT; k++)
+	unsigned size = std::max(HEIGHT,WIDTH);
+	coefficients_for_k = std::vector<std::complex<double>>(size*size);
+	for (unsigned k = 0; k < size; k++)
 	{
-		coefficients_for_k[k] = sign * M_PI * k / WIDTH;
+		for (unsigned n = 0; n < size; n++)
+			coefficients_for_k[k*n] = std::polar(1.0,sign * M_PI * k * n / WIDTH);
 	}
 }
 
@@ -103,6 +105,28 @@ void Task4::IDFT_2D()
 			pixel++;
 		}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void Task4::print_abs()
@@ -211,3 +235,11 @@ void Task4::BCF(int min, int max)
 
 	apply_mask(mask.begin());
 }
+
+template<typename T>
+void Task4::FFT(const T* input_row, int output_column_nr, std::vector<std::vector<std::complex<double>>>& output_matrix)
+{
+
+}
+
+

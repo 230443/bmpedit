@@ -23,7 +23,7 @@ private:
 	size_t WIDTH;
 
 	std::vector<std::vector<std::complex<double>>> img_transformed;
-	std::vector<double> coefficients_for_k;
+	std::vector<std::complex<double>> coefficients_for_k;
 
 	template<typename T>
 	void DFT_1D(const T* input_row, int output_column_nr,
@@ -56,7 +56,10 @@ public:
 	void BPF(int min, int max);
 	void BCF(int min, int max);
 
-	void FFT(std::vector<double>&);
+	template<typename T>
+	void FFT(const T* input_row, int output_column_nr,
+			std::vector<std::vector<std::complex<double>>>& output_matrix);
+	void FFT_2D();
 
 	uint32_t reverse_bits(uint32_t, size_t size);
 };

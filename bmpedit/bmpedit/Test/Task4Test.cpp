@@ -112,3 +112,8 @@ BOOST_AUTO_TEST_SUITE_END()
 //	swap_ranges , inverse not swapping
 //DFT	../../Images/misc/pentagon.bmp	00:00:06.075908
 //IDFT	../../Images/misc/pentagon.bmp	00:00:05.907310
+//DFT	../../Images/misc/pentagon.bmp	00:00:06.566673
+//IDFT	../../Images/misc/pentagon.bmp	00:00:06.346205
+//	Full look up table
+//DFT	../../Images/misc/pentagon.bmp	00:00:00.767949
+//IDFT	../../Images/misc/pentagon.bmp	00:00:00.740966
