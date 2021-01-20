@@ -374,7 +374,7 @@ int main(int argc, char* argv[])
 		}
 		else if (arg == "--ifft")
 		{
-			img.IDFT_2D();
+			img.IFFT_2D();
 			continue;
 		}
 		else if (arg == "--print-abs")

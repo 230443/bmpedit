@@ -27,11 +27,6 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 		img.DFT_2D();
 	}
 
-	BOOST_AUTO_TEST_CASE(bit_reversal)
-	{
-		Bitmap img(IMAGE);
-		BOOST_REQUIRE_EQUAL(img.reverse_bits(128+256,9),3);
-	}
 	BOOST_AUTO_TEST_CASE(test_dft_idft)
 	{
 		Bitmap img(IMAGE);
