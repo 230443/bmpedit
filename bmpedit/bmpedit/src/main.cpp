@@ -367,6 +367,16 @@ int main(int argc, char* argv[])
 			img.IDFT_2D();
 			continue;
 		}
+		else if (arg == "--fft")
+		{
+			img.FFT_2D();
+			continue;
+		}
+		else if (arg == "--ifft")
+		{
+			img.IDFT_2D();
+			continue;
+		}
 		else if (arg == "--print-abs")
 		{
 			img.print_abs();
@@ -385,6 +395,26 @@ int main(int argc, char* argv[])
 		else if (arg == "--print-imag")
 		{
 			img.print_imag();
+			continue;
+		}
+		else if (arg == "--save-abs")
+		{
+			img.print_abs(true);
+			continue;
+		}
+		else if (arg == "--save-arg")
+		{
+			img.print_arg(true);
+			continue;
+		}
+		else if (arg == "--save-real")
+		{
+			img.print_real(true);
+			continue;
+		}
+		else if (arg == "--save-imag")
+		{
+			img.print_imag(true);
 			continue;
 		}
 		if (ref_available)

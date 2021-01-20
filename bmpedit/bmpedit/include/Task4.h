@@ -23,13 +23,14 @@ private:
 	size_t WIDTH;
 
 	std::vector<std::vector<std::complex<double>>> img_transformed;
-	std::vector<std::complex<double>> coefficients_for_k;
+	std::vector<std::complex<double>> coefficients;
 
 	template<typename T>
 	void DFT_1D(const T* input_row, int output_column_nr,
 			std::vector<std::vector<std::complex<double>>>& output_matrix);
 
-	void initialize_coefficients(bool inverse);
+	void set_DFT_coefficients(bool inverse);
+	void set_FFT_coefficients(bool inverse, unsigned size);
 
 protected:
 
@@ -43,10 +44,10 @@ public:
 	void IDFT_2D();
 
 	//	Presenting DFT
-	void print_abs();
-	void print_arg();
-	void print_real();
-	void print_imag();
+	void print_abs(bool save=false);
+	void print_arg(bool save=false);
+	void print_real(bool save=false);
+	void print_imag(bool save=false);
 
 	template<typename T>
 	void apply_mask(T*);
@@ -57,9 +58,11 @@ public:
 	void BCF(int min, int max);
 
 	template<typename T>
-	void FFT(const T* input_row, int output_column_nr,
+	void FFT(const T* input_row, int stages, int output_column_nr,
 			std::vector<std::vector<std::complex<double>>>& output_matrix);
 	void FFT_2D();
+	void IFFT_2D();
+
 
 	uint32_t reverse_bits(uint32_t, size_t size);
 };

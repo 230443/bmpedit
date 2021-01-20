@@ -27,30 +27,34 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 		img.DFT_2D();
 	}
 
+	BOOST_AUTO_TEST_CASE(bit_reversal)
+	{
+		Bitmap img(IMAGE);
+		BOOST_REQUIRE_EQUAL(img.reverse_bits(128+256,9),3);
+	}
+	BOOST_AUTO_TEST_CASE(test_dft_idft)
+	{
+		Bitmap img(IMAGE);
+
+		img.DFT_2D();
+		img.print_abs();
+		img.IDFT_2D();
+	}
+	BOOST_AUTO_TEST_CASE(test_FFT)
+	{
+		Bitmap img(IMAGE);
+
+		img.FFT_2D();
+		img.print_abs();
+	}
 BOOST_AUTO_TEST_SUITE_END()
 
 
 BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 
-	int n = 2;
+	int n = 5;
+
 	BOOST_AUTO_TEST_CASE(DFT)
-	{
-
-		boost::posix_time::time_duration sum;
-		for (int i = 0; i < n; ++i)
-		{
-			Bitmap img(IMAGE);
-			boost::posix_time::ptime startTime = now();
-
-			img.DFT_2D();
-
-			boost::posix_time::time_duration elapsed = now() - startTime;
-			sum += elapsed;
-		}
-		std::cout << "DFT	"<< IMAGE << "	" << sum / n << std::endl;
-	}
-
-	BOOST_AUTO_TEST_CASE(IDFT)
 	{
 
 		boost::posix_time::time_duration sum;
@@ -75,18 +79,31 @@ BOOST_AUTO_TEST_SUITE(Task4TimeSuite)
 		std::cout << "DFT	"<< IMAGE << "	" << sum1 / n << std::endl;
 		std::cout << "IDFT	"<< IMAGE << "	" << sum / n << std::endl;
 	}
-	BOOST_AUTO_TEST_CASE(bit_reversal)
-	{
-		Bitmap img(IMAGE);
-		BOOST_REQUIRE_EQUAL(img.reverse_bits(128+256,9),3);
-	}
-	BOOST_AUTO_TEST_CASE(test_dft_idft)
-	{
-		Bitmap img(IMAGE);
 
-		img.DFT_2D();
-		img.print_abs();
-		img.IDFT_2D();
+	BOOST_AUTO_TEST_CASE(FFT)
+	{
+
+		boost::posix_time::time_duration sum;
+		boost::posix_time::time_duration sum1;
+		for (int i = 0; i < n; ++i)
+		{
+			Bitmap img(IMAGE);
+
+
+			boost::posix_time::ptime startTime1 = now();
+			img.FFT_2D();
+			boost::posix_time::time_duration elapsed1 = now() - startTime1;
+			sum1 += elapsed1;
+
+			boost::posix_time::ptime startTime = now();
+
+			img.IFFT_2D();
+
+			boost::posix_time::time_duration elapsed = now() - startTime;
+			sum += elapsed;
+		}
+		std::cout << "FFT	"<< IMAGE << "	" << sum1 / n << std::endl;
+		std::cout << "IFFT	"<< IMAGE << "	" << sum / n << std::endl;
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -117,3 +134,14 @@ BOOST_AUTO_TEST_SUITE_END()
 //	Full look up table
 //DFT	../../Images/misc/pentagon.bmp	00:00:00.767949
 //IDFT	../../Images/misc/pentagon.bmp	00:00:00.740966
+
+// FFT
+//FFT	../../Images/misc/pentagon.bmp	00:00:00.017852
+//IFFT	../../Images/misc/pentagon.bmp	00:00:00.021946
+
+// no swapping
+//FFT	../../Images/misc/pentagon.bmp	00:00:00.017235
+//IFFT	../../Images/misc/pentagon.bmp	00:00:00.020215
+// swapping
+//FFT	../../Images/misc/pentagon.bmp	00:00:00.017055
+//IFFT	../../Images/misc/pentagon.bmp	00:00:00.019801
