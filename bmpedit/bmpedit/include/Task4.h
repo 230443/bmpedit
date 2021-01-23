@@ -63,6 +63,7 @@ public:
 	void PMF(int k,int l);
 	void BPF(int min, int max);
 	void BCF(int min, int max);
+	void EDF(double angle, double approx, int size);
 };
 
 #endif //BMPEDIT_TASK4_H

@@ -42,6 +42,16 @@ BOOST_AUTO_TEST_SUITE(Task4Suite)
 		img.FFT_2D();
 		img.print_abs();
 	}
+	BOOST_AUTO_TEST_CASE(test_EDF)
+	{
+		Bitmap img(IMAGE);
+
+		img.FFT_2D();
+		img.EDF(20,5,20);
+		img.print_abs();
+		img.IFFT_2D();
+		img.image.display();
+	}
 BOOST_AUTO_TEST_SUITE_END()
 
 

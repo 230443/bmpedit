@@ -153,7 +153,11 @@ void Task4::IFFT_2D()
 	for (const auto& row: img_transformed)
 		for (auto value: row)
 		{
-			*pixel = lround(abs(value / double(HEIGHT * WIDTH)));
+			int val = lround(abs(value / double(HEIGHT * WIDTH)));
+			if (val<256)
+				*pixel = val;
+			else
+				*pixel = 255;
 			pixel++;
 		}
 	coefficients = std::vector<std::complex<double>>(0);
@@ -268,7 +272,12 @@ void Task4::apply_mask(T* mask_value)
 {
 	for (auto& row : img_transformed)
 		for (auto& value : row)
-			value *= *mask_value++;
+			if (*mask_value++ == 0)
+			{
+				value.real(0.0);
+				value.imag(0.0);
+			}
+
 }
 
 void Task4::LPF(int size)
@@ -323,4 +332,32 @@ void Task4::BCF(int min, int max)
 	mask.draw_circle(HEIGHT / 2, WIDTH / 2, min, color);
 
 	apply_mask(mask.begin());
+}
+
+void Task4::EDF(double angle, double approx, int size)
+{
+	cimg_library::CImg<double> mask(WIDTH, HEIGHT, 1, 1, 1);
+
+	if (approx>45) approx=45;
+
+	double alpha = 2*M_PI * -angle/360;
+	approx = 2*M_PI * approx/360;
+	double r = 1.43*HEIGHT;
+
+
+	int x = lround(std::cos(alpha-approx)*r);
+	int y = lround(std::sin(alpha-approx)*r);
+	int x1 = lround(std::cos(alpha+approx)*r);
+	int y1 = lround(std::sin(alpha+approx)*r);
+
+
+	double color[] = { 0 };
+
+	mask.draw_triangle(x1+WIDTH/2,y1+HEIGHT/2,x+WIDTH/2,y+HEIGHT/2,WIDTH/2,HEIGHT/2,color);
+	mask.draw_triangle(-x1+WIDTH/2,-y1+HEIGHT/2,-x+WIDTH/2,-y+HEIGHT/2,WIDTH/2,HEIGHT/2,color);
+	color[0] = { 1 };
+	mask.draw_circle(HEIGHT / 2, WIDTH / 2, size, color);
+
+	apply_mask(mask.begin());
+
 }

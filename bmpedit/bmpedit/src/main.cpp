@@ -159,6 +159,13 @@ int main(int argc, char* argv[])
 				i += 2;
 				continue;
 			}
+			if (arg == "--edf")
+			{
+				if (is_not_int(arg, argv[i + 3])) return 1;
+				img.EDF(stol(argv[i + 1]), stol(argv[i + 2]),stoi(argv[i + 3]));
+				i += 3;
+				continue;
+			}
 			if (arg == "--R1")
 			{
 				if (is_not_int(arg, argv[i + 1])) return 1;
