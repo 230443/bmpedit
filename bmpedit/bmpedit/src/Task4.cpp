@@ -336,11 +336,11 @@ void Task4::BCF(int min, int max)
 
 void Task4::EDF(double angle, double approx, int size)
 {
-	cimg_library::CImg<double> mask(WIDTH, HEIGHT, 1, 1, 1);
+	cimg_library::CImg<double> mask(WIDTH, HEIGHT, 1, 1, 0);
 
 	if (approx>45) approx=45;
 
-	double alpha = 2*M_PI * -angle/360;
+	double alpha = 2*M_PI * angle/360;
 	approx = 2*M_PI * approx/360;
 	double r = 1.43*HEIGHT;
 
@@ -351,11 +351,11 @@ void Task4::EDF(double angle, double approx, int size)
 	int y1 = lround(std::sin(alpha+approx)*r);
 
 
-	double color[] = { 0 };
+	double color[] = { 1 };
 
 	mask.draw_triangle(x1+WIDTH/2,y1+HEIGHT/2,x+WIDTH/2,y+HEIGHT/2,WIDTH/2,HEIGHT/2,color);
 	mask.draw_triangle(-x1+WIDTH/2,-y1+HEIGHT/2,-x+WIDTH/2,-y+HEIGHT/2,WIDTH/2,HEIGHT/2,color);
-	color[0] = { 1 };
+	color[0] = { 0 };
 	mask.draw_circle(HEIGHT / 2, WIDTH / 2, size, color);
 
 	apply_mask(mask.begin());
