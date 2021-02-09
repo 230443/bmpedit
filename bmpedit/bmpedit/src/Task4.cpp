@@ -358,6 +358,7 @@ void Task4::EDF(double angle, double approx, int size)
 	color[0] = { 0 };
 	mask.draw_circle(HEIGHT / 2, WIDTH / 2, size, color);
 
-	apply_mask(mask.begin());
+	mask(HEIGHT/2,WIDTH/2)=1;
 
+	apply_mask(mask.begin());
 }
